@@ -1,0 +1,321 @@
+#!/bin/bash
+
+if [ ! `id -u` = '0' ]; then
+  echo >&2 'Require root privileges'
+  exit 1
+fi
+
+VERSION=0.0.1
+CA_ROOT=%CA_ROOT%
+OPENSSL=%OPENSSL%
+
+DN_BASE='%DN_BASE%'
+UPDATE_HOOK='%UPDATE_HOOK%'
+
+CA_HOME=${CA_ROOT}/ca
+CL_HOME=${CA_ROOT}/users
+
+CA_CONF=${CA_ROOT}/openssl.cnf
+
+CA_IDX=${CA_HOME}/index.txt
+CA_SER=${CA_HOME}/serial
+CA_KEY=${CA_HOME}/private/key.pem
+CA_CRT=${CA_HOME}/cert.pem
+CA_CRN=${CA_HOME}/crlnumber
+CA_CRL=${CA_HOME}/crl.pem
+
+#%PARSER_HERE%
+
+parse "$@"
+eval "set -- $REST"
+
+if [ $# -ge 1 ]; then
+  COMMAND="$1"
+else
+  echo >&2 'No command specified'
+  exit 1
+fi
+
+create_conf() {
+  cat <<EOF > $CA_CONF
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir = $CA_HOME
+database = \$dir/index.txt
+unique_subject = no
+new_certs_dir = \$dir/newcerts
+certificate = \$dir/cert.pem
+serial = \$dir/serial
+crlnumber = \$dir/crlnumber
+private_key = \$dir/private/key.pem
+RANDFILE = \$dir/private/.rand
+x509_extensions = usr_cert
+name_opt = ca_default
+cert_opt = ca_default
+default_days = $EXPIRE
+default_crl_days = $EXPIRE
+default_md = sha256
+preserve = no
+policy = policy_match
+
+[ policy_match ]
+countryName = match
+stateOrProvinceName = match
+organizationName = match
+organizationalUnitName = optional
+commonName = supplied
+emailAddress = optional
+
+[ req ]
+default_bits = $KEYLEN
+distinguished_name = req_distinguished_name
+attributes = req_attributes
+x509_extensions = v3_ca
+string_mask = nombstr
+
+[ req_distinguished_name ]
+countryName = Country Name (2 letter code)
+countryName_default = XX
+countryName_min = 2
+countryName_max = 2
+stateOrProvinceName = State or Province Name (full name)
+localityName = Locality Name (eg, city)
+localityName_default = Default City
+0.organizationName = Organization Name (eg, company)
+0.organizationName_default = Default Company Ltd
+organizationalUnitName = Organizational Unit Name (eg, section)
+commonName = Common Name (eg, your name or your server\'s hostname)
+commonName_max = 64
+emailAddress = Email Address
+emailAddress_max = 64
+
+[ req_attributes ]
+challengePassword = A challenge password
+challengePassword_min = 4
+challengePassword_max = 20
+unstructuredName = An optional company name
+
+[ usr_cert ]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+
+[ client_cert ]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyAgreement
+extendedKeyUsage = clientAuth
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+[ v3_ca ]
+basicConstraints = CA:true
+keyUsage = cRLSign, keyCertSign
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer
+
+[ crl_ext ]
+authorityKeyIdentifier=keyid:always
+EOF
+}
+
+init_ca() {
+  mkdir -p ${CA_HOME}/newcerts
+  mkdir -p ${CA_HOME}/private
+  chmod 700 ${CA_HOME}/private
+  touch $CA_IDX
+  echo '01' > $CA_SER
+  echo '00' > $CA_CRN
+  create_conf
+  mkdir -p ${CL_HOME}/trash
+
+  local DN="${DN_BASE}/CN=PrivCert"
+  $OPENSSL req -config $CA_CONF -new -keyout $CA_KEY -out $CA_CRT \
+           -passout pass:PrivCertKeySecret -subj "$DN" \
+           -x509 -days $EXPIRE -pkeyopt rsa_keygen_bits:$KEYLEN 2> /dev/null
+  #$OPENSSL x509 -days $EXPIRE -in $CA_CRT -outform DER -out $CA_CDER
+
+  $OPENSSL ca -config $CA_CONF -gencrl -out $CA_CRL \
+           -days $EXPIRE -passin pass:PrivCertKeySecret 2> /dev/null
+
+  echo "Add below into ssl configuration file:"
+  echo "-------- BEGIN --------"
+  echo "SSLCACertificateFile $CA_CRT"
+  echo "SSLVerifyClient require"
+  echo "SSLVerifyDepth 10"
+  echo "SSLCARevocationCheck leaf"
+  echo "SSLCARevocationFile $CA_CRL"
+  echo "-------- END --------"
+}
+
+show_cert() {
+  local ID="$1"
+  local CRT="${CL_HOME}/${ID}.crt"
+
+  local ENDDATE=`$OPENSSL x509 -noout -enddate -in "$CRT"`
+  local VALID="${ENDDATE#notAfter=}"
+
+  local SUBJECT=`$OPENSSL x509 -noout -subject -in "$CRT"`
+  local DN="${SUBJECT#subject=}"
+  local REST="${DN#*CN}"
+  REST="${REST# }"; REST="${REST#=}"; REST="${REST# }"
+  local CN="${REST%%[,/]*}"
+  if [ ! "$CN" = "$REST" ]; then
+    local MAIL="${REST#*emailAddress}"
+    MAIL="${MAIL# }"; MAIL="${MAIL#=}"; MAIL="${MAIL# }"
+    echo "$ID	$CN <$MAIL>	$VALID"
+  else
+    echo "$ID	$CN			$VALID"
+  fi
+}
+
+make_cert() {
+  local ID="$1"
+  local CN="$2"
+  local MAIL="$3"
+  if [ -z "$CN" ]; then
+    CN="$ID"
+  fi
+
+  local KEY="${CL_HOME}/${ID}.key"
+  local CSR="${CL_HOME}/${ID}.csr"
+  local CRT="${CL_HOME}/${ID}.crt"
+  local PFX="${CL_HOME}/${ID}.pfx"
+
+  if [ -f "$KEY" ]; then
+    echo >&2 "Already created: $ID"
+    return
+  fi
+
+  $OPENSSL genrsa -out "$KEY" $KEYLEN 2> /dev/null
+  chmod 0400 "$KEY"
+
+  local DN="${DN_BASE}/CN=${CN}${MAIL:+/emailAddress=$MAIL}"
+  $OPENSSL req -config $CA_CONF -new -subj "$DN" \
+           -key "$KEY" -out "$CSR" 2> /dev/null
+  if [ ! -f "$CSR" ]; then
+    echo >&2 "Error creating csr: maybe wrong DN - $DN"
+    rm -f "$KEY"
+    exit 1
+  fi
+
+  $OPENSSL ca -config $CA_CONF -batch -extensions client_cert \
+           -days $EXPIRE -passin pass:PrivCertKeySecret \
+           -out "$CRT" -infiles "$CSR" 2> /dev/null
+  rm -f "$CSR"
+  if [ ! -f "$CRT" ]; then
+    echo >&2 "Error creating cert"
+    rm -f "$KEY"
+    exit 1
+  fi
+  show_cert "$ID"
+  echo "Successfully created: $CRT"
+
+  $OPENSSL pkcs12 -export -password pass: -name "$CN" \
+           -in "$CRT" -inkey "$KEY" -out "$PFX"
+  if [ ! -f "$PFX" ]; then
+    echo >&2 "Error creating pkcs12: try manually"
+    exit 1
+  fi
+  echo "Successfully created: ${PFX}"
+  echo "Import it into user's browser"
+}
+
+revoke_cert() {
+  local ID="$1"
+  local KEY="${CL_HOME}/${ID}.key"
+  local CRT="${CL_HOME}/${ID}.crt"
+  local PFX="${CL_HOME}/${ID}.pfx"
+
+  if [ ! -f "$CRT" ]; then
+    echo >&2 "Not found: $ID"
+    exit 1
+  fi
+
+  $OPENSSL ca -config $CA_CONF -revoke "$CRT" \
+           -passin pass:PrivCertKeySecret 2> /dev/null
+
+  $OPENSSL ca -config $CA_CONF -gencrl -out $CA_CRL \
+           -days $EXPIRE -passin pass:PrivCertKeySecret 2> /dev/null
+
+  $OPENSSL verify -crl_check -CAfile $CA_CRT -CRLfile $CA_CRL "$CRT" > /dev/null
+  if [ $? -eq 0 ]; then
+    echo >&2 "Error revoking cert"
+    exit 1
+  fi
+
+  echo "Successfully revoked: $CRT"
+  mv -f "$KEY" "$CRT" "$PFX" ${CL_HOME}/trash
+
+  $UPDATE_HOOK
+}
+
+case "$COMMAND" in
+  init)
+    if [ $# -gt 1 ]; then
+      echo >&2 'Illegal params'
+      exit 1
+    fi
+    if [ -f $CA_KEY ]; then
+      echo >&2 'Already initialized'
+      exit 1
+    fi
+
+    init_ca
+    ;;
+
+  make)
+    if [ $# -gt 4 -o $# -eq 1 ]; then
+      echo >&2 'Illegal params'
+      exit 1
+    fi
+    if [ ! -f $CA_KEY ]; then
+      echo >&2 'Not initialized'
+      exit 1
+    fi
+
+    make_cert "$2" "$3" "$4"
+    ;;
+
+  list)
+    if [ $# -gt 1 ]; then
+      echo >&2 'Illegal params'
+      exit 1
+    fi
+    if [ ! -f $CA_KEY ]; then
+      echo >&2 'Not initialized'
+      exit 1
+    fi
+
+    cd $CL_HOME
+    for CRT in `ls -1tr *.crt`; do
+      show_cert "${CRT%.crt}"
+    done
+    ;;
+
+  revoke)
+    if [ $# -gt 2 -o $# -eq 1 ]; then
+      echo >&2 'Illegal params'
+      exit 1
+    fi
+    if [ ! -f $CA_KEY ]; then
+      echo >&2 'Not initialized'
+      exit 1
+    fi
+
+    revoke_cert "$2"
+    ;;
+esac
+
+# Local variables:
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim:expandtab ts=2

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+parser_definition() {
+  setup  REST help:usage -- 'Usage: privcert [options] [command] [args...]' ''
+  msg -- 'Options:'
+  param KEYLEN  -l --keylen  validate:number init:=%KEYLEN% \
+                             -- 'key length in bits (default: %KEYLEN%)'
+  param EXPIRE  -e --expire  validate:number init:=%EXPIRE% \
+                             -- 'key life in days (default: %EXPIRE%)'
+  disp  VERSION -v --version -- 'show version'
+  disp  :usage  -h --help    -- 'display help for command' ''
+  msg -- 'Commands:'
+  cmd init   -- 'initialize environment' \
+                'usage: privcert [options] init'
+  cmd make   -- 'make client cert' \
+                'usage: privcert [options] make id [cn] [email]'
+  cmd list   -- 'list all client certs' \
+                'usage: privcert [options] list'
+  cmd revoke -- 'revoke client cert' \
+                'usage: privcert [options] revoke id'
+}
+
+# Local variables:
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim:expandtab ts=2
