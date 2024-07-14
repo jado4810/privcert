@@ -77,7 +77,7 @@ Update apache configuration to make those valid:
 $ sudo apachectl restart
 ```
 
-Now that site could not be accessible until being installed cert signed by this ca.
+Now that site is not accessible until being installed cert signed by this ca.
 
 User certs management
 ---------------------
@@ -88,7 +88,7 @@ User certs management
 $ sudo privcert make «user» [«cn»] [«email»]
 ```
 
-Import cert generated at `/etc/privcert/users/«user».pfx` into the environment of the user.
+Import a cert file generated at `/etc/privcert/users/«user».pfx` into the environment of the user, and it could be access to the site.
 
 ### Show all user certs
 
@@ -96,11 +96,16 @@ Import cert generated at `/etc/privcert/users/«user».pfx` into the environment
 $ sudo privcert list
 ```
 
+It shows only certs just under `/etc/privcert/users`, which should only hold currently valid ones.
+
 ### Revoke user cert
 
 ```console
 $ sudo privcert revoke «user»
 ```
+
+Revoked cert is added to certificate revocation list (`crl.pem`), so the client with the cert could no longer access.
+And the cert is moved to `/etc/privcert/trash`.
 
 ToDo
 ----
