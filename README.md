@@ -79,8 +79,8 @@ $ sudo apachectl restart
 
 Now that site could not be accessible until being installed cert signed by this ca.
 
-User certs managements
-----------------------
+User certs management
+---------------------
 
 ### Make user cert
 
@@ -88,7 +88,7 @@ User certs managements
 $ sudo privcert make «user» [«cn»] [«email»]
 ```
 
-Import cert generated at `/etc/privcert/users/«user».pfx` into the browser.
+Import cert generated at `/etc/privcert/users/«user».pfx` into the environment of the user.
 
 ### Show all user certs
 
@@ -96,7 +96,7 @@ Import cert generated at `/etc/privcert/users/«user».pfx` into the browser.
 $ sudo privcert list
 ```
 
-### Revoke user certs
+### Revoke user cert
 
 ```console
 $ sudo privcert revoke «user»
