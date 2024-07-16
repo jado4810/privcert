@@ -330,7 +330,7 @@ server_loop() {
         fi
 
         CN="$ARG"
-        echo '041 CN OK'
+        echo '051 CN OK'
         ;;
 
       setmail)
@@ -340,7 +340,7 @@ server_loop() {
         fi
 
         MAIL="$ARG"
-        echo '042 MAIL OK'
+        echo '052 MAIL OK'
         ;;
 
       make)
@@ -385,10 +385,10 @@ server_loop() {
         local CRT=''
         for CRT in *.crt; do
           if [ "$CRT" = '*.crt' ]; then
-            echo '020 LIST OK'
+            echo '030 LIST OK'
             break
           elif [ -z "$FOUND" ]; then
-            echo '120 LIST OK'
+            echo '130 LIST OK'
             FOUND=1
           fi
           show_cert "${CRT%.crt}"
@@ -407,16 +407,16 @@ server_loop() {
         revoke_cert "$ARG"
         case $? in
           0)
-            echo '030 REVOKE OK'
+            echo '040 REVOKE OK'
             ;;
           1)
-            echo '231 Not found'
+            echo '241 Not found'
             ;;
           2)
-            echo '232 Error revoking cert'
+            echo '242 Error revoking cert'
             ;;
           *)
-            echo '239 Unknown error'
+            echo '249 Unknown error'
             ;;
         esac
         ;;
