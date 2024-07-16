@@ -166,13 +166,13 @@ show_cert() {
   local REST="${DN#*CN}"
   REST="${REST# }"; REST="${REST#=}"; REST="${REST# }"
   local CN="${REST%%[,/]*}"
-  if [ ! "$CN" = "$REST" ]; then
+  if [ "$CN" = "$REST" ]; then
+    local MAIL=''
+  else
     local MAIL="${REST#*emailAddress}"
     MAIL="${MAIL# }"; MAIL="${MAIL#=}"; MAIL="${MAIL# }"
-    echo "$ID	$CN <$MAIL>	$VALID"
-  else
-    echo "$ID	$CN			$VALID"
   fi
+  echo "$ID	$CN	$MAIL	$VALID"
 }
 
 make_cert() {
