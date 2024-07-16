@@ -1,16 +1,17 @@
 all: src/privcert
 
-CA_ROOT = /etc/privcert
-OPENSSL = $(shell which openssl || echo /usr/bin/openssl)
-DN_BASE = /C=JP/ST=Tokyo/O=Your Company
+CA_ROOT     = /etc/privcert
+OPENSSL     = $(shell which openssl || echo /usr/bin/openssl)
+MD5SUM      = $(shell which md5sum || which md5 || echo /usr/bin/md5sum)
+DN_BASE     = /C=JP/ST=Tokyo/O=Your Company
 UPDATE_HOOK = $(shell which apachectl || echo /usr/bin/apachectl) restart
 
 KEYLEN = 2048
 EXPIRE = 3650
 
 DESTDIR =
-PREFIX = $(DESTDIR)/usr/local
-BINDIR = $(PREFIX)/sbin
+PREFIX  = $(DESTDIR)/usr/local
+BINDIR  = $(PREFIX)/sbin
 
 TOOLS = ./third-party/getoptions
 
@@ -25,6 +26,7 @@ src/privcert: src/privcert.sh.in src/parse.sh
 	    -e 's/%CA_ROOT%/$(subst /,\/,$(CA_ROOT))/' \
 	    -e 's/%DN_BASE%/$(subst /,\/,$(subst &,\&,$(DN_BASE)))/' \
 	    -e 's/%OPENSSL%/$(subst /,\/,$(OPENSSL))/' \
+	    -e 's/%MD5SUM%/$(subst /,\/,$(MD5SUM))/' \
 	    -e 's/%UPDATE_HOOK%/$(subst /,\/,$(UPDATE_HOOK))/' $< > $@
 
 install: src/privcert

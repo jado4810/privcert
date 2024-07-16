@@ -31,6 +31,8 @@ Variables available on `make`:
     * default: `/etc/privcert`
 * `OPENSSL` - openssl executable path
     * default: (auto detected)
+* `MD5SUM` - md5sum executable path
+    * default: (auto detected)
 * `DN_BASE` - prefix to X.509 DN
     * default: `/C=JP/ST=Tokyo/O=Your Company`
     * requires C, ST and O
@@ -59,6 +61,12 @@ First, init the environment and generate self-signed cert for local CA.
 ```console
 $ sudo privcert init
 ```
+
+Input password for server mode twice.
+
+> If omit password or failed to set password, retry `init` to initialize password.
+>
+> Once initializing password, try `sudo privcert passwd` to update.
 
 Set generated cert on ssl configuration of your web server.
 For Apache, like below:

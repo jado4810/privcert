@@ -12,12 +12,16 @@ parser_definition() {
   msg -- 'Commands:'
   cmd init   -- 'initialize environment' \
                 'usage: privcert [options] init'
+  cmd passwd -- 'update password for server mode' \
+                'usage: privcert [options] passwd'
   cmd make   -- 'make client cert' \
                 'usage: privcert [options] make id [cn] [email]'
   cmd list   -- 'list all client certs' \
                 'usage: privcert [options] list'
   cmd revoke -- 'revoke client cert' \
                 'usage: privcert [options] revoke id'
+  cmd server -- 'server mode' \
+                'usage: privcert [options] server'
 }
 
 # Local variables:

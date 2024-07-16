@@ -8,6 +8,7 @@ fi
 VERSION=0.0.1
 CA_ROOT=%CA_ROOT%
 OPENSSL=%OPENSSL%
+MD5SUM=%MD5SUM%
 
 DN_BASE='%DN_BASE%'
 UPDATE_HOOK='%UPDATE_HOOK%'
@@ -23,6 +24,11 @@ CA_KEY=${CA_HOME}/private/key.pem
 CA_CRT=${CA_HOME}/cert.pem
 CA_CRN=${CA_HOME}/crlnumber
 CA_CRL=${CA_HOME}/crl.pem
+
+CA_PWD=${CA_ROOT}/passwd.md5
+
+# xxx
+PW_SALT=PrivCertPasswdSalt
 
 #%PARSER_HERE%
 
@@ -143,15 +149,31 @@ init_ca() {
 
   $OPENSSL ca -config $CA_CONF -gencrl -out $CA_CRL \
            -days $EXPIRE -passin pass:PrivCertKeySecret 2> /dev/null
+}
 
-  echo "Add below into ssl configuration file:"
-  echo "-------- BEGIN --------"
-  echo "SSLCACertificateFile $CA_CRT"
-  echo "SSLVerifyClient require"
-  echo "SSLVerifyDepth 10"
-  echo "SSLCARevocationCheck leaf"
-  echo "SSLCARevocationFile $CA_CRL"
-  echo "-------- END --------"
+init_pw() {
+  local PASS=''
+  read -sp 'Password for server mode: ' PASS
+  echo
+  if [ -z "$PASS" ]; then
+    echo >&2 'Abort'
+    exit 1
+  fi
+
+  local RE_PASS=''
+  read -sp 'Retype password for server mode: ' RE_PASS
+  echo
+  if [ -z "$RE_PASS" ]; then
+    echo >&2 'Abort'
+    exit 1
+  fi
+
+  if [ ! "$PASS" = "$RE_PASS" ]; then
+    echo >&2 'Unmatch passwords'
+    exit 1
+  fi
+
+  echo -n "${PW_SALT}:${PASS}" | $MD5SUM | cut -d' ' -f1 > $CA_PWD
 }
 
 show_cert() {
@@ -189,8 +211,7 @@ make_cert() {
   local PFX="${CL_HOME}/${ID}.pfx"
 
   if [ -f "$KEY" ]; then
-    echo >&2 "Already created: $ID"
-    return
+    return 1
   fi
 
   $OPENSSL genrsa -out "$KEY" $KEYLEN 2> /dev/null
@@ -200,9 +221,8 @@ make_cert() {
   $OPENSSL req -config $CA_CONF -new -subj "$DN" \
            -key "$KEY" -out "$CSR" 2> /dev/null
   if [ ! -f "$CSR" ]; then
-    echo >&2 "Error creating csr: maybe wrong DN - $DN"
     rm -f "$KEY"
-    exit 1
+    return 2
   fi
 
   $OPENSSL ca -config $CA_CONF -batch -extensions client_cert \
@@ -210,21 +230,17 @@ make_cert() {
            -out "$CRT" -infiles "$CSR" 2> /dev/null
   rm -f "$CSR"
   if [ ! -f "$CRT" ]; then
-    echo >&2 "Error creating cert"
     rm -f "$KEY"
-    exit 1
+    return 3
   fi
-  show_cert "$ID"
-  echo "Successfully created: $CRT"
 
   $OPENSSL pkcs12 -export -password pass: -name "$CN" \
            -in "$CRT" -inkey "$KEY" -out "$PFX"
   if [ ! -f "$PFX" ]; then
-    echo >&2 "Error creating pkcs12: try manually"
-    exit 1
+    return 4
   fi
-  echo "Successfully created: ${PFX}"
-  echo "Import it into user's browser"
+
+  return 0
 }
 
 revoke_cert() {
@@ -234,8 +250,7 @@ revoke_cert() {
   local PFX="${CL_HOME}/${ID}.pfx"
 
   if [ ! -f "$CRT" ]; then
-    echo >&2 "Not found: $ID"
-    exit 1
+    return 1
   fi
 
   $OPENSSL ca -config $CA_CONF -revoke "$CRT" \
@@ -246,14 +261,176 @@ revoke_cert() {
 
   $OPENSSL verify -crl_check -CAfile $CA_CRT -CRLfile $CA_CRL "$CRT" > /dev/null
   if [ $? -eq 0 ]; then
-    echo >&2 "Error revoking cert"
-    exit 1
+    return 2
   fi
 
-  echo "Successfully revoked: $CRT"
   mv -f "$KEY" "$CRT" "$PFX" ${CL_HOME}/trash
-
   $UPDATE_HOOK
+
+  return 0
+}
+
+server_loop() {
+  local CMD=''
+  local ARG=''
+  local CN=''
+  local MAIL=''
+
+  local WAIT=1
+  while read CMD ARG; do
+    CMD=`echo "$CMD" | tr [A-Z] [a-z]`
+    case "$CMD" in
+      passwd)
+        if [ -z "$ARG" ]; then
+          echo '202 Bad param'
+          continue
+        fi
+
+        local HASH_IN=`echo -n "${PW_SALT}:${ARG}" | $MD5SUM | cut -d' ' -f1`
+        local HASH_PW=`cat $CA_PWD`
+        if [ ! "$HASH_IN" = "$HASH_PW" ]; then
+          sleep $WAIT
+          if [ $WAIT -ge 4 ]; then
+            echo '205 Attempt failed'
+            return
+          fi
+          echo '204 Bad passwd'
+          WAIT=$((WAIT * 2))
+          continue
+        fi
+
+        echo '001 PASWD OK'
+        break
+        ;;
+
+      setcn|setmail|make|list|revoke)
+        echo '203 Need authentication first'
+        continue
+        ;;
+
+      quit|bye)
+        echo '002 BYE'
+        return
+        ;;
+
+      *)
+        echo '201 Unknown command'
+        ;;
+    esac
+  done
+
+  cd $CL_HOME
+  while read CMD ARG; do
+    CMD=`echo "$CMD" | tr [A-Z] [a-z]`
+    case "$CMD" in
+      setcn)
+        if [ -z "$ARG" ]; then
+          echo '202 Bad param'
+          continue
+        fi
+
+        CN="$ARG"
+        echo '041 CN OK'
+        ;;
+
+      setmail)
+        if [ -z "$ARG" ]; then
+          echo '202 Bad param'
+          continue
+        fi
+
+        MAIL="$ARG"
+        echo '042 MAIL OK'
+        ;;
+
+      make)
+        if [ -z "$ARG" ]; then
+          echo '202 Bad param'
+          continue
+        fi
+
+        make_cert "$ARG" "$CN" "$MAIL"
+        case $? in
+          0)
+            echo '010 MAKE OK'
+            ;;
+          1)
+            echo '211 Already created'
+            ;;
+          2)
+            echo '212 Error creating csr'
+            ;;
+          3)
+            echo '213 Error creating cert'
+            ;;
+          4)
+            echo '214 Error creating pkcs12'
+            ;;
+          *)
+            echo '219 Unknown error'
+            ;;
+        esac
+
+        CN=''
+        MAIL=''
+        ;;
+
+      list)
+        if [ -n "$ARG" ]; then
+          echo '202 Bad param'
+          continue
+        fi
+
+        local FOUND=''
+        local CRT=''
+        for CRT in *.crt; do
+          if [ "$CRT" = '*.crt' ]; then
+            echo '020 LIST OK'
+            break
+          elif [ -z "$FOUND" ]; then
+            echo '120 LIST OK'
+            FOUND=1
+          fi
+          show_cert "${CRT%.crt}"
+        done
+        if [ -n "$FOUND" ]; then
+          echo 'EOF'
+        fi
+        ;;
+
+      revoke)
+        if [ -z "$ARG" ]; then
+          echo '202 Bad param'
+          continue
+        fi
+
+        revoke_cert "$ARG"
+        case $? in
+          0)
+            echo '030 REVOKE OK'
+            ;;
+          1)
+            echo '231 Not found'
+            ;;
+          2)
+            echo '232 Error revoking cert'
+            ;;
+          *)
+            echo '239 Unknown error'
+            ;;
+        esac
+        ;;
+
+      quit|bye)
+        echo '002 BYE'
+        return
+        ;;
+
+      *)
+        echo '201 Unknown command'
+        ;;
+    esac
+  done
 }
 
 case "$COMMAND" in
@@ -262,12 +439,41 @@ case "$COMMAND" in
       echo >&2 'Illegal params'
       exit 1
     fi
-    if [ -f $CA_KEY ]; then
+    if [ -f $CA_KEY -a -f $CA_PWD ]; then
       echo >&2 'Already initialized'
       exit 1
     fi
 
-    init_ca
+    if [ ! -f $CA_KEY ]; then
+      init_ca
+      echo "Add below into ssl configuration file:"
+      echo "-------- BEGIN --------"
+      echo "SSLCACertificateFile $CA_CRT"
+      echo "SSLVerifyClient require"
+      echo "SSLVerifyDepth 10"
+      echo "SSLCARevocationCheck leaf"
+      echo "SSLCARevocationFile $CA_CRL"
+      echo "-------- END --------"
+    fi
+
+    if [ ! -f $CA_PWD ]; then
+      init_pw
+      echo 'Initialized password for server mode'
+    fi
+    ;;
+
+  passwd)
+    if [ $# -gt 1 ]; then
+      echo >&2 'Illegal params'
+      exit 1
+    fi
+    if [ ! -f $CA_PWD ]; then
+      echo >&2 'Not initialized password'
+      exit 1
+    fi
+
+    init_pw
+    echo 'Updated password for server mode'
     ;;
 
   make)
@@ -281,6 +487,36 @@ case "$COMMAND" in
     fi
 
     make_cert "$2" "$3" "$4"
+    case $? in
+      0)
+        show_cert "$2"
+        echo "Successfully created: ${CL_HOME}/$2.crt"
+        echo "Successfully created: ${CL_HOME}/$2.pfx"
+        echo 'Import it into client environment'
+        ;;
+      1)
+        echo >&2 "Already created: $2"
+        exit 1
+        ;;
+      2)
+        echo >&2 'Error creating csr: maybe wrong DN'
+        exit 1
+        ;;
+      3)
+        echo >&2 'Error creating cert'
+        exit 1
+        ;;
+      4)
+        show_cert "$2"
+        echo "Successfully created: ${CL_HOME}/$2.crt"
+        echo >&2 'Error creating pkcs12: try manually'
+        exit 1
+        ;;
+      *)
+        echo >&2 'Unknown error'
+        exit 1
+        ;;
+    esac
     ;;
 
   list)
@@ -313,6 +549,40 @@ case "$COMMAND" in
     fi
 
     revoke_cert "$2"
+    case $? in
+      0)
+        echo "Successfully revoked: ${CL_HOME}/$2.crt"
+        ;;
+      1)
+        echo >&2 "Not found: $2"
+        exit 1
+        ;;
+      2)
+        echo >&2 "Error revoking cert"
+        exit 1
+        ;;
+      *)
+        echo >&2 'Unknown error'
+        exit 1
+        ;;
+    esac
+    ;;
+
+  server)
+    if [ $# -gt 1 ]; then
+      echo >&2 'Illegal params'
+      exit 1
+    fi
+    if [ ! -f $CA_KEY ]; then
+      echo >&2 'Not initialized'
+      exit 1
+    fi
+    if [ ! -f $CA_PWD ]; then
+      echo >&2 'Not initialized password'
+      exit 1
+    fi
+
+    server_loop
     ;;
 esac
 
