@@ -140,7 +140,6 @@ init_ca() {
   $OPENSSL req -config $CA_CONF -new -keyout $CA_KEY -out $CA_CRT \
            -passout pass:PrivCertKeySecret -subj "$DN" \
            -x509 -days $EXPIRE -pkeyopt rsa_keygen_bits:$KEYLEN 2> /dev/null
-  #$OPENSSL x509 -days $EXPIRE -in $CA_CRT -outform DER -out $CA_CDER
 
   $OPENSSL ca -config $CA_CONF -gencrl -out $CA_CRL \
            -days $EXPIRE -passin pass:PrivCertKeySecret 2> /dev/null
