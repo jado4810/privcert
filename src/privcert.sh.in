@@ -294,7 +294,10 @@ case "$COMMAND" in
     fi
 
     cd $CL_HOME
-    for CRT in `ls -1tr *.crt`; do
+    for CRT in *.crt; do
+      if [ "$CRT" = '*.crt' ]; then
+        break
+      fi
       show_cert "${CRT%.crt}"
     done
     ;;
