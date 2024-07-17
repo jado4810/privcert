@@ -178,6 +178,7 @@ init_pw() {
 
 show_cert() {
   local ID="$1"
+  local IDT="$2"
   local CRT="${CL_HOME}/${ID}.crt"
 
   local ENDDATE=`$OPENSSL x509 -noout -enddate -in "$CRT"`
@@ -201,7 +202,31 @@ show_cert() {
     local MAIL="${REST#*emailAddress}"
     MAIL="${MAIL# }"; MAIL="${MAIL#=}"; MAIL="${MAIL# }"
   fi
-  echo "$ID	$CN	$MAIL	$ENDDATE"
+
+  case "${IDT}:${MAIL}" in
+    :*)
+      local FINGERPRINT=`$OPENSSL x509 -noout -fingerprint -in "$CRT"`
+      local DLKEY="${FINGERPRINT#*Fingerprint}"
+      DLKEY="${DLKEY# }"; DLKEY="${DLKEY#=}"; DLKEY="${DLKEY# }"
+      echo -e "${ID}\t${ENDDATE}\t${CN}\t${MAIL}\t${DLKEY//:/}"
+      ;;
+    auto:)
+      echo "$ID    $ENDDATE    $CN"
+      ;;
+    auto:*)
+      echo "$ID    $ENDDATE    $CN <${MAIL}>"
+      ;;
+    *:)
+      echo -n "$ID"
+      seq $((IDT + 4 - ${#ID})) | xargs -I. echo -n ' '
+      echo "$ENDDATE    $CN"
+      ;;
+    *)
+      echo -n "$ID"
+      seq $((IDT + 4 - ${#ID})) | xargs -I. echo -n ' '
+      echo "$ENDDATE    $CN <${MAIL}>"
+      ;;
+  esac
 }
 
 make_cert() {
@@ -388,21 +413,22 @@ server_loop() {
           continue
         fi
 
-        local FOUND=''
+        local IDS=()
         local CRT=''
         for CRT in *.crt; do
           if [ "$CRT" = '*.crt' ]; then
             echo '030 LIST OK'
-            break
-          elif [ -z "$FOUND" ]; then
-            echo '130 LIST OK'
-            FOUND=1
+            continue 2
           fi
-          show_cert "${CRT%.crt}"
+          IDS+=("${CRT%.crt}")
         done
-        if [ -n "$FOUND" ]; then
-          echo 'EOF'
-        fi
+
+        echo '130 LIST OK'
+        local ID=''
+        for ID in "${IDS[@]}"; do
+          show_cert "$ID"
+        done
+        echo 'EOF'
         ;;
 
       revoke)
@@ -496,7 +522,7 @@ case "$COMMAND" in
     make_cert "$2" "$3" "$4"
     case $? in
       0)
-        show_cert "$2"
+        show_cert "$2" auto
         echo "Successfully created: ${CL_HOME}/$2.crt"
         echo "Successfully created: ${CL_HOME}/$2.pfx"
         echo 'Import it into client environment'
@@ -514,7 +540,7 @@ case "$COMMAND" in
         exit 1
         ;;
       4)
-        show_cert "$2"
+        show_cert "$2" auto
         echo "Successfully created: ${CL_HOME}/$2.crt"
         echo >&2 'Error creating pkcs12: try manually'
         exit 1
@@ -537,11 +563,21 @@ case "$COMMAND" in
     fi
 
     cd $CL_HOME
+    IDS=()
     for CRT in *.crt; do
       if [ "$CRT" = '*.crt' ]; then
         break
       fi
-      show_cert "${CRT%.crt}"
+      IDS+=("${CRT%.crt}")
+    done
+    IDT=`for ID in "${IDS[@]}"; do echo ${#ID}; done | sort -rn | head -n 1`
+
+    echo -n 'ID'
+    seq $((IDT + 2)) | xargs -I. echo -n ' '
+    echo -e 'ENDDATE                NAME'
+
+    for ID in "${IDS[@]}"; do
+      show_cert "$ID" $IDT
     done
     ;;
 
