@@ -181,7 +181,14 @@ show_cert() {
   local CRT="${CL_HOME}/${ID}.crt"
 
   local ENDDATE=`$OPENSSL x509 -noout -enddate -in "$CRT"`
-  local VALID="${ENDDATE#notAfter=}"
+  ENDDATE="${ENDDATE#notAfter=}"
+  if date --version > /dev/null 2>&1; then
+    # GNU date
+    ENDDATE=`date -date="$ENDDATE" '+%Y/%m/%d %T'`
+  else
+    # BSD date
+    ENDDATE=`LANG=C date -jf '%b %d %T %Y %Z' "$ENDDATE" '+%Y/%m/%d %T'`
+  fi
 
   local SUBJECT=`$OPENSSL x509 -noout -subject -in "$CRT"`
   local DN="${SUBJECT#subject=}"
@@ -194,7 +201,7 @@ show_cert() {
     local MAIL="${REST#*emailAddress}"
     MAIL="${MAIL# }"; MAIL="${MAIL#=}"; MAIL="${MAIL# }"
   fi
-  echo "$ID	$CN	$MAIL	$VALID"
+  echo "$ID	$CN	$MAIL	$ENDDATE"
 }
 
 make_cert() {
