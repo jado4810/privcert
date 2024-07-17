@@ -9,6 +9,7 @@ VERSION=0.0.1
 CA_ROOT=%CA_ROOT%
 OPENSSL=%OPENSSL%
 MD5SUM=%MD5SUM%
+BASE64=%BASE64%
 
 DN_BASE='%DN_BASE%'
 UPDATE_HOOK='%UPDATE_HOOK%'
@@ -405,6 +406,23 @@ server_loop() {
 
         CN=''
         MAIL=''
+        ;;
+
+      get)
+        if [ -z "$ARG" ]; then
+          echo '202 Bad param'
+          continue
+        fi
+
+        local PFX="${CL_HOME}/${ARG}.pfx"
+        if [ ! -f "$PFX" ]; then
+          echo '221 Not found'
+          continue
+        else
+          echo '120 GET OK'
+          $BASE64 < "$PFX"
+          echo 'EOF'
+        fi
         ;;
 
       list)

@@ -33,6 +33,8 @@ Variables available on `make`:
     * default: (auto detected)
 * `MD5SUM` - md5sum executable path
     * default: (auto detected)
+* `BASE64` - base64 executable path
+    * default: (auto detected)
 * `DN_BASE` - prefix to X.509 DN
     * default: `/C=JP/ST=Tokyo/O=Your Company`
     * requires C, ST and O
