@@ -11,7 +11,7 @@ KEYLEN = 2048
 EXPIRE = 3650
 
 DESTDIR =
-PREFIX  = $(DESTDIR)/usr/local
+PREFIX  = /usr/local
 BINDIR  = $(PREFIX)/sbin
 
 TOOLS = ./third-party/getoptions
@@ -32,8 +32,8 @@ src/privcert: src/privcert.sh.in src/parse.sh
 	    -e 's/%UPDATE_HOOK%/$(subst /,\/,$(UPDATE_HOOK))/' $< > $@
 
 install: src/privcert
-	test -d $(BINDIR) || mkdir -p $(BINDIR)
-	install -p -o root -g root -m 700 $^ $(BINDIR)
+	test -d $(DESTDIR)$(BINDIR) || mkdir -p $(DESTDIR)$(BINDIR)
+	install -p -o root -g root -m 700 $^ $(DESTDIR)$(BINDIR)
 
 clean:
 	rm -f src/privcert src/parse.sh src/parser_definition.sh
