@@ -186,7 +186,7 @@ show_cert() {
   ENDDATE="${ENDDATE#notAfter=}"
   if date --version > /dev/null 2>&1; then
     # GNU date
-    ENDDATE=`date -date="$ENDDATE" '+%Y/%m/%d %T'`
+    ENDDATE=`date --date="$ENDDATE" '+%Y/%m/%d %T'`
   else
     # BSD date
     ENDDATE=`LANG=C date -jf '%b %d %T %Y %Z' "$ENDDATE" '+%Y/%m/%d %T'`
