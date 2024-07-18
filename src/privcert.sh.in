@@ -136,7 +136,7 @@ EOF
 init_ca() {
   mkdir -p ${CA_HOME}/newcerts
   mkdir -p ${CA_HOME}/private
-  chmod 700 ${CA_HOME}/private
+  chmod 0700 ${CA_HOME}/private
   touch $CA_IDX
   echo '01' > $CA_SER
   echo '00' > $CA_CRN
