@@ -26,10 +26,7 @@ CA_CRT=${CA_HOME}/cert.pem
 CA_CRN=${CA_HOME}/crlnumber
 CA_CRL=${CA_HOME}/crl.pem
 
-CA_PWD=${CA_ROOT}/passwd.md5
-
-# xxx
-PW_SALT=PrivCertPasswdSalt
+CA_PWD=${CA_ROOT}/.passwd
 
 #%PARSER_HERE%
 
@@ -174,7 +171,10 @@ init_pw() {
     exit 1
   fi
 
-  echo -n "${PW_SALT}:${PASS}" | $MD5SUM | cut -d' ' -f1 > $CA_PWD
+  local SALT=`$OPENSSL rand -hex 16`
+  echo "$SALT" > $CA_PWD
+  echo -n "${SALT}:${PASS}" | $MD5SUM | cut -d' ' -f1 >> $CA_PWD
+  chmod 0600 $CA_PWD
 }
 
 show_cert() {
@@ -319,9 +319,9 @@ server_loop() {
           continue
         fi
 
-        local HASH_IN=`echo -n "${PW_SALT}:${ARG}" | $MD5SUM | cut -d' ' -f1`
-        local HASH_PW=`cat $CA_PWD`
-        if [ ! "$HASH_IN" = "$HASH_PW" ]; then
+        local PASS=(`xargs < $CA_PWD`)
+        local HASH=`echo -n "${PASS[0]}:${ARG}" | $MD5SUM | cut -d' ' -f1`
+        if [ ! "$HASH" = "${PASS[1]}" ]; then
           sleep $WAIT
           if [ $WAIT -ge 4 ]; then
             echo '205 Attempt failed'
