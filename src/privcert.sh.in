@@ -499,6 +499,11 @@ server_loop() {
         return
         ;;
 
+      passwd)
+        echo '206 Already authenticated'
+        continue
+        ;;
+
       *)
         echo '201 Unknown command'
         ;;
