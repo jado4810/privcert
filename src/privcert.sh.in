@@ -173,16 +173,20 @@ init_ca() {
 
 init_pw() {
   local PASS=''
-  read -sp 'Password for server mode: ' PASS
+  read -rsp 'Password for server mode: ' PASS
   echo
+  PASS="${PASS%}"
+  PASS="${PASS//	/ }"
   if [ -z "$PASS" ]; then
     echo >&2 'Abort'
     exit 1
   fi
 
   local RE_PASS=''
-  read -sp 'Retype password for server mode: ' RE_PASS
+  read -rsp 'Retype password for server mode: ' RE_PASS
   echo
+  RE_PASS="${RE_PASS%}"
+  RE_PASS="${RE_PASS//	/ }"
   if [ -z "$RE_PASS" ]; then
     echo >&2 'Abort'
     exit 1
@@ -332,9 +336,10 @@ server_loop() {
   local MAIL=''
 
   local WAIT=1
-  while read CMD ARG; do
+  while read -r CMD ARG; do
     CMD=`echo "${CMD%}" | tr [A-Z] [a-z]`
     ARG="${ARG%}"
+    ARG="${ARG//	/ }"
     case "$CMD" in
       passwd)
         if [ -z "$ARG" ]; then
@@ -376,9 +381,10 @@ server_loop() {
   done
 
   cd $CL_HOME
-  while read CMD ARG; do
+  while read -r CMD ARG; do
     CMD=`echo "${CMD%}" | tr [A-Z] [a-z]`
     ARG="${ARG%}"
+    ARG="${ARG//	/ }"
     case "$CMD" in
       setcn)
         if [ -z "$ARG" ]; then
