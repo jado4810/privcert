@@ -333,7 +333,8 @@ server_loop() {
 
   local WAIT=1
   while read CMD ARG; do
-    CMD=`echo "$CMD" | tr [A-Z] [a-z]`
+    CMD=`echo "${CMD%}" | tr [A-Z] [a-z]`
+    ARG="${ARG%}"
     case "$CMD" in
       passwd)
         if [ -z "$ARG" ]; then
@@ -376,7 +377,8 @@ server_loop() {
 
   cd $CL_HOME
   while read CMD ARG; do
-    CMD=`echo "$CMD" | tr [A-Z] [a-z]`
+    CMD=`echo "${CMD%}" | tr [A-Z] [a-z]`
+    ARG="${ARG%}"
     case "$CMD" in
       setcn)
         if [ -z "$ARG" ]; then
