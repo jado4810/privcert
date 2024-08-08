@@ -61,14 +61,21 @@ Preparation
 First, init the environment and generate self-signed cert for local CA.
 
 ```console
-$ sudo privcert init
+$ sudo -i privcert init
 ```
+
+> [!NOTE]
+> On most systems, privcert executable installed in `/usr/local/sbin` is not
+> found under `sudo` due to overridden `$PATH` for security reasons.
+> So consider adding `-i` option to bring `$PATH` from root environment.
 
 Input password for server mode twice.
 
-> If omit password or failed to set password, retry `init` to initialize password.
+> [!NOTE]
+> If omit password or failed to set password, retry `init` to initialize
+> password.
 >
-> Once initializing password, try `sudo privcert passwd` to update.
+> Once initialized password, try `sudo privcert passwd` to update.
 
 Set generated cert on ssl configuration of your web server.
 For Apache, like below:
@@ -95,15 +102,15 @@ User certs management
 ### Make user cert
 
 ```console
-$ sudo privcert make «user» [«cn»] [«email»]
+$ sudo -i privcert make u̲s̲e̲r̲ [c̲n̲] [e̲m̲a̲i̲l̲]
 ```
 
-Import a cert file generated at `/etc/privcert/users/«user».pfx` into the environment of the user, and it could be access to the site.
+Import a cert file generated at `/etc/privcert/users/u̲s̲e̲r̲.pfx` into the environment of the user, and it could be access to the site.
 
 ### Show all user certs
 
 ```console
-$ sudo privcert list
+$ sudo -i privcert list
 ```
 
 It shows only certs just under `/etc/privcert/users`, which should only hold currently valid ones.
@@ -111,7 +118,7 @@ It shows only certs just under `/etc/privcert/users`, which should only hold cur
 ### Revoke user cert
 
 ```console
-$ sudo privcert revoke «user»
+$ sudo -i privcert revoke u̲s̲e̲r̲
 ```
 
 Revoked cert is added to certificate revocation list (`crl.pem`), so the client with the cert could no longer access.
