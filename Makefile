@@ -1,20 +1,19 @@
 all: src/privcert
 
+DESTDIR     =
+PREFIX      = /usr/local
+BINDIR      = $(PREFIX)/sbin
+
 CA_ROOT     = /etc/privcert
 OPENSSL     = $(shell which openssl || echo /usr/bin/openssl)
 MD5SUM      = $(shell which md5sum || which md5 || echo /usr/bin/md5sum)
 BASE64      = $(shell which base64 || echo /usr/bin/base64)
 DN_BASE     = /C=JP/ST=Tokyo/O=Your Company
 UPDATE_HOOK = $(shell which apachectl || echo /usr/bin/apachectl) restart
+KEYLEN      = 2048
+EXPIRE      = 3650
 
-KEYLEN = 2048
-EXPIRE = 3650
-
-DESTDIR =
-PREFIX  = /usr/local
-BINDIR  = $(PREFIX)/sbin
-
-TOOLS = ./third-party/getoptions
+TOOLS       = ./third-party/getoptions
 
 src/parser_definition.sh: src/parser_definition.sh.in
 	sed -e 's/%KEYLEN%/$(KEYLEN)/' -e 's/%EXPIRE%/$(EXPIRE)/' $< > $@
