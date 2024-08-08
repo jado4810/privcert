@@ -1,0 +1,25 @@
+# Common configuration
+default: &default
+
+  # Server API
+  server:
+    host: 'localhost'
+    port: 26310
+    password: 'PrivCertAdminSecret'
+
+  # Session expiration in secs
+  session_expire: 3600
+
+  # Secret to encrypt session information in cookie
+  session_secret: 'PrivCertWebSecret'
+
+# Configuration for deployment
+production:
+  <<: *default
+
+# Configuration for development
+development:
+  <<: *default
+
+test:
+  <<: *default

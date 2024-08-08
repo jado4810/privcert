@@ -1,0 +1,21 @@
+en:
+  title:
+    user_cert_admin: 'User Cert Admin'
+    login: 'Login'
+    user_certs_list: 'User Certs List'
+    manage_accounts: 'Manage Accounts'
+    change_password: 'Change Password'
+    logout: 'Logout'
+  login:
+    user: 'User'
+    password: 'Password'
+    login: 'Login'
+    login_failed: 'Login failed.'
+  list:
+    name: 'Name'
+    canonical_name: 'Canonical Name'
+    email_address: 'Email Address'
+    expires: 'Expires'
+    download_url: 'Download URL'
+    revoke_cert: 'Revoke Cert'
+    loading_list_failed: 'Loading list failed.'

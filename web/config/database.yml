@@ -1,0 +1,27 @@
+# Common configuration
+default: &default
+
+  pool: 5
+  timeout: 5000
+  encoding: utf8
+
+  adapter: sqlite3
+
+# Configuration for deployment
+production:
+  <<: *default
+
+  # Database path
+  database: '/etc/privcert/web/auth.db'
+
+# Configuration for development
+development:
+  <<: *default
+
+  database: './db/auth_dev.db'
+  min_messages: notice
+
+test:
+  <<: *default
+
+  database: './db/auth_test.db'

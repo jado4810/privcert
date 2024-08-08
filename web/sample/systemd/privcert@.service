@@ -1,0 +1,8 @@
+[Unit]
+Description = PrivCert user cert manager service
+
+[Service]
+ExecStart = /usr/local/sbin/privcert server
+StandardInput = socket
+StandardOutput = socket
+StandardError = journal

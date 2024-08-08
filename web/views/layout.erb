@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+    <title>PrivCert Admin - <%= @title %></title>
+    <link rel="stylesheet" type="text/css" href="./style/material.css">
+    <link rel="stylesheet" type="text/css" href="./style/layout.css">
+<% case @page %>
+<% when :list %>
+    <!-- link rel="stylesheet" type="text/css" href="./style/editor.css" -->
+    <script type="text/javascript" src="./script/util.js"></script>
+    <script type="text/javascript" src="./script/list.js"></script>
+<% when :user %>
+    <!-- link rel="stylesheet" type="text/css" href="./style/editor.css" -->
+    <script type="text/javascript" src="./script/util.js"></script>
+    <script type="text/javascript" src="./script/user.js"></script>
+<% end %>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="app-logo" href=".">
+        <svg class="icon" viewBox="0 0 32 32" stroke-width="4" stroke-linecap="round">
+          <path d="M2,30V5Q2,2,5,2H24Q30,2,30,8T22,14H2"/>
+          <path d="M26,20H15Q10,20,10,25T15,30H26"/>
+        </svg>
+        PrivCert
+      </a>
+      <h1 class="app-title"><%=
+        _('User Cert Admin', :title)
+      %> - <%= @title %></h1>
+<% unless @page == :login %>
+      <nav class="header-ui">
+        <%= link_icon(:list) %>
+        <%= link_icon(:user) %>
+        <%= link_icon(:passwd) %>
+        <%= link_icon(:logout) %>
+      </nav>
+<% end %>
+    </header>
+<%= yield %>
+  </body>
+</html>

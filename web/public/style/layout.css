@@ -1,0 +1,345 @@
+:root {
+  font: 16px sans-serif;
+}
+
+::-webkit-scrollbar {
+  height: 3px;
+  width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+}
+
+/* Google Material Symbols and Icons - https://fonts.google.com/icons */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'),
+       url(../lib/material-icons.woff2) format('woff2');
+}
+
+body {
+  margin: 0;
+}
+
+.app-header {
+  align-items: center;
+  box-sizing: border-box;
+  column-gap: 16px;
+  display: flex;
+  height: 40px;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 960px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.app-logo {
+  align-items: flex-start;
+  background-color: #eef;
+  border-radius: 2px;
+  color: #97c;
+  column-gap: 4px;
+  cursor: pointer;
+  display: flex;
+  font-family: 'Georgia', serif;
+  font-size: 10px;
+  font-weight: bold;
+  height: 32px;
+  margin-left: 8px;
+  padding: 2px;
+  text-decoration: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.app-logo > .icon {
+  fill: none;
+  height: 32px;
+  stroke: #97c;
+  width: 32px;
+}
+
+.app-title {
+  flex-grow: 1;
+  font-family: sans-serif;
+  font-size: 20px;
+  line-height: 40px;
+  margin: 0;
+  padding: 0;
+}
+
+.header-ui {
+  align-items: center;
+  column-gap: 12px;
+  display: flex;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.header-ui > a {
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.header-ui > .disabled {
+  pointer-events: none;
+}
+
+.header-ui > [data-icon]::before {
+  content: attr(data-icon);
+  flex-shrink: 0;
+  display: block;
+  font-family: 'Material Icons';
+  font-feature-settings: 'liga';
+  font-size: 24px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+}
+
+.app-main {
+  bottom: 0;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 960px;
+  overflow-y: scroll;
+  position: absolute;
+  right: 0;
+  top: 40px;
+}
+
+.login-form {
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  margin: 96px 80px;
+  row-gap: 24px;
+}
+
+.login-form > label {
+  align-self: center;
+  display: block;
+  line-height: 36px;
+}
+
+.input-value > input {
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 2px;
+  box-sizing: border-box;
+  font: 18px sans-serif;
+  height: 36px;
+  outline: none;
+  padding: 4px 8px;
+  width: 100%;
+}
+
+.form-footer {
+  row-gap: 24px;
+  flex-direction: column;
+  display: flex;
+  grid-column: 1 / -1;
+}
+
+.form-ui {
+  column-gap: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  align-items: center;
+  border-radius: 4px;
+  box-sizing: border-box;
+  column-gap: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  font: 16px sans-serif;
+  height: 36px;
+  justify-content: space-evenly;
+  margin: 0;
+  padding: 0 14px;
+  user-select: none;
+}
+
+.form-ui > button {
+  flex-shrink: 0;
+}
+
+button[data-icon] {
+  padding-left: 10px;
+}
+
+.form-ui > button:not([type="button"]) {
+  border: 2px solid transparent;
+  transition: background-color .3s ease,
+              box-shadow       .3s ease;
+}
+
+.form-ui > button[type="button"] {
+  background-color: transparent;
+  border-width: 2px;
+  outline: none;
+  transition: background-color .3s ease,
+              box-shadow       .3s ease,
+              color            .3s ease;
+}
+
+.form-ui > button:not([type="button"]):active {
+  border-style: inset;
+  transition: background-color .3s ease,
+              box-shadow       .3s ease,
+              border-color     0s  ease .25s;
+}
+
+button[data-icon]::before {
+  content: attr(data-icon);
+  flex-shrink: 0;
+  display: block;
+  font-family: 'Material Icons';
+  font-feature-settings: 'liga';
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+}
+
+.form-err {
+  align-items: flex-start;
+  display: flex;
+  justify-content: center;
+}
+
+.form-err::before {
+  display: block;
+  flex-shrink: 0;
+  font-family: 'Material Icons';
+  font-feature-settings: 'liga';
+  font-size: 24px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+}
+
+.form-err:not(:empty)::before {
+  content: 'error';
+}
+
+.form-err > p {
+  line-height: 24px;
+  margin: 0 0 0 4px;
+}
+
+.user-list-header {
+  align-items: center;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  column-gap: 16px;
+  display: flex;
+  font-size: 12px;
+  height: 24px;
+  left: 0;
+  padding: 0 12px;
+  position: sticky;
+  right: 0;
+  top: 0;
+}
+
+.user-list > p {
+  margin: 16px 12px;
+}
+
+.user-list-entry {
+  align-items: center;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  column-gap: 16px;
+  display: flex;
+  height: 36px;
+  padding: 0 12px;
+}
+
+.user-list-header > span {
+  text-align: center;
+}
+
+.user-list-entry > :not(.ui) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-list-header > .name,
+.user-list-entry > .name {
+  flex-shrink: 0;
+  width: 128px;
+}
+
+.user-list-header > .cname,
+.user-list-entry > .cname {
+  flex-grow: 1;
+}
+
+.user-list-header > .mail {
+  flex-shrink: 0;
+  width: 256px;
+}
+
+.user-list-entry > .mail {
+  flex-shrink: 0;
+  font-size: 12px;
+  width: 256px;
+}
+
+.user-list-header > .expire {
+  flex-shrink: 0;
+  width: 144px;
+}
+
+.user-list-entry > .expire {
+  flex-shrink: 0;
+  font-size: 12px;
+  text-align: center;
+  width: 144px;
+}
+
+.user-list-header > .ui {
+  flex-shrink: 0;
+  width: 44px;
+}
+
+.user-list-entry > .ui {
+  align-items: center;
+  column-gap: 8px;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.user-list-entry > .ui > a {
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.user-list-entry > .ui > [data-icon]::before {
+  content: attr(data-icon);
+  flex-shrink: 0;
+  display: block;
+  font-family: 'Material Icons';
+  font-feature-settings: 'liga';
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+}

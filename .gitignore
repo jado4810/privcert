@@ -1,3 +1,11 @@
 src/*.sh
 src/privcert
+web/Gemfile.lock
+web/db/*.db
+web/docker-compose.yml
+web/log
+web/vendor
+**/*.bak
+**/*.old
+**/*.N
 .DS_Store

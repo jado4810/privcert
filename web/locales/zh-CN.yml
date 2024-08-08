@@ -1,0 +1,21 @@
+zh-CN:
+  title:
+    user_cert_admin: '客户端证书管理'
+    login: '登录'
+    user_certs_list: '证书列表'
+    manage_accounts: '管理账号'
+    change_password: '更改密码'
+    logout: '登出'
+  login:
+    user: '用户名'
+    password: '密码'
+    login: '登录'
+    login_failed: '登录失败。'
+  list:
+    name: '名称'
+    canonical_name: '全称'
+    email_address: '电邮地址'
+    expires: '生效日期'
+    download_url: '下载网址'
+    revoke_cert: '禁用证书'
+    loading_list_failed: '检索列表失败。'

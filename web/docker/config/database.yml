@@ -1,0 +1,8 @@
+production:
+  adapter: sqlite3
+  database: "<%=
+    ENV['AUTH_DB']&.empty? == false ? ENV['AUTH_DB'] : '/opt/app/auth/auth.db'
+  %>"
+  pool: 5
+  timeout: 5000
+  encoding: utf8

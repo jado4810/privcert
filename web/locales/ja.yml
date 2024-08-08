@@ -1,0 +1,21 @@
+ja:
+  title:
+    user_cert_admin: 'ユーザー証明書管理'
+    login: 'ログイン'
+    user_certs_list: '証明書一覧'
+    manage_accounts: 'アカウント管理'
+    change_password: 'パスワード変更'
+    logout: 'ログアウト'
+  login:
+    user: 'ログイン名'
+    password: 'パスワード'
+    login: 'ログイン'
+    login_failed: 'ログインに失敗しました。'
+  list:
+    name: '名前'
+    canonical_name: 'フルネーム'
+    email_address: 'メールアドレス'
+    expires: '有効期限'
+    download_url: 'ダウンロードURL'
+    revoke_cert: '証明書無効化'
+    loading_list_failed: '一覧の取得に失敗しました。'

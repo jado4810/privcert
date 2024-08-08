@@ -1,0 +1,17 @@
+production:
+  url_path: "<%= ENV['URL_PATH'] %>"
+  server:
+    host: "<%=
+      ENV['SERVER_HOST']&.empty? == false ? ENV['SERVER_HOST'] : 'localhost'
+    %>"
+    port: <%=
+      ENV['SERVER_PORT']&.empty? == false ? ENV['SERVER_PORT'] : '26310'
+    %>
+    passwd: "<%= ENV['SERVER_PASSWD'] %>"
+  log_prefix: "<%=
+    ENV['LOG_PREFIX']&.empty? == false ? ENV['LOG_PREFIX'] : 'privcert'
+  %>"
+  session_expire: <%=
+    ENV['SESSION_EXPIRE']&.empty? == false ? ENV['SESSION_EXPIRE'] : '3600'
+  %>
+  session_secret: "<%= ENV['SESSION_SECRET'] %>"

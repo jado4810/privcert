@@ -1,0 +1,19 @@
+    <main class="app-main">
+      <form class="login-form" action="./login" method="post">
+        <input type="hidden" <%= csrf_param %>>
+        <label><%= _('User', :login) %></label>
+        <div class="input-value">
+          <input class="login" type="text" name="user" autofocus>
+        </div>
+        <label><%= _('Password', :login) %></label>
+        <div class="input-value">
+          <input class="login" type="password" name="password" autocomplete="current-password">
+        </div>
+        <footer class="form-footer">
+          <div class="form-ui">
+            <button data-icon="login"><%= _('Login', :login) %></button>
+          </div>
+          <div class="form-err"><%= "<p>#{@message}</p>" if @message %></div>
+        </footer>
+      </form>
+    </main>

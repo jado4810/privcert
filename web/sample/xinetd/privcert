@@ -1,0 +1,11 @@
+service privcert
+{
+    protocol    = tcp
+    port        = 26310
+    socket_type = stream
+    wait        = no
+    user        = root
+    server      = /usr/local/sbin/privcert
+    server_args = server
+    disable     = no
+}

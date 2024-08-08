@@ -55,6 +55,8 @@ Variables available on `make install`:
 
 Also `DESTDIR`, useful when making packages, available.
 
+Register `privcert` as a service to use from web interface, see [web/README.md](./web/README.md) for more details.
+
 Preparation
 -----------
 

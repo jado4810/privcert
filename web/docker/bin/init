@@ -1,0 +1,64 @@
+#!/usr/local/bin/ruby
+
+exit unless $0 == __FILE__
+
+uid = ENV['APP_UID']
+gid = ENV['APP_GID']
+unless uid && gid
+  raise 'APP_UID or APP_GID not specified.'
+end
+
+# Set app:app to be UID and GID of when Passenger is executed
+begin
+  system(%Q{
+    if ! id app > /dev/null 2>&1; then
+      groupadd -og #{gid} -r app
+      useradd -ou #{uid} -g app -Md /opt/app -r app
+    fi
+  }, exception: true)
+rescue RuntimeError
+  raise "Failed to register: app:app - uid=#{uid}, gid=#{gid}"
+end
+
+# Adjust permission of the directory where Passenger writes
+dirs = ['auth', 'log', 'tmp', 'db'].map{|dir| '/opt/app/' << dir}.join(' ')
+system("find #{dirs} -xdev ! -type l -exec chown app:app {} \\;")
+
+passenger_pid = fork do
+  # Change execution permission of Passenger
+  Process::GID.change_privilege(gid.to_i)
+  Process::UID.change_privilege(uid.to_i)
+
+  # Start Passenger
+  env_opts = [
+    ['--port=',                   'PORT',       '3000',     ''               ],
+    ['--max-pool-size=',          'MAX_POOL',   '6',        ''               ],
+    ['--max-request-queue-size=', 'MAX_QUEUE',  '100',      ''               ],
+    ['--log-file="/opt/app/log/', 'LOG_PREFIX', 'privcert', '-passenger.log"']
+  ].map{|prefix, key, default, suffix|
+    prefix << (ENV[key]&.empty? == false ? ENV[key] : default) << suffix
+  }.join(' ')
+  sec_opts = '--disable-security-update-check --disable-anonymous-telemetry'
+  exec("passenger start #{env_opts} #{sec_opts}")
+  raise 'exec failed.'
+end
+
+# Reclaim resources for terminated processes
+Signal.trap(:CHLD) do
+  begin
+    while Process.wait
+    end
+  rescue Errno::ECHILD
+  end
+end
+
+# Termination
+Signal.trap(:TERM) do
+  Process.kill :TERM, passenger_pid
+end
+
+# Wait termination of Passenger
+begin
+  Process.waitpid(passenger_pid)
+rescue Errno::ECHILD
+end

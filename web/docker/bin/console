@@ -1,0 +1,18 @@
+#!/usr/local/bin/ruby
+
+require 'rubygems'
+require 'bundler'
+Bundler.require
+
+def appdir(path = '')
+  (Pathname(ENV['BUNDLE_GEMFILE'] || '/opt/app/Gemfile').dirname + path).to_s
+end
+
+class Sinatra::Base
+  configure do
+    set :root, appdir
+  end
+end
+
+require appdir('lib/app')
+Pry.start

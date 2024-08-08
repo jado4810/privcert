@@ -1,0 +1,21 @@
+zh-TW:
+  title:
+    user_cert_admin: '用戶端憑證管理'
+    login: '登入'
+    user_certs_list: '憑證列表'
+    manage_accounts: '管理帳號'
+    change_password: '更改密碼'
+    logout: '登出'
+  login:
+    user: '用戶名'
+    password: '密碼'
+    login: '登入'
+    login_failed: '登入失敗。'
+  list:
+    name: '名稱'
+    canonical_name: '全稱'
+    email_address: '電郵地址'
+    expires: '生效日期'
+    download_url: '下載網址'
+    revoke_cert: '停用憑證'
+    loading_list_failed: '檢索列表失敗。'

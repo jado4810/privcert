@@ -1,0 +1,117 @@
+:root {
+  background-color: #fff;
+  color: #666;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+}
+
+.app-header {
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(0, 0, 0, .2);
+}
+
+.app-logo:focus-visible,
+.header-ui > [data-icon]:focus-visible,
+.user-list-entry > .ui > [data-icon]:focus-visible {
+  outline: #ccc solid 2px;
+}
+
+.app-title {
+  color: #468;
+}
+
+.header-ui > [data-icon]::before,
+.user-list-entry > .ui > [data-icon]::before {
+  color: #888;
+}
+
+.header-ui > .disabled[data-icon]::before {
+  color: #ccc;
+}
+
+.header-ui > :not(.disabled)[data-icon]:hover::before,
+.user-list-entry > .ui > [data-icon]:hover::before {
+  color: #444;
+}
+
+.header-ui > :not(.disabled)[data-icon]:active::before,
+.user-list-entry > .ui > [data-icon]:active::before {
+  color: #008;
+}
+
+.app-main {
+  box-shadow: 0 0 8px rgba(0, 0, 0, .2);
+}
+
+.input-value > input {
+  border-color: #ccc;
+}
+
+.input-value > input:focus-visible {
+  border-color: #48e;
+}
+
+.form-ui > button:not([type="button"]) {
+  background-color: #48e;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2),
+              0 2px 2px      rgba(0, 0, 0, .14),
+              0 1px 5px      rgba(0, 0, 0, .12);
+  color: #fff;
+}
+
+.form-ui > button[type="button"] {
+  border-color: #ccc;
+  color: #444;
+}
+
+.form-ui > button:not([type="button"]):hover {
+  background-color: #59f;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2),
+              0 4px 5px      rgba(0, 0, 0, .14),
+              0 1px 10px     rgba(0, 0, 0, .12);
+}
+
+.form-ui > button[type="button"]:hover {
+  background-color: rgba(0, 0, 0, .1);
+  color: #000;
+}
+
+.form-ui > button:not([type="button"]):active {
+  background-color: #37c;
+  border-color: #48e;
+}
+
+.form-ui > button[type="button"]:not(:disabled):active {
+  background-color: rgba(0, 0, 0, .15);
+}
+
+.form-ui > button:not([type="button"]):focus-visible {
+  outline: #34c solid 2px;
+}
+
+.form-ui > button:[type="button"]:focus-visible {
+  border-color: #48e;
+}
+
+button:not([type="button"])[data-icon]::before {
+  color: #eee;
+}
+
+button[type="button"][data-icon]::before {
+  color: #666;
+}
+
+.form-err {
+  color: #d00;
+}
+
+.user-list-header {
+  background-color: #fff;
+  border-bottom-color: #eee;
+}
+
+.user-list-entry {
+  border-bottom-color: #eee;
+}

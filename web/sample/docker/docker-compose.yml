@@ -1,0 +1,79 @@
+services:
+
+  app:
+    image: privcert
+    restart: always
+    network_mode: host
+    logging:
+      driver: none
+
+    volumes:
+
+      # Auth database path
+      # [FMT] «PATH»:/opt/app/auth
+      # - Specify «PATH» where auth database file placed
+      # - Must be writable with APP_UID:APP_GID privilege
+      # - /opt/app/auth is container internal path and is fixed
+      - /etc/privcert/web:/opt/app/auth
+
+      # Log file path
+      # [FMT] «PATH»:/opt/app/log
+      # - Specify «PATH» where log files placed
+      # - Must be writable with APP_UID:APP_GID privilege
+      # - /opt/app/log is container internal path and is fixed
+      - /var/log/privcert:/opt/app/log
+
+    environment:
+
+      # External port
+      # - Specify listening port by app server
+      # - Make reverse proxy passing to this port
+      PORT: 31080
+
+      # Local path of access URL
+      # - Specify local path part of URL to access this app
+      URL_PATH: /privcert/
+
+      # Exec UID and GID
+      # - Specify privilege to execute app server
+      # - Auth database and log files are written with these IDs
+      # - Recommended to use dedicated account for this app
+      APP_UID: 1000
+      APP_GID: 1000
+
+      # Log file name prefix
+      # - Specify prefix of log file name
+      # - Write to log files under "log file path":
+      #   - App web server - «LOG_PREFIX»-passenger.log
+      #   - App server     - «LOG_PREFIX»-app.log
+      # - Change prefix or path to deploy multi instance
+      LOG_PREFIX: privcert
+
+      # Max size of server connection pool
+      MAX_POOL: 6
+
+      # Max size of server request queue
+      MAX_QUEUE: 100
+
+      # Auth database file
+      # - /opt/app/auth is fixed (must be same as "auth database path")
+      # - Must be writable with APP_UID:APP_GID privilege
+      AUTH_DB: /opt/app/auth/auth.db
+
+      # Session lifetime
+      # - Specify timeout in seconds for forced logout
+      SESSION_EXPIRE: 3600
+
+      # Session secret
+      # - Encryption key to store sessions into cookie
+      SESSION_SECRET: c0c885e7c1d358b40ed1e220c6e4d95c84e5dfb6821fb5d27ff453269261d299
+
+      # Server info
+      # - Specify server mode entry of privcert
+      SERVER_HOST: localhost
+      SERVER_PORT: 26310
+      SERVER_PASSWD: PrivCertAdminSecret
+
+      # Container timezone
+      # - Specify timezone for timestamps on database or logs
+      TZ: GMT-9

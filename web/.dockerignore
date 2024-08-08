@@ -1,0 +1,13 @@
+.bundle
+Dockerfile
+Gemfile.lock
+config
+db/*.db
+docker-compose.log
+sample
+tmp
+vendor
+**/*.bak
+**/*.old
+**/*.N
+.DS_Store
