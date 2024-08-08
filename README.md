@@ -60,16 +60,16 @@ Preparation
 
 First, init the environment and generate self-signed cert for local CA.
 
-```console
-$ sudo -i privcert init
-```
-
 > [!NOTE]
 > On most systems, privcert executable installed in `/usr/local/sbin` is not
 > found under `sudo` due to overridden `$PATH` for security reasons.
 > So consider adding `-i` option to bring `$PATH` from root environment.
 
-Input password for server mode twice.
+```console
+$ sudo -i privcert init
+```
+
+Then, input password for server mode twice.
 
 > [!NOTE]
 > If omit password or failed to set password, retry `init` to initialize
