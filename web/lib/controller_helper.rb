@@ -12,14 +12,21 @@ module ControllerHelper
       locales = I18n.config.available_locales.map(&:to_s).map{|lang|
         [lang.to_sym, lang.sub(/-.*/, '').to_sym]
       }.flatten.uniq
+      default_locale = I18n.config.available_locales.first
 
-      locale = langs&.find{|lang| locales.include?(lang)} || :ja
-      begin
+      locale = langs&.find{|lang| locales.include?(lang)} || default_locale
+
+      if I18n.config.available_locales.include?(locale)
         I18n.locale = locale
-      rescue
-        I18n.locale = I18n.config.available_locales.find{|lang|
+      else
+        fallback_locale = I18n.config.available_locales.find{|lang|
           locale == lang.to_s.sub(/-.*/, '').to_sym
         }
+        if I18n.config.available_locales.include?(fallback_locale)
+          I18n.locale = fallback_locale
+        else
+          I18n.locale = default_locale
+        end
       end
     end
   end
