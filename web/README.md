@@ -187,8 +187,7 @@ Will displayed a piece to be added to apache configuration, copy them to
 * Line 1, 3 and 4 - just copy the content
 * Line 5-8 - add `PassengerEnabled` line and below:
 
-```console
-# vi /etc/httpd/conf.d/passenger.conf
+```apache
 LoadModule passenger_module /usr/local/rbenv/…/buildout/apache2/mod_passenger.so
 <IfModule mod_passenger.c>
   PassengerRoot /usr/local/rbenv/…/gems/3.2.0/gems/passenger-6.0.23
@@ -210,8 +209,7 @@ Then place whole contents under this directory into an appropriate path:
 Edit `.bundle/config` and change `production` to `development` in
 `BUNDLE_WITHOUT`:
 
-```console
-# vi .bundle/config
+```yaml
 BUNDLE_WITHOUT: "development:test"
 ```
 
