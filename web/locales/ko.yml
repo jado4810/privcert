@@ -1,0 +1,21 @@
+ko:
+  title:
+    user_cert_admin: '유저 인증서 관리'
+    login: '로그인'
+    user_certs_list: '인증서 목록'
+    manage_accounts: '계정 관리'
+    change_password: '비밀번호 변경'
+    logout: '로그아웃'
+  login:
+    user: '계정 이름'
+    password: '비밀번호'
+    login: '로그인'
+    login_failed: '로그인에 실패했습니다.'
+  list:
+    name: '이름'
+    canonical_name: '풀네임'
+    email_address: '메일 주소'
+    expires: '만료일'
+    download_url: '다운로드용 URL'
+    revoke_cert: '인증서의 비활성화'
+    loading_list_failed: '목록 가져오기에 실패했습니다.'
