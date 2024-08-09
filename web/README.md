@@ -4,10 +4,9 @@ PrivCert web interface
 Requirement
 -----------
 
-### Run with Docker
+### Run with Docker (Recommended)
 
-* Docker
-* Docker compose plugin
+* Docker (CE 19.03 or later) with compose plugin
 * Web server (such as apache) as reverse proxy
 
 ### Run standalone
@@ -21,12 +20,12 @@ Register PrivCert as a service
 ### For systemd compatible system
 
 A socket service file (`privcert.socket`) and a service template file
-(`privcert@.service`) are available under `sample/systemd/`.
+(`privcert@.service`) are available under `sample/systemd`.
 
 To change listening port from default of 26310/TCP, edit `ListenStream`
 definition in `privcert.socket` file:
 
-```ini:privcert.socket
+```ini
 [Socket]
 ListenStream = 127.0.0.1:26310
 ```
@@ -37,7 +36,7 @@ default of 127.0.0.1.
 If `PREFIX` or `BINDIR` changed while installing privcert, edit `ExecStart`
 definition in `privcert@.service` file:
 
-```ini:privcert@.service
+```ini
 [Service]
 ExecStart = /usr/local/sbin/privcert server
 ```
@@ -56,12 +55,12 @@ $ sudo systemctl start privcert.socket
 Configure inetd to run `/usr/local/sbin/privcert server`.
 
 For the systems with xinetd and `/etc/xinetd.d`, a service config file
-(`privcert`) under `sample/xinetd/` is available; copy it and restart xinetd.
+(`privcert`) under `sample/xinetd` is available; copy it and restart xinetd.
 
 Recommend to restrict source address to 127.0.0.1 with tcpwrapper or firewalld;
-just like below for tcpwrapper:
+for tcpwrapper, just add below to `/etc/hosts.allow`:
 
-```hosts:hosts.allow
+```hosts
 privcert:127.0.0.1 :allow
 ```
 
@@ -78,16 +77,13 @@ $ docker build -t privcert .
 $ docker save privcert | ssh webapp-server docker load
 ```
 
-Or just load the privided container image:
+Or just load the provided container image:
 
 ```console
 $ xzcat privcert-latest.tar.xz | docker load
 ```
 
 Edit `docker-compose.yml` under `sample/docker`.
-
-```yaml:docker-compose.yml
-```
 
 Mostly editing points are below:
 
@@ -108,7 +104,7 @@ uid=501(privcert) gid=501(privcert) groups=501(privcert)
 Run container on the directory where `docker-compose.yml` exists:
 
 ```console
-$ cd path/to/docker-compose
+$ cd path/to/dockerComposeYml
 $ docker compose up -d
 ```
 
@@ -125,7 +121,7 @@ $ sudo chmod 600 /etc/privcert/web/auth.db
 
 Put reverse proxy settings into `ssl.conf` (for apache):
 
-```apache:ssl.conf
+```apache
 SSLProxyEngine on
 RequestHeader set X-Forwarded-Proto 'https'
 
@@ -143,4 +139,120 @@ $ sudo apachectl restart
 
 ### Run standalone
 
-to be written...
+First, install Ruby environment using rbenv or from the official package
+repository of the target OS.
+
+For example, using rbenv with recent RHEL or compatible distros:
+
+```console
+$ sudo su -
+# dnf install -y openssl-devel readline-devel zlib-devel
+# dnf install -y sqlite-devel
+# dnf install -y curl-devel httpd-devel apr-devel apr-util-devel
+# cd /usr/local
+# git clone git://github.com/sstephenson/rbenv.git rbenv
+# git clone git://github.com/sstephenson/ruby-build.git rbenv/plugins/ruby-build
+# vi /etc/profile.d/rbenv.sh
+export RBENV_ROOT=/usr/local/rbenv
+export PATH=$RBENV_ROOT/bin:$PATH
+eval "$(rbenv init --no-rehash -)"
+# source /etc/profile.d/rbenv.sh
+# ebenv install --list
+# rbenv insatll 3.2.3
+# rbenv global 3.2.3
+# gem install bundler --no-document
+# gem install passenger --no-document
+```
+
+Or using RHEL or compatible appstream packages:
+
+```console
+$ sudo su -
+# dnf module reset ruby
+# dnf module enable ruby:3.2
+# dnf module -y install ruby:3.2
+```
+
+Next, install the passenger module to apache:
+
+```console
+# passenger-install-apache2-module
+```
+
+Just hit <kbd>Enter</kbd>s to any questions.
+
+Will displayed a piece to be added to apache configuration, copy them to
+`/etc/httpd/conf.d/passenger.conf` and edit below:
+
+* Line 1, 3 and 4 - just copy the content
+* Line 5-8 - add `PassengerEnabled` line and below:
+
+```console
+# vi /etc/httpd/conf.d/passenger.conf
+LoadModule passenger_module /usr/local/rbenv/…/buildout/apache2/mod_passenger.so
+<IfModule mod_passenger.c>
+  PassengerRoot /usr/local/rbenv/…/gems/3.2.0/gems/passenger-6.0.23
+  PassengerDefaultRuby /usr/local/rbenv/versions/3.2.2/bin/ruby
+  PassengerEnabled off
+  PassengerUserSwitching off
+  PassengerDefaultUser apache
+  PassengerDisableAnonymousTelemetry on
+</IfModule>
+```
+
+Then place whole contents under this directory into an appropriate path:
+
+```console
+# cp -r web /usr/local/privcert-web
+# cd /usr/local/privcert-web
+```
+
+Edit `.bundle/config` and change `production` to `development` in
+`BUNDLE_WITHOUT`:
+
+```console
+# vi .bundle/config
+BUNDLE_WITHOUT: "development:test"
+```
+
+Install bundled packages with `bundle install`:
+
+```console
+# bundle install
+```
+
+Change configuration in `config/settings.yml` and `config/database.yml`.
+
+Initialize an auth database on the first run:
+
+```console
+# bundle exec rake db:create APP_ENV=production
+# bundle exec rake db:migrate APP_ENV=production
+# bundle exec rake db:seed APP_ENV=production
+# chown apache:apache /etc/privcert/web/auth.db
+# chmod 700 /etc/privcert/web
+# chmod 600 /etc/privcert/web/auth.db
+```
+
+Put below into `ssl.conf`:
+
+```apache
+Alias /privcert /usr/local/privcert-web/public
+<Location /privcert>
+  PassengerEnabled on
+  PassengerBaseURI /privcert
+  PassengerAppRoot /usr/local/privcert-web
+</Location>
+
+<Directory /usr/local/privcert-web/public>
+  AllowOverride all
+  Options -MultiViews
+  Require all granted
+</Directory>
+```
+
+And activate it:
+
+```console
+# apachectl restart
+```

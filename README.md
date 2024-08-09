@@ -10,7 +10,8 @@ PrivCert - Private CA for management of user certs
 What is this?
 -------------
 
-Simple script to manage user certs to be used for client certification on the restricted websites.
+Simple script to manage user certs to be used for client certification on the
+restricted websites.
 
 It sets up self-signed CA and generates client certs per user.
 
@@ -54,11 +55,12 @@ Variables available on `make`:
 Variables available on `make install`:
 
 * `PREFIX` - install prefix, default is `/usr/local`.
-* `BINDIR` - where executables are installed at, default value is `$(PREFIX)/sbin`.
+* `BINDIR` - where executables are installed at, default is `$(PREFIX)/sbin`.
 
 Also `DESTDIR`, useful when making packages, available.
 
-Register `privcert` as a service to use from web interface, see [web/README.md](./web/README.md) for more details.
+Register `privcert` as a service to use from web interface, see
+[web/README.md](./web/README.md) for more details.
 
 Preparation
 -----------
@@ -82,10 +84,10 @@ Then, input password for server mode twice.
 >
 > Once initialized password, try `sudo privcert passwd` to update.
 
-Set generated cert on ssl configuration of your web server.
-For Apache, like below:
+Set generated cert on the ssl configuration of your web server.
+For Apache, append below to the `VirtualHost` directive in `ssl.conf`:
 
-```apache:ssl.conf
+```apache
 SSLCACertificateFile /etc/privcert/ca/cert.pem
 SSLVerifyClient require
 SSLVerifyDepth 10
@@ -93,13 +95,18 @@ SSLCARevocationCheck leaf
 SSLCARevocationFile /etc/privcert/ca/crl.pem
 ```
 
+> [!NOTE]
+> In addition, might already have specified `SSLCertificateFile` and
+> `SSLCertificateKeyFile` to enable SSL with an appropriate server cert.
+
 Update apache configuration to make those valid:
 
 ```console
 $ sudo apachectl restart
 ```
 
-Now that site is not accessible until being installed cert signed by this ca.
+Now the site is not accessible until installing the client cert signed by this
+ca.
 
 User certs management
 ---------------------
@@ -110,7 +117,8 @@ User certs management
 $ sudo -i privcert make u̲s̲e̲r̲ [c̲n̲] [e̲m̲a̲i̲l̲]
 ```
 
-Import a cert file generated at `/etc/privcert/users/u̲s̲e̲r̲.pfx` into the environment of the user, and it could be access to the site.
+To make the site accessible, import the cert file generated at
+`/etc/privcert/users/u̲s̲e̲r̲.pfx` into the environment of the user.
 
 ### Show all user certs
 
@@ -118,7 +126,8 @@ Import a cert file generated at `/etc/privcert/users/u̲s̲e̲r̲.pfx` into the 
 $ sudo -i privcert list
 ```
 
-It shows only certs just under `/etc/privcert/users`, which should only hold currently valid ones.
+It shows only certs just under `/etc/privcert/users`, which should hold only
+valid ones.
 
 ### Revoke user cert
 
@@ -126,7 +135,8 @@ It shows only certs just under `/etc/privcert/users`, which should only hold cur
 $ sudo -i privcert revoke u̲s̲e̲r̲
 ```
 
-Revoked cert is added to certificate revocation list (`crl.pem`), so the client with the cert could no longer access.
+Revoked cert is added to certificate revocation list (`crl.pem`), so the client
+with the cert could no longer access.
 And the cert is moved to `/etc/privcert/trash`.
 
 ToDo
@@ -141,4 +151,6 @@ Copyright and License
 
 Copyright (c)2024 Shun-ichi TAHARA &lt;jado@flowernet.jp&gt;
 
-Provided under MIT license, with the exception of third-party/getoptions directory, which is appropriated from [ko1nksm/getoptions](https://github.com/ko1nksm/getoptions) of CC0 license.
+Provided under MIT license, with the exception of third-party/getoptions
+directory, which is appropriated from
+[ko1nksm/getoptions](https://github.com/ko1nksm/getoptions) of CC0 license.
