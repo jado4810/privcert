@@ -17,5 +17,5 @@ ko:
     email_address: '메일 주소'
     expires: '만료일'
     download_url: '다운로드용 URL'
-    revoke_cert: '인증서의 비활성화'
+    revoke_cert: '인증서 비활성화'
     loading_list_failed: '목록 가져오기에 실패했습니다.'
