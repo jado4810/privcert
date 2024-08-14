@@ -364,7 +364,7 @@ server_loop() {
         break
         ;;
 
-      setcn|setmail|make|list|revoke)
+      setcn|setmail|make|get|list|revoke)
         echo '203 Need authentication first'
         continue
         ;;
