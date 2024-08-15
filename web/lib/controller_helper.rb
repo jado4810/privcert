@@ -117,10 +117,61 @@ var _I18N_msgs = {
       }
     EOS
   end
+
+  def auth(s, passwd)
+    s.print "PASSWD #{passwd}\r\n"
+    ServerError.check(s.gets.response, false)
+  end
+
+  def get_data(s)
+    data = []
+    while true
+      line = s.gets.response
+      case line
+      when nil
+        raise UnexpectedEofError
+      when 'EOF'
+        return data
+      else
+        data << line
+      end
+    end
+  end
+
+  def get_list(s)
+    s.print "LIST\r\n"
+    if ServerError.check(s.gets.response)
+      return get_data(s).map{|elem|
+        cols = elem.split(/\t/)
+        {
+          name: cols[0].to_s_or_empty,
+          cname: cols[2].to_s_or_empty,
+          mail: cols[3].to_s_or_empty,
+          expire: cols[1].to_s_or_empty,
+          key: cols[4].to_s_or_empty
+        }
+      }
+    else
+      return []
+    end
+  end
+
+  def close(s)
+    s.print "BYE\r\n"
+    ServerError.check(s.gets.response, false)
+  end
 end
 
 class NilClass
   def to_s_or_nil
+    return nil
+  end
+
+  def to_s_or_empty
+    return ''
+  end
+
+  def response
     return nil
   end
 end
@@ -133,5 +184,13 @@ class String
   def to_s_or_nil
     s = self.fullstrip
     return s.empty? ? nil : s
+  end
+
+  def to_s_or_empty
+    return self.fullstrip
+  end
+
+  def response
+    return self.sub(/\r?\n$/, '')
   end
 end
