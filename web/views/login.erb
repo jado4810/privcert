@@ -13,7 +13,11 @@
           <div class="form-ui">
             <button data-icon="login"><%= _('Login', :login) %></button>
           </div>
-          <div class="form-err"><%= "<p>#{@message}</p>" if @message %></div>
+          <div class="error-status">
+<% if @message %>
+            <p><%= @message %></p>
+<% end %>
+          </div>
         </footer>
       </form>
     </main>

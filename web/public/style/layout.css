@@ -214,13 +214,13 @@ button[data-icon]::before {
   text-rendering: optimizelegibility;
 }
 
-.form-err {
+.error-status {
   align-items: flex-start;
+  column-gap: 4px;
   display: flex;
-  justify-content: center;
 }
 
-.form-err::before {
+.error-status::before {
   display: block;
   flex-shrink: 0;
   font-family: 'Material Icons';
@@ -231,13 +231,13 @@ button[data-icon]::before {
   text-rendering: optimizelegibility;
 }
 
-.form-err:not(:empty)::before {
+.error-status:has(> p)::before {
   content: 'error';
 }
 
-.form-err > p {
+.error-status > p {
   line-height: 24px;
-  margin: 0 0 0 4px;
+  margin: 0;
 }
 
 .user-list-header {
