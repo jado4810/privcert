@@ -3,18 +3,21 @@ module ControllerHelper
     obj.before do
       request.script_name = App::URL_PATH unless App::URL_PATH.nil?
 
-      langs = request.env['HTTP_ACCEPT_LANGUAGE']&.split(',')&.map{|lang|
-        lang.sub(/;.*$/, '')
-      }&.map{|lang|
-        [lang.to_sym, lang.sub(/-.*/, '').to_sym]
-      }&.flatten&.uniq
-
-      locales = I18n.config.available_locales.map(&:to_s).map{|lang|
-        [lang.to_sym, lang.sub(/-.*/, '').to_sym]
-      }.flatten.uniq
       default_locale = I18n.config.available_locales.first
 
-      locale = langs&.find{|lang| locales.include?(lang)} || default_locale
+      if request.env['HTTP_ACCEPT_LANGUAGE'].to_s_or_nil.nil?
+        locale = default_locale
+      else
+        locales = I18n.config.available_locales.map(&:to_s).map{|lang|
+          [lang.to_sym, lang.sub(/-.*/, '').to_sym]
+        }.flatten.uniq
+
+        locale = request.env['HTTP_ACCEPT_LANGUAGE'].split(',').map{|lang|
+          lang.to_s_or_nil&.sub(/;.*$/, '')
+        }.compact.map{|lang|
+          [lang.to_sym, lang.sub(/-.*/, '').to_sym]
+        }.flatten.uniq.find{|lang| locales.include?(lang)}
+      end
 
       if I18n.config.available_locales.include?(locale)
         I18n.locale = locale
@@ -22,6 +25,7 @@ module ControllerHelper
         fallback_locale = I18n.config.available_locales.find{|lang|
           locale == lang.to_s.sub(/-.*/, '').to_sym
         }
+
         if I18n.config.available_locales.include?(fallback_locale)
           I18n.locale = fallback_locale
         else
@@ -112,5 +116,22 @@ var _I18N_msgs = {
         return _I18N_msgs[key] || key;
       }
     EOS
+  end
+end
+
+class NilClass
+  def to_s_or_nil
+    return nil
+  end
+end
+
+class String
+  def fullstrip
+    return self.sub(/^[\s　]+/, '').sub(/[\s　]+$/, '')
+  end
+
+  def to_s_or_nil
+    s = self.fullstrip
+    return s.empty? ? nil : s
   end
 end
