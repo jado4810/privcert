@@ -1,5 +1,5 @@
 :root {
-  font: 16px sans-serif;
+  font: 14px sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -137,7 +137,7 @@ body {
   border-style: solid;
   border-width: 2px;
   box-sizing: border-box;
-  font: 18px sans-serif;
+  font: 14px sans-serif;
   height: 36px;
   outline: none;
   padding: 4px 8px;
@@ -164,7 +164,7 @@ button {
   column-gap: 8px;
   cursor: pointer;
   display: inline-flex;
-  font: 16px sans-serif;
+  font: 14px sans-serif;
   height: 36px;
   justify-content: space-evenly;
   margin: 0;
@@ -225,7 +225,7 @@ button[data-icon]::before {
   flex-shrink: 0;
   font-family: 'Material Icons';
   font-feature-settings: 'liga';
-  font-size: 24px;
+  font-size: 18px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizelegibility;
@@ -290,14 +290,9 @@ button[data-icon]::before {
   flex-grow: 1;
 }
 
-.user-list-header > .mail {
-  flex-shrink: 0;
-  width: 256px;
-}
-
+.user-list-header > .mail,
 .user-list-entry > .mail {
   flex-shrink: 0;
-  font-size: 12px;
   width: 256px;
 }
 
