@@ -215,7 +215,7 @@ button[data-icon]::before {
 }
 
 .error-status {
-  align-items: flex-start;
+  align-items: center;
   column-gap: 4px;
   display: flex;
 }
@@ -225,7 +225,7 @@ button[data-icon]::before {
   flex-shrink: 0;
   font-family: 'Material Icons';
   font-feature-settings: 'liga';
-  font-size: 18px;
+  font-size: 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizelegibility;
@@ -282,7 +282,7 @@ button[data-icon]::before {
 .user-list-header > .name,
 .user-list-entry > .name {
   flex-shrink: 0;
-  width: 128px;
+  width: 144px;
 }
 
 .user-list-header > .cname,
