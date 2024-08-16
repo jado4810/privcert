@@ -318,12 +318,17 @@ revoke_cert() {
   $OPENSSL ca -config $CA_CONF -gencrl -out $CA_CRL \
            -days $EXPIRE -passin pass:PrivCertKeySecret 2> /dev/null
 
-  $OPENSSL verify -crl_check -CAfile $CA_CRT -CRLfile $CA_CRL "$CRT" > /dev/null
+  $OPENSSL verify -crl_check \
+           -CAfile $CA_CRT -CRLfile $CA_CRL "$CRT" 2> /dev/null
   if [ $? -eq 0 ]; then
     return 2
   fi
 
-  mv -f "$KEY" "$CRT" "$PFX" ${CL_HOME}/trash
+  local SERIAL=`$OPENSSL x509 -noout -serial -in "$CRT"`
+  local SERIAL="${SERIAL#serial=}"
+  mv -f "$KEY" "${CL_HOME}/trash/${SERIAL}.key"
+  mv -f "$CRT" "${CL_HOME}/trash/${SERIAL}.crt"
+  mv -f "$PFX" "${CL_HOME}/trash/${SERIAL}.pfx"
   $UPDATE_HOOK
 
   return 0
