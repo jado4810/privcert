@@ -11,7 +11,7 @@ ko:
     password: '비밀번호'
     login: '로그인'
     login_failed: '로그인에 실패했습니다.'
-  list:
+  cert:
     name: '이름'
     canonical_name: '풀네임'
     email_address: '메일 주소'

@@ -1,5 +1,5 @@
     <script type="text/javascript">
-      <%= init_i18n_js(:list, [
+      <%= init_i18n_js(:cert, [
         'Download URL',
         'Revoke Cert',
         'Loading list failed.'
@@ -7,10 +7,10 @@
     </script>
     <main class="app-main">
       <header class="user-list-header">
-        <span class="name"><%= _('Name', :list) %></span>
-        <span class="cname"><%= _('Canonical Name', :list) %></span>
-        <span class="mail"><%= _('Email Address', :list) %></span>
-        <span class="expire"><%= _('Expires', :list) %></span>
+        <span class="name"><%= _('Name', :cert) %></span>
+        <span class="cname"><%= _('Canonical Name', :cert) %></span>
+        <span class="mail"><%= _('Email Address', :cert) %></span>
+        <span class="expire"><%= _('Expires', :cert) %></span>
         <span class="ui"></span>
       </header>
       <div id="user-list" class="user-list"></div>

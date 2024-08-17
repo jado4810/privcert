@@ -11,7 +11,7 @@ ja:
     password: 'パスワード'
     login: 'ログイン'
     login_failed: 'ログインに失敗しました。'
-  list:
+  cert:
     name: '名前'
     canonical_name: 'フルネーム'
     email_address: 'メールアドレス'

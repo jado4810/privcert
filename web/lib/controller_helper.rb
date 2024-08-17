@@ -53,7 +53,7 @@ module ControllerHelper
     login: {
       title: 'Login'
     },
-    list: {
+    cert: {
       title: 'User Certs List',
       icon: 'list'
     },

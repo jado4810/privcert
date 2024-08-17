@@ -7,14 +7,12 @@
     <link rel="stylesheet" type="text/css" href="./style/material.css">
     <link rel="stylesheet" type="text/css" href="./style/layout.css">
 <% case @page %>
-<% when :list %>
-    <!-- link rel="stylesheet" type="text/css" href="./style/editor.css" -->
+<% when :cert %>
     <script type="text/javascript" src="./script/util.js"></script>
     <script type="text/javascript" src="./script/list.js"></script>
 <% when :user %>
-    <!-- link rel="stylesheet" type="text/css" href="./style/editor.css" -->
     <script type="text/javascript" src="./script/util.js"></script>
-    <script type="text/javascript" src="./script/user.js"></script>
+    <script type="text/javascript" src="./script/list.js"></script>
 <% end %>
   </head>
   <body>
@@ -31,7 +29,7 @@
       %> - <%= @title %></h1>
 <% unless @page == :login %>
       <nav class="header-ui">
-        <%= link_icon(:list) %>
+        <%= link_icon(:cert) %>
         <%= link_icon(:user) %>
         <%= link_icon(:passwd) %>
         <%= link_icon(:logout) %>

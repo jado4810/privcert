@@ -11,7 +11,7 @@ zh-CN:
     password: '密码'
     login: '登录'
     login_failed: '登录失败。'
-  list:
+  cert:
     name: '名称'
     canonical_name: '全称'
     email_address: '电邮地址'

@@ -11,7 +11,7 @@ zh-TW:
     password: '密碼'
     login: '登入'
     login_failed: '登入失敗。'
-  list:
+  cert:
     name: '名稱'
     canonical_name: '全稱'
     email_address: '電郵地址'

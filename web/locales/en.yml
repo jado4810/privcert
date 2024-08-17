@@ -11,7 +11,7 @@ en:
     password: 'Password'
     login: 'Login'
     login_failed: 'Login failed.'
-  list:
+  cert:
     name: 'Name'
     canonical_name: 'Canonical Name'
     email_address: 'Email Address'

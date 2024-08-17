@@ -3,7 +3,7 @@ class CertController < Sinatra::Base
 
   get '/' do
     need_auth(:or_login)
-    view(:list)
+    view(:cert)
   end
 
   get '/cert/list.json' do
