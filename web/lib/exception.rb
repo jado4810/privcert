@@ -1,8 +1,4 @@
 class ServerError < StandardError
-  def initialize(msg)
-    super(_('Server error', :error) << ': (' << _(msg, :error))
-  end
-
   def self.check(res, have_data = nil)
     case res
     when /^0/
@@ -29,54 +25,54 @@ end
 
 class BadPasswordError < ServerError
   def initialize
-    super('bad server password.');
+    super('bad server password');
   end
 end
 
 class CertExistsError < ServerError
   def initialize
-    super('specified cert already exists.')
+    super('specified cert already exists')
   end
 end
 
 class CertNotFoundError < ServerError
   def initialize
-    super('specified cert not found.')
+    super('specified cert not found')
   end
 end
 
 class CertCreateError < ServerError
   def initialize
-    super('error on creating cert.')
+    super('error on creating cert')
   end
 end
 
 class CertRevokeError < ServerError
   def initialize
-    super('error on revoking cert.')
+    super('error on revoking cert')
   end
 end
 
 class UnknownServerError < ServerError
   def initialize
-    super('unknown server error.')
+    super('unknown server error')
   end
 end
 
 class NoDataError < ServerError
   def initialize
-    super('no data in server response.')
+    super('no data in server response')
   end
 end
 
 class UnexpectedDataError < ServerError
   def initialize
-    super('unexpected data in server response.')
+    super('unexpected data in server response')
   end
 end
 
 class UnexpectedEofError < ServerError
   def initialize
-    super('unexpected eof in server response.')
+    super('unexpected eof in server response')
   end
 end

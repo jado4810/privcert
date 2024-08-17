@@ -18,4 +18,16 @@ en:
     expires: 'Expires'
     download_url: 'Download URL'
     revoke_cert: 'Revoke Cert'
-    loading_list_failed: 'Loading list failed.'
+    create: 'Create'
+    cancel: 'Cancel'
+    new_cert: 'New Cert'
+    loading_list_failed: 'Loading list failed(%s).'
+    creating_cert_failed: 'Creating cert failed(%s).'
+    revoking_cert_failed: 'Revoking cert failed(%s).'
+  rule:
+    alnum_: '(AlNum,_,-)'
+    ascii_except_quot: '(ASCII except &quot;,\)'
+  error:
+    access_error: 'access error'
+    specified_cert_already_exists: 'specified cert already exists'
+    specified_cert_not_found: 'specified cert not found'

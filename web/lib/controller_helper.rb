@@ -99,14 +99,27 @@ module ControllerHelper
 
   def _(msg, scope, key = nil)
     if key.nil?
-      key = msg.gsub(/[^\s_0-9A-Za-z]/, '').gsub(/\s+/, '_').downcase.to_sym
+      key = msg.gsub('%s', '').gsub(/[^\s_0-9A-Za-z]/, '').gsub(/\s+/, '_')
+              .downcase.to_sym
     end
     I18n.t(key, scope: scope, default: msg)
   end
 
+  def get_translations(msgs, scope)
+    msgs.map{|msg|
+      translation = _(msg, scope)
+      {msg: msg, translation: translation} if msg != translation
+    }.compact
+  end
+
   def init_i18n_js(scope, msgs)
-    defs = msgs.map{|msg|
-      "'" << msg << "': '" << _(msg, scope) << "'"
+    error_msgs =
+      ServerError.subclasses.map{|klass| klass.new.to_s} << 'access error'
+    defs = [
+      get_translations(msgs, scope),
+      get_translations(error_msgs, :error)
+    ].flatten.map{|elem|
+      "'" << elem[:msg] << "': '" << elem[:translation] << "'"
     }.join(",\n        ")
     <<-EOS
 var _I18N_msgs = {

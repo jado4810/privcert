@@ -2,7 +2,9 @@
       <%= init_i18n_js(:cert, [
         'Download URL',
         'Revoke Cert',
-        'Loading list failed.'
+        'Loading list failed(%s).',
+        'Creating cert failed(%s).',
+        'Revoking cert failed(%s).'
       ]) %>
     </script>
     <main class="app-main">
@@ -14,4 +16,34 @@
         <span class="ui"></span>
       </header>
       <div id="user-list" class="user-list"></div>
+      <footer class="user-list-ui">
+        <input id="user-list-switch" class="switch-control" type="checkbox">
+        <form id="user-list-create" class="switch-part" <%= csrf_data %>>
+          <span class="name"><input type="text" name="name" placeholder="<%=
+            _('Name', :cert) << _('(AlNum,_,-)', :rule)
+          %>" pattern="[\-_0-9a-zA-Z]+" required></span>
+          <span class="cname"><input type="text" name="cname" placeholder="<%=
+            _('Canonical Name', :cert) << _('(ASCII except &quot;,\\)', :rule)
+          %>" pattern="[ !#-\[\]-~]*"></span>
+          <span class="mail"><input type="email" name="mail" placeholder="<%=
+            _('Email Address', :cert)
+          %>"></span>
+          <span class="ui-submit">
+            <button data-icon="done"><%= _('Create', :cert) %></button>
+          </span>
+          <span class="ui-close">
+            <a id="user-list-close" href="#" title="<%=
+              _('Cancel', :cert)
+            %>" data-icon="close"></a>
+          </span>
+        </form>
+        <div class="switch-part">
+          <span class="ui-open">
+            <button id="user-list-open" type="button" title="<%=
+              _('New Cert', :cert)
+            %>" data-icon="add"></button>
+          </span>
+        </div>
+        <div id="user-list-error" class="user-list-error error-status"></div>
+      </footer>
     </main>

@@ -14,7 +14,8 @@
 
 .app-logo:focus-visible,
 .header-ui > [data-icon]:focus-visible,
-.user-list-entry > .ui > [data-icon]:focus-visible {
+.user-list-entry > .ui > [data-icon]:focus-visible,
+.switch-part > .ui-close > [data-icon]:focus-visible {
   outline: #ccc solid 2px;
 }
 
@@ -23,7 +24,8 @@
 }
 
 .header-ui > [data-icon]::before,
-.user-list-entry > .ui > [data-icon]::before {
+.user-list-entry > .ui > [data-icon]::before,
+.switch-part > .ui-close > [data-icon]::before {
   color: #888;
 }
 
@@ -32,12 +34,14 @@
 }
 
 .header-ui > :not(.disabled)[data-icon]:hover::before,
-.user-list-entry > .ui > [data-icon]:hover::before {
+.user-list-entry > .ui > [data-icon]:hover::before,
+.switch-part > .ui-close > [data-icon]:hover::before {
   color: #444;
 }
 
 .header-ui > :not(.disabled)[data-icon]:active::before,
-.user-list-entry > .ui > [data-icon]:active::before {
+.user-list-entry > .ui > [data-icon]:active::before,
+.switch-part > .ui-close > [data-icon]:active::before {
   color: #008;
 }
 
@@ -45,15 +49,21 @@
   box-shadow: 0 0 8px rgba(0, 0, 0, .2);
 }
 
-.input-value > input {
+input {
   border-color: #ccc;
 }
 
-.input-value > input:focus-visible {
+input:focus-visible {
   border-color: #48e;
 }
 
-.form-ui > button:not([type="button"]) {
+input::placeholder {
+  color: #aaa;
+}
+
+.form-ui > button:not([type="button"]),
+.switch-part > .ui-submit > button,
+.switch-part > .ui-open > button {
   background-color: #48e;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2),
               0 2px 2px      rgba(0, 0, 0, .14),
@@ -66,7 +76,9 @@
   color: #444;
 }
 
-.form-ui > button:not([type="button"]):hover {
+.form-ui > button:not([type="button"]):hover,
+.switch-part > .ui-submit > button:hover,
+.switch-part > .ui-open > button:hover {
   background-color: #59f;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2),
               0 4px 5px      rgba(0, 0, 0, .14),
@@ -78,7 +90,9 @@
   color: #000;
 }
 
-.form-ui > button:not([type="button"]):active {
+.form-ui > button:not([type="button"]):active,
+.switch-part > .ui-submit > button:active,
+.switch-part > .ui-open > button:active {
   background-color: #37c;
   border-color: #48e;
 }
@@ -87,7 +101,9 @@
   background-color: rgba(0, 0, 0, .15);
 }
 
-.form-ui > button:not([type="button"]):focus-visible {
+.form-ui > button:not([type="button"]):focus-visible,
+.switch-part > .ui-submit > button:focus-visible,
+.switch-part > .ui-open > button:focus-visible {
   outline: #34c solid 2px;
 }
 
@@ -95,11 +111,13 @@
   border-color: #48e;
 }
 
-button:not([type="button"])[data-icon]::before {
+.form-ui > button:not([type="button"])[data-icon]::before,
+.switch-part > .ui-submit > button[data-icon]::before,
+.switch-part > .ui-open > button[data-icon]::before {
   color: #eee;
 }
 
-button[type="button"][data-icon]::before {
+.form-ui > button[type="button"][data-icon]::before {
   color: #666;
 }
 

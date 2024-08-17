@@ -18,4 +18,16 @@ zh-CN:
     expires: '生效日期'
     download_url: '下载网址'
     revoke_cert: '禁用证书'
-    loading_list_failed: '检索列表失败。'
+    create: '作成'
+    cancel: '取消'
+    new_cert: '附加证书'
+    loading_list_failed: '检索列表失败(%s)。'
+    creating_cert_failed: '附加证书失败(%s)。'
+    revoking_cert_failed: '禁用证书失败(%s)。'
+  rule:
+    alnum_: '(字母数字,_,-)'
+    ascii_except_quot: '(除&quot;,\之外的ASCII)'
+  error:
+    access_error: '服务器访问过程中的异常情况'
+    specified_cert_already_exists: '存在同名证书'
+    specified_cert_not_found: '指定证书不存在'
