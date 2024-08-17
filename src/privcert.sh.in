@@ -329,7 +329,6 @@ revoke_cert() {
   mv -f "$KEY" "${CL_HOME}/trash/${SERIAL}.key"
   mv -f "$CRT" "${CL_HOME}/trash/${SERIAL}.crt"
   mv -f "$PFX" "${CL_HOME}/trash/${SERIAL}.pfx"
-  $UPDATE_HOOK
 
   return 0
 }
@@ -386,6 +385,7 @@ server_loop() {
   done
 
   cd $CL_HOME
+  local UPDATE=''
   while read -r CMD ARG; do
     CMD=`echo "${CMD%}" | tr [A-Z] [a-z]`
     ARG="${ARG%}"
@@ -491,6 +491,7 @@ server_loop() {
         fi
 
         revoke_cert "$ARG"
+        UPDATE=yes
         case $? in
           0)
             echo '040 REVOKE OK'
@@ -509,6 +510,7 @@ server_loop() {
 
       quit|bye)
         echo '002 BYE'
+        [ -n "$UPDATE" ] && $UPDATE_HOOK
         return
         ;;
 
@@ -650,6 +652,7 @@ case "$COMMAND" in
     fi
 
     revoke_cert "$2"
+    $UPDATE_HOOK
     case $? in
       0)
         echo "Successfully revoked: ${CL_HOME}/$2.crt"
