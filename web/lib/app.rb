@@ -7,7 +7,7 @@ require_relative 'exception'
 require_relative 'database'
 require_relative 'controller_helper'
 require_relative 'login_controller'
-require_relative 'list_controller'
+require_relative 'cert_controller'
 #require_relative 'user_controller'
 
 class App < Sinatra::Base
@@ -48,6 +48,6 @@ class App < Sinatra::Base
   end
 
   use LoginController
-  use ListController
+  use CertController
   #use UserController
 end

@@ -9,7 +9,7 @@ privcert.List = function() {
 privcert.List.prototype.show_ = function() {
   var list = this.list;
 
-  var url = './list.json';
+  var url = './cert/list.json';
   privcert.Util.get_json(url).anyway(function() {
     list.innerHTML = '';
   }).done(function(res) {

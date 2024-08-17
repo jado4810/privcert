@@ -1,4 +1,4 @@
-class ListController < Sinatra::Base
+class CertController < Sinatra::Base
   include ControllerHelper
 
   get '/' do
@@ -6,7 +6,7 @@ class ListController < Sinatra::Base
     view(:list)
   end
 
-  get '/list.json' do
+  get '/cert/list.json' do
     need_auth(:or_halt)
 
     begin
