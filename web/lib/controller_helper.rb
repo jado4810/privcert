@@ -118,15 +118,31 @@ var _I18N_msgs = {
     EOS
   end
 
+  def send(s, cmd)
+    s.sync = true
+    s.write("#{cmd}\r\n")
+  end
+
+  def recv(s)
+    return s.readline(chomp: true)
+  rescue EOFError
+    raise ServerError::UnexpectedEofError
+  end
+
+  def sendrecv(s, cmd)
+    send(s, cmd)
+    return recv(s)
+  end
+
   def auth(s, passwd)
-    s.print "PASSWD #{passwd}\r\n"
-    ServerError.check(s.gets.response, false)
+    stat = sendrecv(s, "PASSWD #{passwd}")
+    ServerError.check(stat, false)
   end
 
   def get_data(s)
     data = []
     while true
-      line = s.gets.response
+      line = recv(s)
       case line
       when nil
         raise UnexpectedEofError
@@ -139,8 +155,8 @@ var _I18N_msgs = {
   end
 
   def get_list(s)
-    s.print "LIST\r\n"
-    if ServerError.check(s.gets.response)
+    stat = sendrecv(s, 'LIST')
+    if ServerError.check(stat)
       return get_data(s).map{|elem|
         cols = elem.split(/\t/)
         {
@@ -157,8 +173,8 @@ var _I18N_msgs = {
   end
 
   def close(s)
-    s.print "BYE\r\n"
-    ServerError.check(s.gets.response, false)
+    stat = sendrecv(s, 'BYE')
+    ServerError.check(stat, false)
   end
 end
 
@@ -169,10 +185,6 @@ class NilClass
 
   def to_s_or_empty
     return ''
-  end
-
-  def response
-    return nil
   end
 end
 
@@ -188,9 +200,5 @@ class String
 
   def to_s_or_empty
     return self.fullstrip
-  end
-
-  def response
-    return self.sub(/\r?\n$/, '')
   end
 end

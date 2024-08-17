@@ -21,8 +21,6 @@ class ServerError < StandardError
       raise CertCreateError;
     when /^242/
       raise CertRevokeError;
-    when nil
-      raise UnexpectedEofError;
     else
       raise UnknownServerError;
     end
