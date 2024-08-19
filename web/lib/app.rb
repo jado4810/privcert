@@ -22,7 +22,7 @@ class App < Sinatra::Base
     end
 
     I18n.load_path << Dir.glob('./locales/*.yml')
-    I18n.config.available_locales = [:en, :ja, :'zh-CN', :'zh-TW', :ko]
+    I18n.config.available_locales = [:en, :ja, :'zh-CN', :'zh-TW', :ko, :de]
 
     use Rack::Session::Cookie,
         secret: settings.session_secret,

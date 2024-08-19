@@ -1,0 +1,33 @@
+de:
+  title:
+    user_cert_admin: 'Nutzerzertifikaten-Admin'
+    login: 'Anmelden'
+    user_certs_list: 'Zertifikatsliste'
+    manage_accounts: 'Kontenverwaltung'
+    change_password: 'Passwortänderung'
+    logout: 'Abmelden'
+  login:
+    user: 'Nutzername'
+    password: 'Passwort'
+    login: 'Anmelden'
+    login_failed: 'Anmeldung fehlgeschlagen.'
+  cert:
+    name: 'Name'
+    canonical_name: 'Kanonischer Name'
+    email_address: 'E-Mail-Adresse'
+    expires: 'Läuft ab'
+    download_url: 'URL zum Herunterladen'
+    revoke_cert: 'Zertifikatswiderruf'
+    create: 'Erstellen'
+    cancel: 'Absagen'
+    new_cert: 'Neues Zertifikat'
+    loading_list_failed: 'Listenladen fehlgeschlagen(%s).'
+    creating_cert_failed: 'Erstellung fehlgeschlagen(%s).'
+    revoking_cert_failed: 'Widerruf fehlgeschlagen(%s).'
+  rule:
+    alnum_: '(AlNum,_,-)'
+    ascii_except_quot: '(ASCII außer &quot;,\)'
+  error:
+    access_error: 'Zugriffsfehler'
+    specified_cert_already_exists: 'angegebenes Zertifikat existiert bereits'
+    specified_cert_not_found: 'angegebenes Zertifikat nicht gefunden'
