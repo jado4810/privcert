@@ -1,7 +1,7 @@
     <main class="app-main">
       <form class="auth-form" action="./passwd" method="post">
         <input type="hidden" <%= csrf_param %>>
-        <label><%= _('Password', :passwd) %></label>
+        <label><%= _('Current Password', :passwd) %></label>
         <div class="input-value">
           <input type="password" name="password" autofocus autocomplete="current-password" required>
         </div>
