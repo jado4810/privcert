@@ -49,6 +49,16 @@ module ControllerHelper
     end
   end
 
+  def get_user(fallback)
+    need_auth(fallback)
+    user = Db::User.find_by(id: session[:user_id])
+    if user.nil?
+      fallback.to_proc.call(self)
+    end
+
+    return user
+  end
+
   PAGES = {
     login: {
       title: 'Login'

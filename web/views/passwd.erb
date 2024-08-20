@@ -1,0 +1,34 @@
+    <main class="app-main">
+      <form class="auth-form" action="./passwd" method="post">
+        <input type="hidden" <%= csrf_param %>>
+        <label><%= _('Password', :passwd) %></label>
+        <div class="input-value">
+          <input type="password" name="password" autofocus autocomplete="current-password" required>
+        </div>
+        <label><%= _('New Password', :passwd) %></label>
+        <div class="input-value">
+          <input type="password" name="new_password" placeholder="<%=
+            _('(At least 8 chars)', :rule)
+          %>" autocomplete="new-password" minlength="8" required>
+        </div>
+        <label><%= _('(Verify)', :passwd) %></label>
+        <div class="input-value">
+          <input type="password" name="new_password_verify" placeholder="<%=
+            _('(At least 8 chars)', :rule)
+          %>" autocomplete="new-password" minlength="8" required>
+        </div>
+        <footer class="form-footer">
+          <div class="form-ui">
+            <a class="button" href="./" data-icon="close"><%=
+              _('Cancel', :passwd)
+            %></a>
+            <button data-icon="done"><%= _('Change', :passwd) %></button>
+          </div>
+          <div id="error-status" class="error-status">
+<% if @message %>
+            <p><%= @message %></p>
+<% end %>
+          </div>
+        </footer>
+      </form>
+    </main>

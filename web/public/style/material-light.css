@@ -61,7 +61,7 @@ input::placeholder {
   color: #aaa;
 }
 
-.form-ui > button:not([type="button"]),
+.form-ui > button,
 .switch-part > .ui-submit > button,
 .switch-part > .ui-open > button {
   background-color: #48e;
@@ -71,12 +71,12 @@ input::placeholder {
   color: #fff;
 }
 
-.form-ui > button[type="button"] {
+.form-ui > a.button {
   border-color: #ccc;
   color: #444;
 }
 
-.form-ui > button:not([type="button"]):hover,
+.form-ui > button:hover,
 .switch-part > .ui-submit > button:hover,
 .switch-part > .ui-open > button:hover {
   background-color: #59f;
@@ -85,39 +85,39 @@ input::placeholder {
               0 1px 10px     rgba(0, 0, 0, .12);
 }
 
-.form-ui > button[type="button"]:hover {
+.form-ui > a.button:hover {
   background-color: rgba(0, 0, 0, .1);
   color: #000;
 }
 
-.form-ui > button:not([type="button"]):active,
+.form-ui > button:active,
 .switch-part > .ui-submit > button:active,
 .switch-part > .ui-open > button:active {
   background-color: #37c;
   border-color: #48e;
 }
 
-.form-ui > button[type="button"]:not(:disabled):active {
+.form-ui > a.button:active {
   background-color: rgba(0, 0, 0, .15);
 }
 
-.form-ui > button:not([type="button"]):focus-visible,
+.form-ui > button:focus-visible,
 .switch-part > .ui-submit > button:focus-visible,
 .switch-part > .ui-open > button:focus-visible {
   outline: #34c solid 2px;
 }
 
-.form-ui > button:[type="button"]:focus-visible {
+.form-ui > a.button:focus-visible {
   border-color: #48e;
 }
 
-.form-ui > button:not([type="button"])[data-icon]::before,
+.form-ui > button[data-icon]::before,
 .switch-part > .ui-submit > button[data-icon]::before,
 .switch-part > .ui-open > button[data-icon]::before {
   color: #eee;
 }
 
-.form-ui > button[type="button"][data-icon]::before {
+.form-ui > a.button[data-icon]::before {
   color: #666;
 }
 
