@@ -22,7 +22,7 @@ class PasswordController < Sinatra::Base
     user.password = params[:new_password]
     user.password_confirmation = params[:new_password_verify]
     unless user.save
-      @message = _('Changing password failed')
+      @message = _('Changing password failed', :passwd)
       return view(:passwd)
     end
 
