@@ -81,6 +81,8 @@ module ControllerHelper
     props = []
     if @page == target
       props << 'class="disabled"' << 'href="#"'
+    elsif target == :cert
+      props << %Q{href="./"}
     else
       props << %Q{href="./#{target.to_s}"}
     end
