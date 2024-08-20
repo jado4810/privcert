@@ -24,9 +24,19 @@ en:
     loading_list_failed: 'Loading list failed(%s).'
     creating_cert_failed: 'Creating cert failed(%s).'
     revoking_cert_failed: 'Revoking cert failed(%s).'
+  passwd:
+    password: 'Current Password'
+    new_password: 'New Password'
+    verify: '(Verify)'
+    cancel: 'Cancel'
+    change: 'Change'
+    invalid_current_password: 'Invalid current password.'
+    new_passwords_unmatch: 'New passwords unmatch.'
+    changing_password_failed: 'Changing password failed.'
   rule:
     alnum_: '(AlNum,_,-)'
     ascii_except_quot: '(ASCII except &quot;,\)'
+    at_least_8_chars: '(At least 8 chars)'
   error:
     access_error: 'access error'
     specified_cert_already_exists: 'specified cert already exists'

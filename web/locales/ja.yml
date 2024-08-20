@@ -24,9 +24,19 @@ ja:
     loading_list_failed: '一覧の取得に失敗しました(%s)。'
     creating_cert_failed: '証明書の追加に失敗しました(%s)。'
     revoking_cert_failed: '証明書の無効化に失敗しました(%s)。'
+  passwd:
+    current_password: '現在のパスワード'
+    new_password: '新しいパスワード'
+    verify: '(確認用再入力)'
+    cancel: 'キャンセル'
+    change: '変更'
+    invalid_current_password: '現在のパスワードが正しくありません。'
+    new_passwords_unmatch: '新しいパスワードが一致しません。'
+    changing_password_failed: 'パスワードの変更に失敗しました。'
   rule:
     alnum_: '(英数・_・-)'
     ascii_except_quot: '(&quot;・\以外のASCII)'
+    at_least_8_chars: '(8文字以上)'
   error:
     access_error: 'サーバーアクセス時のエラー'
     specified_cert_already_exists: '同名の証明書が存在します'
