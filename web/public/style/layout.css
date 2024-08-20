@@ -163,7 +163,7 @@ button[data-icon]::before {
   text-rendering: optimizelegibility;
 }
 
-.login-form {
+.auth-form {
   column-gap: 16px;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -171,7 +171,7 @@ button[data-icon]::before {
   row-gap: 24px;
 }
 
-.login-form > label {
+.auth-form > label {
   align-self: center;
   display: block;
   line-height: 36px;
@@ -230,7 +230,8 @@ button[data-icon]::before {
   display: flex;
 }
 
-.error-status::before {
+.error-status:has(> p)::before {
+  content: 'error';
   display: block;
   flex-shrink: 0;
   font-family: 'Material Icons';
@@ -239,10 +240,6 @@ button[data-icon]::before {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizelegibility;
-}
-
-.error-status:has(> p)::before {
-  content: 'error';
 }
 
 .error-status > p {

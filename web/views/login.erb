@@ -1,13 +1,13 @@
     <main class="app-main">
-      <form class="login-form" action="./login" method="post">
+      <form class="auth-form" action="./login" method="post">
         <input type="hidden" <%= csrf_param %>>
         <label><%= _('User', :login) %></label>
         <div class="input-value">
-          <input class="login" type="text" name="user" autofocus>
+          <input type="text" name="user" autofocus required>
         </div>
         <label><%= _('Password', :login) %></label>
         <div class="input-value">
-          <input class="login" type="password" name="password" autocomplete="current-password">
+          <input type="password" name="password" autocomplete="current-password" required>
         </div>
         <footer class="form-footer">
           <div class="form-ui">
