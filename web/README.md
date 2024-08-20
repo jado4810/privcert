@@ -254,3 +254,10 @@ And activate it:
 ```console
 # apachectl restart
 ```
+
+Default account
+---------------
+
+`rake db:seed` introduces a default account "`admin`" with password
+"`PrivCertAdmin`".
+Strongly recommended changing it at first.

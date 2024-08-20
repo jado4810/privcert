@@ -82,7 +82,7 @@ Then, input password for server mode twice.
 > If omit password or failed to set password, retry `init` to initialize
 > password.
 >
-> Once initialized password, try `sudo privcert passwd` to update.
+> Once initialized password, try `sudo -i privcert passwd` to update.
 
 Set generated cert on the ssl configuration of your web server.
 For Apache, append below to the `VirtualHost` directive in `ssl.conf`:
