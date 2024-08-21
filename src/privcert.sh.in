@@ -473,13 +473,15 @@ server_loop() {
             echo '030 LIST OK'
             continue 2
           fi
-          IDS+=("${CRT%.crt}")
+          local SERIAL=`$OPENSSL x509 -noout -serial -in "$CRT"`
+          IDS+=("$((0x${SERIAL#serial=}))_${CRT%.crt}")
         done
+        IDS=(`echo "${IDS[@]}" | tr ' ' '\n' | sort -n`)
 
         echo '130 LIST OK'
         local ID=''
         for ID in "${IDS[@]}"; do
-          show_cert "$ID"
+          show_cert "${ID#*_}"
         done
         echo 'EOF'
         ;;
@@ -632,8 +634,11 @@ case "$COMMAND" in
       if [ "$CRT" = '*.crt' ]; then
         break
       fi
-      IDS+=("${CRT%.crt}")
+      SERIAL=`$OPENSSL x509 -noout -serial -in "$CRT"`
+      IDS+=("$((0x${SERIAL#serial=}))_${CRT%.crt}")
     done
+    IDS=(`echo "${IDS[@]}" | tr ' ' '\n' | sort -n`)
+    IDS=(`for ID in "${IDS[@]}"; do echo "${ID#*_}"; done`)
     IDT=`for ID in "${IDS[@]}"; do echo ${#ID}; done | sort -rn | head -n 1`
 
     echo -n 'ID'
