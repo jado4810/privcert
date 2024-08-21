@@ -24,9 +24,19 @@ de:
     loading_list_failed: 'Listenladen fehlgeschlagen(%s).'
     creating_cert_failed: 'Erstellung fehlgeschlagen(%s).'
     revoking_cert_failed: 'Widerruf fehlgeschlagen(%s).'
+  passwd:
+    current_password: 'Derzeitige Passwort'
+    new_password: 'Neue Passwort'
+    verify: '(Überprüfen)'
+    cancel: 'Absagen'
+    change: 'Änderen'
+    invalid_current_password: 'Ungültige derzeitige Passwort.'
+    new_passwords_unmatch: 'Neue Passwörter nicht übereinstimmen.'
+    changing_password_failed: 'Passwortänderung fehlgeschlagen.'
   rule:
     alnum_: '(AlNum,_,-)'
     ascii_except_quot: '(ASCII außer &quot;,\)'
+    at_least_8_chars: '(Mind. 8 Zeichen)'
   error:
     access_error: 'Zugriffsfehler'
     specified_cert_already_exists: 'angegebenes Zertifikat existiert bereits'

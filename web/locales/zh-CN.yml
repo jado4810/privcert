@@ -24,9 +24,19 @@ zh-CN:
     loading_list_failed: '检索列表失败(%s)。'
     creating_cert_failed: '附加证书失败(%s)。'
     revoking_cert_failed: '禁用证书失败(%s)。'
+  passwd:
+    current_password: '当前密码'
+    new_password: '新密码'
+    verify: '(证实)'
+    cancel: '取消'
+    change: '更改'
+    invalid_current_password: '当前密码无效。'
+    new_passwords_unmatch: '新密码不匹配。'
+    changing_password_failed: '更改密码失败。'
   rule:
     alnum_: '(字母数字,_,-)'
     ascii_except_quot: '(除&quot;,\之外的ASCII)'
+    at_least_8_chars: '(8个字符以上)'
   error:
     access_error: '服务器访问过程中的异常情况'
     specified_cert_already_exists: '存在同名证书'
