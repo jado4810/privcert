@@ -412,7 +412,7 @@ server_loop() {
         ;;
 
       make)
-        if [ -z "$ARG" ]; then
+        if [ -z "$ARG" -o ! "$ARG" = "${ARG// /_}" ]; then
           echo '202 Bad param'
           continue
         fi
@@ -572,6 +572,10 @@ case "$COMMAND" in
   make)
     if [ $# -gt 4 -o $# -eq 1 ]; then
       echo >&2 'Illegal params'
+      exit 1
+    fi
+    if [ -z "$2" -o ! "$2" = "${2// /_}" ]; then
+      echo >&2 'Illegal id'
       exit 1
     fi
     if [ ! -f $CA_KEY ]; then
