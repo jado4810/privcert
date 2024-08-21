@@ -20,7 +20,7 @@ de:
     revoke_cert: 'Zertifikatswiderruf'
     create: 'Erstellen'
     cancel: 'Absagen'
-    new_cert: 'Neues Zertifikat'
+    new_cert: 'Neue Zertifikat'
     loading_list_failed: 'Listenladen fehlgeschlagen(%s).'
     creating_cert_failed: 'Erstellung fehlgeschlagen(%s).'
     revoking_cert_failed: 'Widerruf fehlgeschlagen(%s).'
