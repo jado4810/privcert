@@ -25,7 +25,7 @@ en:
     creating_cert_failed: 'Creating cert failed(%s).'
     revoking_cert_failed: 'Revoking cert failed(%s).'
   passwd:
-    password: 'Current Password'
+    current_password: 'Current Password'
     new_password: 'New Password'
     verify: '(Verify)'
     cancel: 'Cancel'
