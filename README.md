@@ -2,7 +2,7 @@ PrivCert - Private CA for management of user certs
 ==================================================
 
 [![GitHub top language](https://img.shields.io/github/languages/top/jado4810/privcert.svg)](https://github.com/jado4810/privcert/search?l=Shell)
-[![Ruby](https://img.shields.io/badge/-Ruby-CC342D?logo=Ruby&logoColor=fff)](https://github.com/ruby)
+[![GitHub top language](https://img.shields.io/github/languages/top/jado4810/privcert.svg)](https://github.com/jado4810/privcert/search?l=Ruby)
 [![Sinatra](https://img.shields.io/badge/-Sinatra-000.svg?logo=Ruby%20Sinatra&logoColor=fff)](https://github.com/sinatra)
 [![Docker](https://img.shields.io/badge/-Docker-2496ed.svg?logo=Docker&logoColor=fff)](https://github.com/docker)
 [![License](https://img.shields.io/github/license/jado4810/privcert.svg)](https://github.com/jado4810/privcert/blob/main/LICENSE.txt)
