@@ -90,7 +90,7 @@ module ControllerHelper
   def link_icon(target)
     props = []
     if @page == target
-      props << 'class="disabled"' << 'href="#"'
+      props << 'class="disabled"' << 'href="."'
     elsif target == :cert
       props << %Q{href="./"}
     else
