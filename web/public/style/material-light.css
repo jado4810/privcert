@@ -29,18 +29,19 @@
   color: #888;
 }
 
-.header-ui > .disabled[data-icon]::before {
+.header-ui > .disabled[data-icon]::before,
+.list-entry > .ui-listop > .disabled[data-icon]::before {
   color: #ccc;
 }
 
 .header-ui > :not(.disabled)[data-icon]:hover::before,
-.list-entry > .ui-listop > [data-icon]:hover::before,
+.list-entry > .ui-listop > :not(.disabled)[data-icon]:hover::before,
 .switch-part > .ui-close > [data-icon]:hover::before {
   color: #444;
 }
 
 .header-ui > :not(.disabled)[data-icon]:active::before,
-.list-entry > .ui-listop > [data-icon]:active::before,
+.list-entry > .ui-listop > :not(.disabled)[data-icon]:active::before,
 .switch-part > .ui-close > [data-icon]:active::before {
   color: #008;
 }

@@ -157,14 +157,18 @@ privcert.List.prototype.show_ = function(error_msg, res) {
           case 'delete':
             link.href = '.';
             link.dataset.icon = 'delete';
-            link.addEventListener(
-                'click',
-                this.delete_.bind(
-                    this, entry[data.dataset.key],
-                    data.dataset.confirm, data.dataset.warn
-                ),
-                false
-            );
+            if (entry.deletable) {
+              link.addEventListener(
+                  'click',
+                  this.delete_.bind(
+                      this, entry[data.dataset.key],
+                      data.dataset.confirm, data.dataset.warn
+                  ),
+                  false
+              );
+            } else {
+              link.className = 'disabled';
+            }
             break;
           }
           col.appendChild(link);

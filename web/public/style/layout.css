@@ -90,7 +90,8 @@ body {
   user-select: none;
 }
 
-.header-ui > .disabled {
+.header-ui > .disabled,
+.list-entry > .ui-listop > .disabled {
   pointer-events: none;
 }
 

@@ -8,7 +8,7 @@ require_relative 'database'
 require_relative 'controller_helper'
 require_relative 'login_controller'
 require_relative 'cert_controller'
-#require_relative 'user_controller'
+require_relative 'user_controller'
 require_relative 'passwd_controller'
 
 class App < Sinatra::Base
@@ -50,6 +50,6 @@ class App < Sinatra::Base
 
   use LoginController
   use CertController
-  #use UserController
+  use UserController
   use PasswdController
 end

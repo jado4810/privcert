@@ -1,0 +1,95 @@
+    <script type="text/javascript">
+      privcert.List.confirm_msg = '<%=
+      %>';
+      privcert.List.warn_msg = '<%=
+        _('NOTE: THIS CANNOT BE UNDONE.', :list)
+      %>';
+    </script>
+    <main class="app-main">
+      <header class="list-header">
+        <span class="name"><%= _('Name', :user) %></span>
+        <span class="passwd"><%= _('Password', :user) %></span>
+        <span class="ui-submit"></span>
+        <span class="ui-spacer"></span>
+        <span class="ui-listop"></span>
+      </header>
+      <div id="list" class="list-container" data-type="user"></div>
+      <div id="view" class="list-template">
+        <span data-klass="name" data-key="name"></span>
+        <span data-klass="passwd" data-value="********"></span>
+        <span data-klass="ui-submit"></span>
+        <span data-klass="ui-spacer"></span>
+        <span data-klass="ui-listop">
+          <data value="update" data-key="name"><%=
+            _('Change Password', :user)
+          %></data>
+          <data value="delete" data-key="name" data-confirm="<%=
+            _('Sure to delete user?', :user)
+          %>" data-warn="<%=
+            _('NOTE: THIS CANNOT BE UNDONE.', :warn)
+          %>"><%=
+            _('Delete User', :user)
+          %></data>
+        </span>
+      </div>
+      <div id="edit" class="list-template">
+        <span data-klass="name" data-key="name"></span>
+        <span data-klass="passwd">
+          <input type="password" name="passwd" placeholder="<%=
+            _('(At least 8 chars)', :rule)
+          %>" autocomplete="new-password" minlength="8" required>
+        </span>
+        <span data-klass="ui-submit">
+          <button data-icon="done"><%= _('Change', :user) %></button>
+        </span>
+        <span data-klass="ui-spacer"></span>
+        <span data-klass="ui-listop">
+          <data value="cancel"><%= _('Cancel', :user) %></data>
+        </span>
+      </div>
+      <footer class="list-ui">
+        <input id="switch" class="switch-control" type="checkbox">
+        <form id="create" class="switch-part" <%= csrf_data %>>
+          <span class="name">
+            <input type="text" name="name" placeholder="<%=
+              _('Name', :user) << _('(AlNum,_,-)', :rule)
+            %>" pattern="[\-_0-9a-zA-Z]+" required>
+          </span>
+          <span class="passwd">
+            <input type="password" name="passwd" placeholder="<%=
+              _('(At least 8 chars)', :rule)
+            %>" autocomplete="new-password" minlength="8" required>
+          </span>
+          <span class="ui-submit">
+            <button data-icon="done"><%= _('Create', :user) %></button>
+          </span>
+          <span class="spacer"></span>
+          <span class="ui-close">
+            <a id="close" href="#" title="<%=
+              _('Cancel', :user)
+            %>" data-icon="close"></a>
+          </span>
+        </form>
+        <div class="switch-part">
+          <span class="ui-open">
+            <button id="open" type="button" title="<%=
+              _('New User', :user)
+            %>" data-icon="add"></button>
+          </span>
+        </div>
+        <div id="error" class="list-error error-status">
+          <data value="create"><%=
+            _('Creating user failed.', :user)
+          %></data>
+          <data value="read"><%=
+            _('Loading list failed.', :user)
+          %></data>
+          <data value="update"><%=
+            _('Editing user failed.', :user)
+          %></data>
+          <data value="delete"><%=
+            _('Deleting user failed.', :user)
+          %></data>
+        </div>
+      </footer>
+    </main>

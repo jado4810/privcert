@@ -129,65 +129,6 @@ module ControllerHelper
            "  #{defs}\n      " <<
            '};'
   end
-
-  def send(s, cmd)
-    s.sync = true
-    s.write("#{cmd}\r\n")
-  end
-
-  def recv(s)
-    return s.readline(chomp: true)
-  rescue EOFError
-    raise ServerError::UnexpectedEofError
-  end
-
-  def sendrecv(s, cmd)
-    send(s, cmd)
-    return recv(s)
-  end
-
-  def auth(s, passwd)
-    stat = sendrecv(s, "PASSWD #{passwd}")
-    ServerError.check(stat, false)
-  end
-
-  def get_data(s)
-    data = []
-    while true
-      line = recv(s)
-      case line
-      when nil
-        raise UnexpectedEofError
-      when 'EOF'
-        return data
-      else
-        data << line
-      end
-    end
-  end
-
-  def get_list(s)
-    stat = sendrecv(s, 'LIST')
-    if ServerError.check(stat)
-      return get_data(s).map{|elem|
-        cols = elem.split(/\t/)
-        {
-          name: cols[0].to_s_or_empty,
-          cname: cols[2].to_s_or_empty,
-          mail: cols[3].to_s_or_empty,
-          expire: cols[1].to_s_or_empty,
-          key: cols[4].to_s_or_empty
-        }
-      }
-    else
-      return []
-    end
-  end
-
-  def close(s)
-    stat = sendrecv(s, 'BYE')
-    ServerError.check(stat, false)
-  end
 end
 
 class NilClass
