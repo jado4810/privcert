@@ -3,17 +3,17 @@
         <input type="hidden" <%= csrf_param %>>
         <label><%= _('Current Password', :passwd) %></label>
         <div class="input-value">
-          <input type="password" name="password" autofocus autocomplete="current-password" required>
+          <input type="password" name="passwd" autofocus autocomplete="current-password" required>
         </div>
         <label><%= _('New Password', :passwd) %></label>
         <div class="input-value">
-          <input type="password" name="new_password" placeholder="<%=
+          <input type="password" name="new_passwd" placeholder="<%=
             _('(At least 8 chars)', :rule)
           %>" autocomplete="new-password" minlength="8" required>
         </div>
         <label><%= _('(Verify)', :passwd) %></label>
         <div class="input-value">
-          <input type="password" name="new_password_verify" placeholder="<%=
+          <input type="password" name="new_passwd_verify" placeholder="<%=
             _('(At least 8 chars)', :rule)
           %>" autocomplete="new-password" minlength="8" required>
         </div>

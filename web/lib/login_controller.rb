@@ -8,7 +8,7 @@ class LoginController < Sinatra::Base
 
   post '/login' do
     user = Db::User.find_by(name: params[:user])
-    if user&.authenticate(params[:password])
+    if user&.authenticate(params[:passwd])
       session[:user_id] = user.id
       redirect to('/')
     else
