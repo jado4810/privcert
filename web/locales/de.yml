@@ -21,8 +21,9 @@ de:
     create: 'Erstellen'
     cancel: 'Absagen'
     new_cert: 'Neue Zertifikat'
-    loading_list_failed: 'Listenladen fehlgeschlagen(%s).'
+    sure_to_revoke_cert: 'Sicher, das Zertifikat zu widerrufen?'
     creating_cert_failed: 'Erstellung fehlgeschlagen(%s).'
+    loading_list_failed: 'Listenladen fehlgeschlagen(%s).'
     revoking_cert_failed: 'Widerruf fehlgeschlagen(%s).'
   passwd:
     current_password: 'Derzeitige Passwort'
@@ -33,6 +34,8 @@ de:
     invalid_current_password: 'Ungültige derzeitige Passwort.'
     new_passwords_unmatch: 'Neue Passwörter nicht übereinstimmen.'
     changing_password_failed: 'Passwortänderung fehlgeschlagen.'
+  warn:
+    note_this_cannot_be_undone: 'HINWEIS: DIES KANN NICHT RÜCKGÄNGIG GEMACHT WERDEN.'
   rule:
     alnum_: '(AlNum,_,-)'
     ascii_except_quot: '(ASCII außer &quot;,\)'

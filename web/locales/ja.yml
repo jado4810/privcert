@@ -21,8 +21,9 @@ ja:
     create: '作成'
     cancel: 'キャンセル'
     new_cert: '証明書追加'
-    loading_list_failed: '一覧の取得に失敗しました(%s)。'
+    sure_to_revoke_cert: '証明書を無効化してもよろしいですか?'
     creating_cert_failed: '証明書の追加に失敗しました(%s)。'
+    loading_list_failed: '一覧の取得に失敗しました(%s)。'
     revoking_cert_failed: '証明書の無効化に失敗しました(%s)。'
   passwd:
     current_password: '現在のパスワード'
@@ -37,6 +38,8 @@ ja:
     alnum_: '(英数・_・-)'
     ascii_except_quot: '(&quot;・\以外のASCII)'
     at_least_8_chars: '(8文字以上)'
+  warn:
+    note_this_cannot_be_undone: '注: この操作は元に戻せません。'
   error:
     access_error: 'サーバーアクセス時のエラー'
     specified_cert_already_exists: '同名の証明書が存在します'

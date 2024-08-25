@@ -1,49 +1,77 @@
     <script type="text/javascript">
-      <%= init_i18n_js(:cert, [
-        'Download URL',
-        'Revoke Cert',
-        'Loading list failed(%s).',
-        'Creating cert failed(%s).',
-        'Revoking cert failed(%s).'
-      ]) %>
+      <%= init_i18n_error_msg %>
     </script>
     <main class="app-main">
-      <header class="user-list-header">
+      <header class="list-header">
         <span class="name"><%= _('Name', :cert) %></span>
         <span class="cname"><%= _('Canonical Name', :cert) %></span>
         <span class="mail"><%= _('Email Address', :cert) %></span>
         <span class="expire"><%= _('Expires', :cert) %></span>
-        <span class="ui"></span>
+        <span class="ui-listop"></span>
       </header>
-      <div id="user-list" class="user-list"></div>
-      <footer class="user-list-ui">
-        <input id="user-list-switch" class="switch-control" type="checkbox">
-        <form id="user-list-create" class="switch-part" <%= csrf_data %>>
-          <span class="name"><input type="text" name="name" placeholder="<%=
-            _('Name', :cert) << _('(AlNum,_,-)', :rule)
-          %>" pattern="[\-_0-9a-zA-Z]+" required></span>
-          <span class="cname"><input type="text" name="cname" placeholder="<%=
-            _('Canonical Name', :cert) << _('(ASCII except &quot;,\\)', :rule)
-          %>" pattern="[ !#-\[\]-~]*"></span>
-          <span class="mail"><input type="email" name="mail" placeholder="<%=
-            _('Email Address', :cert)
-          %>"></span>
+      <div id="list" class="list-container" data-type="cert"></div>
+      <div id="view" class="list-template">
+        <span data-klass="name" data-key="name"></span>
+        <span data-klass="cname" data-key="cname"></span>
+        <span data-klass="mail" data-key="mail"></span>
+        <span data-klass="expire" data-key="expire"></span>
+        <span data-klass="ui-listop">
+          <data value="link" data-key="key"><%=
+            _('Download URL', :cert)
+          %></data>
+          <data value="delete" data-key="name" data-confirm="<%=
+            _('Sure to revoke cert?', :cert)
+          %>" data-warn="<%=
+            _('NOTE: THIS CANNOT BE UNDONE.', :warn)
+          %>"><%=
+            _('Revoke Cert', :cert)
+          %></data>
+        </span>
+      </div>
+      <footer class="list-ui">
+        <input id="switch" class="switch-control" type="checkbox">
+        <form id="create" class="switch-part" <%= csrf_data %>>
+          <span class="name">
+            <input type="text" name="name" placeholder="<%=
+              _('Name', :cert) << _('(AlNum,_,-)', :rule)
+            %>" pattern="[\-_0-9a-zA-Z]+" required>
+          </span>
+          <span class="cname">
+            <input type="text" name="cname" placeholder="<%=
+              _('Canonical Name', :cert) << _('(ASCII except &quot;,\\)', :rule)
+            %>" pattern="[ !#-\[\]-~]*">
+          </span>
+          <span class="mail">
+            <input type="email" name="mail" placeholder="<%=
+              _('Email Address', :cert)
+            %>">
+          </span>
           <span class="ui-submit">
             <button data-icon="done"><%= _('Create', :cert) %></button>
           </span>
           <span class="ui-close">
-            <a id="user-list-close" href="#" title="<%=
+            <a id="close" href="." title="<%=
               _('Cancel', :cert)
             %>" data-icon="close"></a>
           </span>
         </form>
         <div class="switch-part">
           <span class="ui-open">
-            <button id="user-list-open" type="button" title="<%=
+            <button id="open" type="button" title="<%=
               _('New Cert', :cert)
             %>" data-icon="add"></button>
           </span>
         </div>
-        <div id="user-list-error" class="user-list-error error-status"></div>
+        <div id="error" class="list-error error-status">
+          <data value="create"><%=
+            _('Creating cert failed(%s).', :cert)
+          %></data>
+          <data value="read"><%=
+            _('Loading list failed(%s).', :cert)
+          %></data>
+          <data value="delete"><%=
+            _('Revoking cert failed(%s).', :cert)
+          %></data>
+        </div>
       </footer>
     </main>

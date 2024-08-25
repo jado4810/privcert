@@ -21,8 +21,9 @@ ko:
     create: '만들기'
     cancel: '취소'
     new_cert: '인증서 추가'
-    loading_list_failed: '목록을 불러오지 못했습니다(%s).'
+    sure_to_revoke_cert: '인증서를 비활성화해도 되나요?'
     creating_cert_failed: '인증서를 추가하지 못했습니다(%s).'
+    loading_list_failed: '목록을 불러오지 못했습니다(%s).'
     revoking_cert_failed: '인증서를 비활성화하지 못했습니다(%s).'
   passwd:
     current_password: '지금 비밀번호'
@@ -37,6 +38,8 @@ ko:
     alnum_: '(영숫자,_,-)'
     ascii_except_quot: '(&quot;,\이외의ASCII)'
     at_least_8_chars: '(8글자 이상)'
+  warn:
+    note_this_cannot_be_undone: '참고: 이 작업은 되돌릴 수 없습니다.'
   error:
     access_error: '서버 접속시 오류'
     specified_cert_already_exists: '같은 이름의 인증서가 존재합니다'

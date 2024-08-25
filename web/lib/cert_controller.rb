@@ -63,10 +63,10 @@ class CertController < Sinatra::Base
     need_auth(:or_halt)
 
     case params[:mode].to_s_or_nil
-    when 'revoke'
-      mode = :revoke
-    when nil
-      mode = :make
+    when 'create'
+      mode = :create
+    when 'delete'
+      mode = :delete
     else
       halt 400, 'Unknown mode'
     end
@@ -83,7 +83,7 @@ class CertController < Sinatra::Base
         auth(s, server['passwd'])
 
         case mode
-        when :make
+        when :create
           cname = params[:cname].to_s_or_nil
           unless cname.nil?
             stat = sendrecv(s, "SETCN #{cname}")
@@ -98,7 +98,7 @@ class CertController < Sinatra::Base
 
           stat = sendrecv(s, "MAKE #{name}")
 
-        when :revoke
+        when :delete
           stat = sendrecv(s, "REVOKE #{name}")
 
         else

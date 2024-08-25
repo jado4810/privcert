@@ -1,15 +1,23 @@
 privcert.List = function() {
-  var list = document.getElementById('user-list');
-  var error = document.getElementById('user-list-error');
-  if (!list || !error) return;
+  var list = document.getElementById('list');
+  var error = document.getElementById('error');
+  var view = document.getElementById('view');
+  if (!list || !error || !view) return;
+
+  var type = list.dataset.type;
+  if (!type) return;
+
+  this.type = type;
 
   this.list = list;
   this.error = error;
+  this.view = view;
+  this.edit = document.getElementById('edit');
 
-  var sw = document.getElementById('user-list-switch');
-  var open = document.getElementById('user-list-open');
-  var close = document.getElementById('user-list-close');
-  var form = document.getElementById('user-list-create');
+  var sw = document.getElementById('switch');
+  var open = document.getElementById('open');
+  var close = document.getElementById('close');
+  var form = document.getElementById('create');
   if (sw && open && close && form) {
     this.sw = sw;
     this.form = form;
@@ -18,7 +26,7 @@ privcert.List = function() {
     form.addEventListener('submit', this.create_.bind(this), false);
   }
 
-  this.get_();
+  this.read_();
 }
 
 privcert.List.prototype.open_ = function(e) {
@@ -27,48 +35,84 @@ privcert.List.prototype.open_ = function(e) {
 }
 
 privcert.List.prototype.close_ = function(e) {
-  e.stopPropagation();
+  e.preventDefault();
   this.form.reset();
   this.sw.checked = false;
-}
-
-privcert.List.prototype.get_ = function() {
-  var error_msg = 'Loading list failed(%s).';
-  privcert.Util.get_json('./cert/list.json')
-      .done(this.show_.bind(this, error_msg))
-      .fail(this.error_.bind(this, error_msg, null));
 }
 
 privcert.List.prototype.create_ = function(e) {
   e.preventDefault();
 
-  var param = ['name', 'cname', 'mail'].reduce(function(v, key) {
-    v[key] = this.form[key].value.replace(/^\s+/, '').replace(/\s+$/, '');
-    return v;
-  }.bind(this), {});
+  var elems =
+      this.form.querySelectorAll(':not(.ui-submit):not(.ui-close) > input');
+  var param = Array.prototype.reduce.call(elems, function(param, elem) {
+    var val = elem.value;
+    if (elem.type == 'password') {
+      param[elem.name] = elem.value;
+    } else {
+      param[elem.name] = elem.value.replace(/^\s+/, '').replace(/\s+$/, '');
+    }
+    return param;
+  }, {
+    mode: 'create'
+  });
 
-  if (!param.name) return;
+  var data = this.error.querySelector('data[value="create"]');
+  if (data) {
+    var error_msg = data.innerText;
+  } else {
+    var error_msg = 'Create failed.';
+  }
 
-  this.error.innerHTML = '';
+  this.clear_error_();
+
+  var url = './' + this.type;
   var csrf_token = this.form.dataset.csrftoken;
-  var error_msg = 'Creating cert failed(%s).';
-  privcert.Util.post_json('./cert', param, csrf_token)
+  privcert.Util.post_json(url, param, csrf_token)
       .done(this.show_.bind(this, error_msg))
       .fail(this.error_.bind(this, error_msg, null));
 }
 
-privcert.List.prototype.revoke_ = function(name, e) {
+privcert.List.prototype.read_ = function() {
+  var data = this.error.querySelector('data[value="read"]');
+  if (data) {
+    var error_msg = data.innerText;
+  } else {
+    var error_msg = 'Read failed.';
+  }
+
+  var url = './' + this.type + '/list.json';
+  privcert.Util.get_json(url)
+      .done(this.show_.bind(this, error_msg))
+      .fail(this.error_.bind(this, error_msg, null));
+}
+
+privcert.List.prototype.update_ = function(name, e) {
+  e.preventDefault();
+}
+
+privcert.List.prototype.delete_ = function(name, confirm_msg, warn_msg, e) {
   e.preventDefault();
 
+  if (!confirm(confirm_msg + '\n' + warn_msg)) return;
+
   var param = {
-    mode: 'revoke',
+    mode: 'delete',
     name: name
   };
 
-  this.error.innerHTML = '';
+  var data = this.error.querySelector('data[value="delete"]');
+  if (data) {
+    var error_msg = data.innerText;
+  } else {
+    var error_msg = 'Delete failed.';
+  }
+
+  this.clear_error_();
+
+  var url = './' + this.type;
   var csrf_token = this.form.dataset.csrftoken;
-  var error_msg = 'Revoking cert failed(%s).';
-  privcert.Util.post_json('./cert', param, csrf_token)
+  privcert.Util.post_json(url, param, csrf_token)
       .done(this.show_.bind(this, error_msg))
       .fail(this.error_.bind(this, error_msg, null));
 }
@@ -84,44 +128,68 @@ privcert.List.prototype.show_ = function(error_msg, res) {
   this.list.innerHTML = '';
   res.detail.forEach(function(entry) {
     var elem = document.createElement('div');
-    elem.className = 'user-list-entry';
+    elem.className = 'list-entry';
 
-    ['name', 'cname', 'mail', 'expire'].forEach(function(key) {
+    Array.prototype.forEach.call(this.view.children, function(spec) {
       var col = document.createElement('span');
-      col.className = key;
-      col.appendChild(document.createTextNode(entry[key]));
+      col.className = spec.dataset.klass;
+
+      if (spec.dataset.key) {
+        col.appendChild(document.createTextNode(entry[spec.dataset.key]));
+      } else if (spec.dataset.value) {
+        col.appendChild(document.createTextNode(spec.dataset.value));
+      } else if (spec.dataset.klass == 'ui-listop') {
+        Array.prototype.forEach.call(spec.children, function(data) {
+          var link = document.createElement('a');
+          link.title = data.innerText;
+          switch (data.value) {
+          case 'link':
+            link.href = './' + this.type + '/' + entry[data.dataset.key];
+            link.dataset.icon = 'link';
+            break;
+          case 'update':
+            link.href = '.';
+            link.dataset.icon = 'edit';
+            link.addEventListener(
+                'click', this.update_.bind(this, entry[data.dataset.key]), false
+            );
+            break;
+          case 'delete':
+            link.href = '.';
+            link.dataset.icon = 'delete';
+            link.addEventListener(
+                'click',
+                this.delete_.bind(
+                    this, entry[data.dataset.key],
+                    data.dataset.confirm, data.dataset.warn
+                ),
+                false
+            );
+            break;
+          }
+          col.appendChild(link);
+        }.bind(this));
+      }
+
       elem.appendChild(col);
-    });
+    }.bind(this));
 
-    var ui = document.createElement('span');
-    ui.className = 'ui';
-
-    var dllink = document.createElement('a');
-    dllink.href = './cert/' + entry.key;
-    dllink.title = _('Download URL');
-    dllink.dataset.icon = 'link';
-    ui.appendChild(dllink);
-
-    var dellink = document.createElement('a');
-    dellink.href = '.';
-    dellink.title = _('Revoke Cert');
-    dellink.dataset.icon = 'delete';
-    dellink.addEventListener(
-        'click', this.revoke_.bind(this, entry.name), false
-    );
-    ui.appendChild(dellink);
-
-    elem.appendChild(ui);
     this.list.appendChild(elem);
   }.bind(this));
 }
 
 privcert.List.prototype.error_ = function(error_msg, err_detail) {
   if (!err_detail) err_detail = 'access error';
-  var msg = _(error_msg).replace('%s', _(err_detail));
+  var msg = error_msg.replace('%s', _(err_detail));
   var p = document.createElement('p');
   p.appendChild(document.createTextNode(msg));
   this.error.appendChild(p);
+}
+
+privcert.List.prototype.clear_error_ = function() {
+  Array.prototype.forEach.call(this.error.children, function(elem) {
+    if (elem.tagName != 'DATA') this.error.removeChild(elem);
+  }.bind(this));
 }
 
 privcert.Util.ready(function() {

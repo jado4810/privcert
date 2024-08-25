@@ -21,8 +21,9 @@ en:
     create: 'Create'
     cancel: 'Cancel'
     new_cert: 'New Cert'
-    loading_list_failed: 'Loading list failed(%s).'
+    sure_to_revoke_cert: 'Sure to revoke cert?'
     creating_cert_failed: 'Creating cert failed(%s).'
+    loading_list_failed: 'Loading list failed(%s).'
     revoking_cert_failed: 'Revoking cert failed(%s).'
   passwd:
     current_password: 'Current Password'
@@ -37,6 +38,8 @@ en:
     alnum_: '(AlNum,_,-)'
     ascii_except_quot: '(ASCII except &quot;,\)'
     at_least_8_chars: '(At least 8 chars)'
+  warn:
+    note_this_cannot_be_undone: 'NOTE: THIS CANNOT BE UNDONE.'
   error:
     access_error: 'access error'
     specified_cert_already_exists: 'specified cert already exists'

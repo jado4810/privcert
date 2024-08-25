@@ -260,3 +260,9 @@ privcert.Util.post_json = function(url, data, csrf_token) {
 
   return xhr.receive_json();
 }
+
+privcert.Util.i18n_error_msgs = {};
+
+function _(key) {
+  return privcert.Util.i18n_error_msgs[key] || key;
+}

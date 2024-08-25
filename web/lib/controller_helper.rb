@@ -117,30 +117,17 @@ module ControllerHelper
     I18n.t(key, scope: scope, default: msg)
   end
 
-  def get_translations(msgs, scope)
-    msgs.map{|msg|
-      translation = _(msg, scope)
-      {msg: msg, translation: translation} if msg != translation
-    }.compact
-  end
-
-  def init_i18n_js(scope, msgs)
+  def init_i18n_error_msg
     error_msgs =
       ServerError.subclasses.map{|klass| klass.new.to_s} << 'access error'
-    defs = [
-      get_translations(msgs, scope),
-      get_translations(error_msgs, :error)
-    ].flatten.map{|elem|
-      "'" << elem[:msg] << "': '" << elem[:translation] << "'"
-    }.join(",\n        ")
-    <<-EOS
-var _I18N_msgs = {
-        #{defs}
-      };
-      function _(key) {
-        return _I18N_msgs[key] || key;
-      }
-    EOS
+    defs = error_msgs.map{|msg|
+      translation = _(msg, :error)
+      "'#{msg}': '#{translation}'" if msg != translation
+    }.compact.join(",\n        ")
+
+    return "privcert.Util.i18n_error_msgs = {\n      " <<
+           "  #{defs}\n      " <<
+           '};'
   end
 
   def send(s, cmd)

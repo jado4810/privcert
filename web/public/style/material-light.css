@@ -14,7 +14,7 @@
 
 .app-logo:focus-visible,
 .header-ui > [data-icon]:focus-visible,
-.user-list-entry > .ui > [data-icon]:focus-visible,
+.list-entry > .ui-listop > [data-icon]:focus-visible,
 .switch-part > .ui-close > [data-icon]:focus-visible {
   outline: #ccc solid 2px;
 }
@@ -24,7 +24,7 @@
 }
 
 .header-ui > [data-icon]::before,
-.user-list-entry > .ui > [data-icon]::before,
+.list-entry > .ui-listop > [data-icon]::before,
 .switch-part > .ui-close > [data-icon]::before {
   color: #888;
 }
@@ -34,13 +34,13 @@
 }
 
 .header-ui > :not(.disabled)[data-icon]:hover::before,
-.user-list-entry > .ui > [data-icon]:hover::before,
+.list-entry > .ui-listop > [data-icon]:hover::before,
 .switch-part > .ui-close > [data-icon]:hover::before {
   color: #444;
 }
 
 .header-ui > :not(.disabled)[data-icon]:active::before,
-.user-list-entry > .ui > [data-icon]:active::before,
+.list-entry > .ui-listop > [data-icon]:active::before,
 .switch-part > .ui-close > [data-icon]:active::before {
   color: #008;
 }
@@ -125,11 +125,11 @@ input::placeholder {
   color: #d00;
 }
 
-.user-list-header {
+.list-header {
   background-color: #fff;
   border-bottom-color: #eee;
 }
 
-.user-list-entry {
+.list-entry {
   border-bottom-color: #eee;
 }
