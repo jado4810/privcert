@@ -2,27 +2,27 @@ var privcert = {};
 privcert.app = {};
 privcert.Util = {};
 
-// 継承
+// Inherits
 privcert.Util.inherit = function(child, parent) {
-  // 親クラスのプロパティをコピー
+  // Copy properties from parent class
   for (var property in parent) {
     child[property] = parent[property];
   }
 
-  // 親クラスのプロトタイプをセット
+  // Set prototype of parent class
   child.__super__ = parent.prototype;
 
-  // 親クラスのコンストラクタを呼ばずにプロトタイプをコピー
+  // Copy prototype without calling constructor of parent class
   var DummyClass = function() {};
   DummyClass.prototype = parent.prototype;
   child.prototype = new DummyClass();
 
-  // 子クラスのプロトタイプはconstructor()のみ差し替え
+  // Replace only constructor() in prototype of child class
   child.prototype.constructor = child;
   return child;
 }
 
-// 初期化処理
+// Initialize
 privcert.Util.ready = function(callback) {
   if (document.readyState == 'complete' ||
       document.readyState != 'loading' && !document.documentElement.doScroll) {
@@ -36,19 +36,19 @@ privcert.Util.ready = function(callback) {
 
 // Promise
 privcert.Util.Promise = function() {
-  // 状態
-  // null…未解決 / true…解決済 / false…棄却済
+  // Status
+  // null - not decided / true - resolved / false - rejected
   this.stat = null;
-  // 解決時または棄却時に渡される値
+  // Value passed when resolved or rejected
   this.arg = null;
 
-  // 解決時の処理
+  // Callbacks on resolve
   this.doneCB = [];
-  // 棄却時の処理
+  // Callbacks on reject
   this.failCB = [];
 }
 
-// 解決時・棄却時の処理を予約
+// Set callback on both resolve and reject
 privcert.Util.Promise.prototype.then = function(doneCB, failCB) {
   this.done(doneCB);
   this.fail(failCB);
@@ -56,31 +56,31 @@ privcert.Util.Promise.prototype.then = function(doneCB, failCB) {
   return this;
 }
 
-// 解決時の処理を予約
+// Set callback on resolve
 privcert.Util.Promise.prototype.done = function(callback) {
   if (callback != null) {
     this.doneCB.push(callback);
 
-    // 既に解決済の場合、即コールバックを実行
+    // Apply callbacks now if already resolved
     if (this.stat == true) callback.apply(this, this.arg);
   }
 
   return this;
 }
 
-// 棄却時の処理を予約
+// Set callback on reject
 privcert.Util.Promise.prototype.fail = function(callback) {
   if (callback != null) {
     this.failCB.push(callback);
 
-    // 既に棄却済の場合、即コールバックを実行
+    // Apply callbacks now if already rejected
     if (this.stat == false) callback.apply(this, this.arg);
   }
 
   return this;
 }
 
-// 解決時・棄却時共通の処理を予約
+// Set callback common on resolve and reject
 privcert.Util.Promise.prototype.anyway = function(callback) {
   this.done(callback);
   this.fail(callback);
@@ -88,7 +88,7 @@ privcert.Util.Promise.prototype.anyway = function(callback) {
   return this;
 }
 
-// 解決済状態への移行を通知
+// Make the promise object resolved
 privcert.Util.Promise.prototype.resolve = function() {
   if (this.stat != null) return this;
 
@@ -102,7 +102,7 @@ privcert.Util.Promise.prototype.resolve = function() {
   return this;
 }
 
-// 棄却済状態への移行を通知
+// Make the promise object rejected
 privcert.Util.Promise.prototype.reject = function() {
   if (this.stat != null) return this;
 
@@ -116,45 +116,45 @@ privcert.Util.Promise.prototype.reject = function() {
   return this;
 }
 
-// 連続した非同期処理のためのPromiseオブジェクトを生成
+// Make the promise object for continuous async processes
 privcert.Util.Promise.prototype.pipe = function(doneFilter, failFilter) {
   var promise = new privcert.Util.Promise();
 
   if (doneFilter == null) {
-    // 解決時フィルタが指定されていない場合、即新しいPromiseに連動させる
+    // Pass to the new promise now if without filter for resolve
     this.done(promise.resolve.bind(promise));
   } else {
     this.done(function(promise, doneFilter) {
       var values = Array.prototype.slice.call(arguments, 2);
 
-      // 解決時に続く処理を実行
+      // Kick continuous process on resolve
       var subResult = doneFilter.apply(this, values);
       if (subResult instanceof privcert.Util.Promise) {
-        // Promiseが返された場合、新しいPromiseに連動させる
+        // Pass to the new promise if returned the promise object
         subResult.then(promise.resolve.bind(promise),
                        promise.reject.bind(promise));
       } else {
-        // それ以外が返された場合、その値で新しいPromiseを解決
+        // Otherwise, resolve new promise with the return value
         promise.resolve(subResult);
       }
     }.bind(this, promise, doneFilter));
   }
 
   if (failFilter == null) {
-    // 棄却時フィルタが指定されていない場合、即新しいPromiseに連動させる
+    // Pass to the new promise now if without filter for reject
     this.fail(promise.reject.bind(promise));
   } else {
     this.fail(function(promise, failFilter) {
       var reasons = Array.prototype.slice.call(arguments, 2);
 
-      // 棄却時に続く処理を実行
+      // Kick continuous process on reject
       var subResult = failFilter.apply(this, reasons);
       if (subResult instanceof privcert.Util.Promise) {
-        // Promiseが返された場合、新しいPromiseに連動させる
+        // Pass to the new promise if returned the promise object
         subResult.then(promise.resolve.bind(promise),
                        promise.reject.bind(promise));
       } else {
-        // それ以外が返された場合、その値で新しいPromiseを棄却
+        // Otherwise, reject new promise with the return value
         promise.reject(subResult);
       }
     }.bind(this, promise, failFilter));
@@ -163,7 +163,7 @@ privcert.Util.Promise.prototype.pipe = function(doneFilter, failFilter) {
   return promise;
 }
 
-// 並行する非同期処理のためのPromiseオブジェクトを生成
+// Make the promise object for concurrent async processes
 privcert.Util.Promise.when = function(promises) {
   var promise = new privcert.Util.Promise();
   promise.nSub = arguments.length;
@@ -197,7 +197,7 @@ privcert.Util.Promise.when = function(promises) {
   return promise;
 }
 
-// Promise版XHRオブジェクトを生成
+// XHR on Promise
 privcert.Util.Promise.XHR = function() {
   privcert.Util.Promise.call(this);
 
@@ -214,7 +214,7 @@ privcert.Util.Promise.XHR = function() {
 }
 privcert.Util.inherit(privcert.Util.Promise.XHR, privcert.Util.Promise);
 
-// サーバレスポンスのJSONデータを取得
+// Get json from server response
 privcert.Util.Promise.XHR.prototype.receive_json = function() {
   return this.pipe(function(res) {
     try {
@@ -231,7 +231,7 @@ privcert.Util.Promise.XHR.prototype.receive_json = function() {
   });
 }
 
-// HTTP GETでJSONを取得
+// Get json with HTTP GET
 privcert.Util.get_json = function(url) {
   var xhr = new privcert.Util.Promise.XHR();
 
@@ -241,7 +241,7 @@ privcert.Util.get_json = function(url) {
   return xhr.receive_json();
 }
 
-// HTTP POSTでデータを送信してJSONを取得
+// Post data with HTTP POST and get json
 privcert.Util.post_json = function(url, data, csrf_token) {
   var xhr = new privcert.Util.Promise.XHR();
 
@@ -261,8 +261,10 @@ privcert.Util.post_json = function(url, data, csrf_token) {
   return xhr.receive_json();
 }
 
+// I18n error messages (to be initialized by server view)
 privcert.Util.i18n_error_msgs = {};
 
+// Get translation
 function _(key) {
   return privcert.Util.i18n_error_msgs[key] || key;
 }
