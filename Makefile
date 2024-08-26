@@ -15,14 +15,19 @@ EXPIRE      = 3650
 
 TOOLS       = ./third-party/getoptions
 
+src/license.sh: LICENSE.txt
+	sed -e 's/^/# /' -e 's/[ \r]*$$//' $< > $@
+
 src/parser_definition.sh: src/parser_definition.sh.in
 	sed -e 's/%KEYLEN%/$(KEYLEN)/' -e 's/%EXPIRE%/$(EXPIRE)/' $< > $@
 
 src/parse.sh: src/parser_definition.sh $(TOOLS)/gengetoptions $(TOOLS)/getoptions
 	$(TOOLS)/gengetoptions parser -i2 -f- parser_definition parse < $< > $@
 
-src/privcert: src/privcert.sh.in src/parse.sh
-	sed -e '/%PARSER_HERE%/r src/parse.sh' -e '/%PARSER_HERE%/d' \
+src/privcert: src/privcert.sh.in src/license.sh src/parse.sh src/openssl.conf.in
+	sed -e '/%LICENSE_HERE%/r src/license.sh' -e '/%LICENSE_HERE%/d' \
+	    -e '/%PARSER_HERE%/r src/parse.sh' -e '/%PARSER_HERE%/d' \
+	    -e '/%SSLCONF_HERE%/r src/openssl.conf.in' -e '/%SSLCONF_HERE%/d' \
 	    -e 's/%CA_ROOT%/$(subst /,\/,$(CA_ROOT))/' \
 	    -e 's/%OPENSSL%/$(subst /,\/,$(OPENSSL))/' \
 	    -e 's/%MD5SUM%/$(subst /,\/,$(MD5SUM))/' \
@@ -35,6 +40,6 @@ install: src/privcert
 	install -p -o root -g root -m 700 $^ $(DESTDIR)$(BINDIR)
 
 clean:
-	rm -f src/privcert src/parse.sh src/parser_definition.sh
+	rm -f src/privcert src/license.sh src/parser_definition.sh src/parse.sh
 
 .PHONY: all install clean
