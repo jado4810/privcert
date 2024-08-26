@@ -1,11 +1,11 @@
 PrivCert - Private CA for management of user certs
 ==================================================
 
-[![GitHub top language](https://img.shields.io/github/languages/top/jado4810/privcert?logo=shell&logoColor=white&labelColor=%23ffd500&color=%23666)](https://github.com/jado4810/privcert/search?l=Shell)
-[![Ruby](https://img.shields.io/badge/-Ruby-CC342D?logo=Ruby&logoColor=fff)](https://github.com/ruby)
-[![Sinatra](https://img.shields.io/badge/-Sinatra-000.svg?logo=Ruby%20Sinatra&logoColor=fff)](https://github.com/sinatra)
-[![Docker](https://img.shields.io/badge/-Docker-2496ed.svg?logo=Docker&logoColor=fff)](https://github.com/docker)
-[![License](https://img.shields.io/github/license/jado4810/privcert.svg)](https://github.com/jado4810/privcert/blob/main/LICENSE.txt)
+[![Ruby](https://img.shields.io/github/languages/top/jado4810/privcert?logo=ruby&logoColor=fff&label=Ruby&labelColor=cc342d&color=666)](https://github.com/jado4810/privcert/search?l=Ruby)
+[![Shell](https://img.shields.io/badge/Shell-4eaa25?logo=gnu-bash&logoColor=fff)](https://github.com/jado4810/privcert/search?l=Shell)
+[![Sinatra](https://img.shields.io/badge/-Sinatra-000.svg?logo=ruby-sinatra&logoColor=fff)](https://github.com/sinatra)
+[![Docker](https://img.shields.io/badge/-Docker-2496ed.svg?logo=docker&logoColor=fff)](https://github.com/docker)
+[![MIT License](https://img.shields.io/github/license/jado4810/privcert.svg)](https://github.com/jado4810/privcert/blob/main/LICENSE.txt)
 
 What is this?
 -------------
