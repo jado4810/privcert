@@ -9,7 +9,7 @@ if [ ! `id -u` = '0' ]; then
   exit 1
 fi
 
-VERSION=0.0.1
+VERSION=0.9.90
 CA_ROOT=%CA_ROOT%
 OPENSSL=%OPENSSL%
 MD5SUM=%MD5SUM%
