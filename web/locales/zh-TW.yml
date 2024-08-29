@@ -20,9 +20,9 @@ zh-TW:
     revoke_cert: '停用憑證'
     create: '作成'
     cancel: '取消'
-    new_cert: '附加憑證'
+    new_cert: '新增憑證'
     sure_to_revoke_cert: '您確定要停用憑證嗎?'
-    creating_cert_failed: '附加憑證失敗(%s)。'
+    creating_cert_failed: '新增憑證失敗(%s)。'
     loading_list_failed: '檢索列表失敗(%s)。'
     revoking_cert_failed: '停用憑證失敗(%s)。'
   passwd:

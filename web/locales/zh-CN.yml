@@ -20,9 +20,9 @@ zh-CN:
     revoke_cert: '禁用证书'
     create: '作成'
     cancel: '取消'
-    new_cert: '附加证书'
+    new_cert: '新增证书'
     sure_to_revoke_cert: '您确定要停用证书吗?'
-    creating_cert_failed: '附加证书失败(%s)。'
+    creating_cert_failed: '新增证书失败(%s)。'
     loading_list_failed: '检索列表失败(%s)。'
     revoking_cert_failed: '禁用证书失败(%s)。'
   passwd:

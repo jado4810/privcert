@@ -1,13 +1,13 @@
 de:
   title:
-    user_cert_admin: 'Nutzerzertifikaten-Admin'
+    user_cert_admin: 'Benutzerzertifikaten-Admin'
     login: 'Anmelden'
     user_certs_list: 'Zertifikatsliste'
     manage_accounts: 'Kontenverwaltung'
     change_password: 'Passwortänderung'
     logout: 'Abmelden'
   login:
-    user: 'Nutzername'
+    user: 'Benutzername'
     password: 'Passwort'
     login: 'Anmelden'
     login_failed: 'Anmeldung fehlgeschlagen.'
@@ -21,10 +21,10 @@ de:
     create: 'Erstellen'
     cancel: 'Absagen'
     new_cert: 'Neue Zertifikat'
-    sure_to_revoke_cert: 'Sicher, das Zertifikat zu widerrufen?'
-    creating_cert_failed: 'Erstellung fehlgeschlagen(%s).'
+    sure_to_revoke_cert: 'Möchten Sie das Zertifikat wirklich widerrufen?'
+    creating_cert_failed: 'Zertifikatserstellung fehlgeschlagen(%s).'
     loading_list_failed: 'Listenladen fehlgeschlagen(%s).'
-    revoking_cert_failed: 'Widerruf fehlgeschlagen(%s).'
+    revoking_cert_failed: 'Zertifikatswiderrufen fehlgeschlagen(%s).'
   passwd:
     current_password: 'Derzeitige Passwort'
     new_password: 'Neue Passwort'
