@@ -1,18 +1,18 @@
     <main class="app-main">
       <header class="list-header">
-        <span class="name"><%= _('Name', :user) %></span>
-        <span class="passwd"><%= _('Password', :user) %></span>
-        <span class="ui-submit"></span>
-        <span class="ui-spacer"></span>
-        <span class="ui-listop"></span>
+        <span class="col-name"><%= _('User Name', :user) %></span>
+        <span class="col-passwd"><%= _('Password', :user) %></span>
+        <span class="col-submit"></span>
+        <span class="col-spacer"></span>
+        <span class="col-ui"></span>
       </header>
       <div id="list" class="list-container" data-type="user"></div>
       <div id="view" class="list-template">
-        <span data-klass="name" data-key="name"></span>
-        <span data-klass="passwd" data-value="********"></span>
-        <span data-klass="ui-submit"></span>
-        <span data-klass="ui-spacer"></span>
-        <span data-klass="ui-listop">
+        <span data-klass="col-name" data-key="name"></span>
+        <span data-klass="col-passwd" data-value="********"></span>
+        <span data-klass="col-submit"></span>
+        <span data-klass="col-spacer"></span>
+        <span data-klass="col-ui">
           <data value="update" data-key="name"><%=
             _('Change Password', :user)
           %></data>
@@ -26,45 +26,45 @@
         </span>
       </div>
       <div id="edit" class="list-template">
-        <span data-klass="name" data-key="name"></span>
-        <span data-klass="passwd">
+        <span data-klass="col-name" data-name="name"></span>
+        <span data-klass="col-passwd">
           <input type="password" name="passwd" placeholder="<%=
             _('(At least 8 chars)', :rule)
           %>" autocomplete="new-password" minlength="8" required>
         </span>
-        <span data-klass="ui-submit">
+        <span data-klass="col-submit">
           <button data-icon="done"><%= _('Change', :user) %></button>
         </span>
-        <span data-klass="ui-spacer"></span>
-        <span data-klass="ui-listop">
+        <span data-klass="col-spacer"></span>
+        <span data-klass="col-ui">
           <data value="cancel"><%= _('Cancel', :user) %></data>
         </span>
       </div>
       <footer class="list-ui">
         <input id="switch" class="switch-control" type="checkbox">
         <form id="create" class="switch-part" <%= csrf_data %>>
-          <span class="name">
+          <span class="col-name">
             <input type="text" name="name" placeholder="<%=
               _('(AlNum,_,-)', :rule)
             %>" pattern="[\-_0-9a-zA-Z]+" required>
           </span>
-          <span class="passwd">
+          <span class="col-passwd">
             <input type="password" name="passwd" placeholder="<%=
               _('(At least 8 chars)', :rule)
             %>" autocomplete="new-password" minlength="8" required>
           </span>
-          <span class="ui-submit">
+          <span class="col-submit">
             <button data-icon="done"><%= _('Create', :user) %></button>
           </span>
-          <span class="spacer"></span>
-          <span class="ui-close">
+          <span class="col-spacer"></span>
+          <span class="col-ui">
             <a id="close" href="." title="<%=
               _('Cancel', :user)
             %>" data-icon="close"></a>
           </span>
         </form>
         <div class="switch-part">
-          <span class="ui-open">
+          <span class="col-ui">
             <button id="open" type="button" title="<%=
               _('New User', :user)
             %>" data-icon="add"></button>

@@ -3,19 +3,19 @@
     </script>
     <main class="app-main">
       <header class="list-header">
-        <span class="name"><%= _('Name', :cert) %></span>
-        <span class="cname"><%= _('Canonical Name', :cert) %></span>
-        <span class="mail"><%= _('Email Address', :cert) %></span>
-        <span class="expire"><%= _('Expires', :cert) %></span>
-        <span class="ui-listop"></span>
+        <span class="col-name"><%= _('Name', :cert) %></span>
+        <span class="col-cname"><%= _('Canonical Name', :cert) %></span>
+        <span class="col-mail"><%= _('Email Address', :cert) %></span>
+        <span class="col-expire"><%= _('Expires', :cert) %></span>
+        <span class="col-ui"></span>
       </header>
       <div id="list" class="list-container" data-type="cert"></div>
       <div id="view" class="list-template">
-        <span data-klass="name" data-key="name"></span>
-        <span data-klass="cname" data-key="cname"></span>
-        <span data-klass="mail" data-key="mail"></span>
-        <span data-klass="expire" data-key="expire"></span>
-        <span data-klass="ui-listop">
+        <span data-klass="col-name" data-key="name"></span>
+        <span data-klass="col-cname" data-key="cname"></span>
+        <span data-klass="col-mail" data-key="mail"></span>
+        <span data-klass="col-expire" data-key="expire"></span>
+        <span data-klass="col-ui">
           <data value="link" data-key="key"><%=
             _('Download URL', :cert)
           %></data>
@@ -31,30 +31,30 @@
       <footer class="list-ui">
         <input id="switch" class="switch-control" type="checkbox">
         <form id="create" class="switch-part" <%= csrf_data %>>
-          <span class="name">
+          <span class="col-name">
             <input type="text" name="name" placeholder="<%=
               _('(AlNum,_,-)', :rule)
             %>" pattern="[\-_0-9a-zA-Z]+" required>
           </span>
-          <span class="cname">
+          <span class="col-cname">
             <input type="text" name="cname" placeholder="<%=
               _('(ASCII except &quot;,\\)', :rule)
             %>" pattern="[ !#-\[\]-~]*">
           </span>
-          <span class="mail">
+          <span class="col-mail">
             <input type="email" name="mail">
           </span>
-          <span class="ui-submit">
+          <span class="col-submit">
             <button data-icon="done"><%= _('Create', :cert) %></button>
           </span>
-          <span class="ui-close">
+          <span class="col-ui">
             <a id="close" href="." title="<%=
               _('Cancel', :cert)
             %>" data-icon="close"></a>
           </span>
         </form>
         <div class="switch-part">
-          <span class="ui-open">
+          <span class="col-ui">
             <button id="open" type="button" title="<%=
               _('New Cert', :cert)
             %>" data-icon="add"></button>
