@@ -37,7 +37,7 @@
         </span>
         <span data-klass="col-spacer"></span>
         <span data-klass="col-ui">
-          <data value="cancel"><%= _('Cancel', :user) %></data>
+          <a href="." title="<%= _('Cancel', :user) %>" data-icon="close"></a>
         </span>
       </div>
       <footer class="list-ui">
@@ -78,7 +78,7 @@
             _('Loading list failed.', :user)
           %></data>
           <data value="update"><%=
-            _('Editing user failed.', :user)
+            _('Changing password failed.', :user)
           %></data>
           <data value="delete"><%=
             _('Deleting user failed.', :user)

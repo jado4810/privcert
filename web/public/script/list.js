@@ -12,40 +12,60 @@ privcert.List = function() {
   this.list = list;
   this.error = error;
   this.view = view;
-  this.edit = document.getElementById('edit');
 
   var sw = document.getElementById('switch');
   var open = document.getElementById('open');
   var close = document.getElementById('close');
   var form = document.getElementById('create');
   if (sw && open && close && form) {
-    this.sw = sw;
-    this.form = form;
-    open.addEventListener('click', this.open_.bind(this), false);
-    close.addEventListener('click', this.close_.bind(this), false);
+    var edit = document.getElementById('edit');
+    if (edit) {
+      this.edit = {
+        template: edit,
+        target: null,
+        form: null
+      };
+    }
+    this.create = {
+      sw: sw,
+      form: form
+    };
 
     this.csrf_token = form.dataset.csrftoken;
+
+    open.addEventListener(
+        'click',
+        function(e) {
+          e.stopPropagation();
+          if (this.edit && this.edit.form) {
+            this.edit.target.style.display = '';
+            this.edit.target = null;
+            this.list.removeChild(this.edit.form);
+            this.edit.form = null;
+          }
+          sw.checked = true;
+        }.bind(this),
+        false
+    );
+    close.addEventListener(
+        'click',
+        function(e) {
+          e.preventDefault();
+          form.reset();
+          sw.checked = false;
+        },
+        false
+    );
     form.addEventListener('submit', this.create_.bind(this), false);
   }
 
   this.read_();
 }
 
-privcert.List.prototype.open_ = function(e) {
-  e.stopPropagation();
-  this.sw.checked = true;
-}
-
-privcert.List.prototype.close_ = function(e) {
-  e.preventDefault();
-  this.form.reset();
-  this.sw.checked = false;
-}
-
 privcert.List.prototype.create_ = function(e) {
   e.preventDefault();
 
-  var elems = this.form.querySelectorAll('input');
+  var elems = this.create.form.querySelectorAll('input');
   var param = Array.prototype.reduce.call(elems, function(param, elem) {
     var val = elem.value;
     if (elem.type == 'password') {
@@ -89,12 +109,120 @@ privcert.List.prototype.read_ = function() {
 
 privcert.List.prototype.update_ = function(name, e) {
   e.preventDefault();
+
+  this.create.form.reset();
+  this.create.sw.checked = false;
+  if (this.edit.form) {
+    this.edit.target.style.display = '';
+    this.edit.target = null;
+    this.list.removeChild(this.edit.form);
+    this.edit.form = null;
+  }
+
+  for (var target = e.target.parentElement;
+       target.className != 'list-entry'; target = target.parentElement) {
+    if (!target) return;
+  }
+  this.edit.target = target;
+
+  var form = document.createElement('form');
+  form.className = 'list-entry';
+  this.edit.form = form;
+
+  var fixed_param = {};
+
+  var template = this.edit.template;
+  Array.prototype.forEach.call(template.children, function(spec, idx) {
+    var col = document.createElement('span');
+    col.className = spec.dataset.klass;
+
+    if (!spec.children.length) {
+      var text = target.children[idx].firstChild;
+      if (text) {
+        col.appendChild(text.cloneNode());
+        if (spec.dataset.name) {
+          fixed_param[spec.dataset.name] =
+              text.nodeValue.replace(/^\s+/, '').replace(/\s+$/, '');
+        }
+      }
+    } else {
+      var elem = spec.firstElementChild.cloneNode(true);
+      if (spec.dataset.klass == 'col-ui') {
+        elem.addEventListener(
+            'click',
+            function(e) {
+              e.preventDefault();
+              target.style.display = '';
+              this.edit.target = null;
+              this.list.removeChild(form);
+              this.edit.form = null;
+            }.bind(this),
+            false
+        );
+      }
+      col.appendChild(elem);
+    }
+    form.appendChild(col);
+  }.bind(this));
+
+  form.addEventListener(
+      'submit',
+      function(e) {
+        e.preventDefault();
+
+        var elems = form.querySelectorAll('input');
+        var param = Array.prototype.reduce.call(elems, function(param, elem) {
+          var val = elem.value;
+          if (elem.type == 'password') {
+            param[elem.name] = elem.value;
+          } else {
+            param[elem.name] =
+                elem.value.replace(/^\s+/, '').replace(/\s+$/, '');
+          }
+          return param;
+        }, Object.assign({
+          mode: 'update'
+        }, fixed_param));
+
+        var data = this.error.querySelector('data[value="update"]');
+        if (data) {
+          var error_msg = data.firstChild.nodeValue;
+        } else {
+          var error_msg = 'Update failed.';
+        }
+
+        this.clear_error_();
+
+        var url = this.type;
+        privcert.Util.post_json(url, param, this.csrf_token)
+            .done(this.show_.bind(this, error_msg))
+            .fail(this.error_.bind(this, error_msg, null));
+
+        target.style.display = '';
+        this.edit.target = null;
+        this.list.removeChild(form);
+        this.edit.form = null;
+      }.bind(this),
+      false
+  );
+
+  target.style.display = 'none';
+  this.list.insertBefore(form, target.nextSibling);
 }
 
 privcert.List.prototype.delete_ = function(name, confirm_msg, warn_msg, e) {
   e.preventDefault();
 
   if (!confirm(confirm_msg + '\n' + warn_msg)) return;
+
+  this.create.form.reset();
+  this.create.sw.checked = false;
+  if (this.edit.form) {
+    this.edit.target.style.display = '';
+    this.edit.target = null;
+    this.list.removeChild(this.edit.form);
+    this.edit.form = null;
+  }
 
   var param = {
     mode: 'delete',
@@ -122,8 +250,10 @@ privcert.List.prototype.show_ = function(error_msg, res) {
     return;
   }
 
-  this.form.reset();
-  this.sw.checked = false;
+  if (this.create) {
+    this.create.form.reset();
+    this.create.sw.checked = false;
+  }
   this.list.innerHTML = '';
   res.detail.forEach(function(entry) {
     var elem = document.createElement('div');
@@ -147,16 +277,25 @@ privcert.List.prototype.show_ = function(error_msg, res) {
             link.dataset.icon = 'link';
             break;
           case 'update':
+            if (!this.edit) return;
             link.href = '.';
             link.dataset.icon = 'edit';
-            link.addEventListener(
-                'click', this.update_.bind(this, entry[data.dataset.key]), false
-            );
+            if (entry.mine) {
+              link.className = 'disabled';
+            } else {
+              link.addEventListener(
+                  'click',
+                  this.update_.bind(this, entry[data.dataset.key]),
+                  false
+              );
+            }
             break;
           case 'delete':
             link.href = '.';
             link.dataset.icon = 'delete';
-            if (entry.deletable) {
+            if (entry.mine) {
+              link.className = 'disabled';
+            } else {
               link.addEventListener(
                   'click',
                   this.delete_.bind(
@@ -165,8 +304,6 @@ privcert.List.prototype.show_ = function(error_msg, res) {
                   ),
                   false
               );
-            } else {
-              link.className = 'disabled';
             }
             break;
           }

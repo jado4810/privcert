@@ -10,26 +10,78 @@ class UserController < Sinatra::Base
     return Db::User.order(:created_at, :id).map{|user|
       {
         name: user.name.to_s_or_empty,
-        deletable: (user.id != curr_user.id)
+        mine: (user.id == curr_user.id)
       }
     }
   end
 
   get '/user/list.json' do
-    user = get_user(:or_halt)
+    curr_user = get_user(:or_halt)
 
-    begin
-      data = {
-        error: false,
-        detail: get_list(user)
-      }
-      json data
-    rescue
-      data = {
-        error: true,
-        detail: 'db error'
-      }
-      json data
+    data = {
+      error: false,
+      detail: get_list(curr_user)
+    }
+    json data
+  end
+
+  post '/user' do
+    curr_user = get_user(:or_halt)
+
+    case params[:mode].to_s_or_nil
+    when 'create'
+      mode = :create
+    when 'update'
+      mode = :update
+    when 'delete'
+      mode = :delete
+    else
+      halt 400, 'Unknown mode'
     end
+
+    name = params[:name].to_s_or_nil
+    if name.nil?
+      halt 400, 'No name'
+    end
+
+    if mode == :create
+      user = Db::User.new
+
+      user.name = name
+      user.password = params[:passwd]
+      user.password_confirmation = params[:passwd]
+
+    else
+      user = Db::User.find_by(name: name)
+      if user.nil?
+        halt 400, 'Unknown user'
+      end
+
+      case mode
+      when :update
+        user.password = params[:passwd]
+        user.password_confirmation = params[:passwd]
+
+      when :delete
+        if user.id == curr_user.id
+          halt 400, 'Not permitted'
+        end
+
+        user.invalid_flag = true
+
+      else
+        halt 500, 'Illegal mode'
+      end
+    end
+
+    unless user.save
+      halt 500, 'Failed'
+    end
+
+    data = {
+      error: false,
+      detail: get_list(curr_user)
+    }
+    json data
   end
 end
