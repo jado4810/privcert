@@ -22,8 +22,14 @@ class App < Sinatra::Base
       use Rack::CommonLogger, file
     end
 
-    I18n.load_path << Dir.glob('./locales/*.yml')
-    I18n.config.available_locales = [:en, :ja, :'zh-CN', :'zh-TW', :ko, :de]
+    locale_files = Dir.glob('./locales/*.yml').sort
+    I18n.load_path << locale_files
+    priority = [:en, :'zh-CN']
+    locale_files.each do |file|
+      locale = file.sub(/^.+\//, '').sub(/\.yml$/, '').to_sym
+      priority << locale unless priority.include?(locale)
+    end
+    I18n.config.available_locales = priority
 
     use Rack::Session::Cookie,
         secret: settings.session_secret,
