@@ -1,10 +1,3 @@
-    <script type="text/javascript">
-      privcert.List.confirm_msg = '<%=
-      %>';
-      privcert.List.warn_msg = '<%=
-        _('NOTE: THIS CANNOT BE UNDONE.', :list)
-      %>';
-    </script>
     <main class="app-main">
       <header class="list-header">
         <span class="name"><%= _('Name', :user) %></span>
@@ -52,7 +45,7 @@
         <form id="create" class="switch-part" <%= csrf_data %>>
           <span class="name">
             <input type="text" name="name" placeholder="<%=
-              _('Name', :user) << _('(AlNum,_,-)', :rule)
+              _('(AlNum,_,-)', :rule)
             %>" pattern="[\-_0-9a-zA-Z]+" required>
           </span>
           <span class="passwd">
@@ -65,7 +58,7 @@
           </span>
           <span class="spacer"></span>
           <span class="ui-close">
-            <a id="close" href="#" title="<%=
+            <a id="close" href="." title="<%=
               _('Cancel', :user)
             %>" data-icon="close"></a>
           </span>

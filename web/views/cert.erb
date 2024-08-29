@@ -33,18 +33,16 @@
         <form id="create" class="switch-part" <%= csrf_data %>>
           <span class="name">
             <input type="text" name="name" placeholder="<%=
-              _('Name', :cert) << _('(AlNum,_,-)', :rule)
+              _('(AlNum,_,-)', :rule)
             %>" pattern="[\-_0-9a-zA-Z]+" required>
           </span>
           <span class="cname">
             <input type="text" name="cname" placeholder="<%=
-              _('Canonical Name', :cert) << _('(ASCII except &quot;,\\)', :rule)
+              _('(ASCII except &quot;,\\)', :rule)
             %>" pattern="[ !#-\[\]-~]*">
           </span>
           <span class="mail">
-            <input type="email" name="mail" placeholder="<%=
-              _('Email Address', :cert)
-            %>">
+            <input type="email" name="mail">
           </span>
           <span class="ui-submit">
             <button data-icon="done"><%= _('Create', :cert) %></button>
