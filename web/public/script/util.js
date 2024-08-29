@@ -163,40 +163,6 @@ privcert.Util.Promise.prototype.pipe = function(doneFilter, failFilter) {
   return promise;
 }
 
-// Make the promise object for concurrent async processes
-privcert.Util.Promise.when = function(promises) {
-  var promise = new privcert.Util.Promise();
-  promise.nSub = arguments.length;
-  promise.nResolve = 0;
-  promise.nReject = 0;
-  promise.subValue = new Array(promise.nSub);
-  promise.subReason = new Array(promise.nSub);
-
-  Array.prototype.forEach.call(arguments, function(p, i) {
-    p.then(function(value) {
-      promise.subValue[i] = value;
-      promise.subReason[i] = null;
-      promise.nResolve++;
-      if (promise.nResolve + promise.nReject >= promise.nSub) {
-        if (promise.nReject == 0) {
-          promise.resolve.apply(promise, promise.subValue);
-        } else {
-          promise.reject.apply(promise, promise.subReason);
-        }
-      }
-    }, function(reason) {
-      promise.subValue[i] = null;
-      promise.subReason[i] = reason;
-      promise.nReject++;
-      if (promise.nResolve + promise.nReject >= promise.nSub) {
-        promise.reject.apply(promise, promise.subReason);
-      }
-    });
-  });
-
-  return promise;
-}
-
 // XHR on Promise
 privcert.Util.Promise.XHR = function() {
   privcert.Util.Promise.call(this);
