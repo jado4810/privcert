@@ -18,11 +18,20 @@ class UserController < Sinatra::Base
   get '/user/list.json' do
     curr_user = get_user(:or_halt)
 
-    data = {
-      error: false,
-      detail: get_list(curr_user)
-    }
-    json data
+    begin
+      data = {
+        error: false,
+        detail: get_list(curr_user)
+      }
+      json data
+
+    rescue ActiveRecord::ActiveRecordError => e
+      data = {
+        error: true,
+        detail: e.to_s
+      }
+      json data
+    end
   end
 
   post '/user' do
@@ -44,44 +53,53 @@ class UserController < Sinatra::Base
       halt 400, 'No name'
     end
 
-    if mode == :create
-      user = Db::User.new
+    begin
+      if mode == :create
+        user = Db::User.new
 
-      user.name = name
-      user.password = params[:passwd]
-      user.password_confirmation = params[:passwd]
-
-    else
-      user = Db::User.find_by(name: name)
-      if user.nil?
-        halt 400, 'Unknown user'
-      end
-
-      case mode
-      when :update
+        user.name = name
         user.password = params[:passwd]
         user.password_confirmation = params[:passwd]
 
-      when :delete
-        if user.id == curr_user.id
-          halt 400, 'Not permitted'
+      else
+        user = Db::User.find_by(name: name)
+        if user.nil?
+          halt 400, 'Unknown user'
         end
 
-        user.invalid_flag = true
+        case mode
+        when :update
+          user.password = params[:passwd]
+          user.password_confirmation = params[:passwd]
 
-      else
-        halt 500, 'Illegal mode'
+        when :delete
+          if user.id == curr_user.id
+            halt 400, 'Not permitted'
+          end
+
+          user.invalid_flag = true
+
+        else
+          halt 500, 'Illegal mode'
+        end
       end
-    end
 
-    unless user.save
-      halt 500, 'Failed'
-    end
+      unless user.save
+        halt 500, 'Failed'
+      end
 
-    data = {
-      error: false,
-      detail: get_list(curr_user)
-    }
-    json data
+      data = {
+        error: false,
+        detail: get_list(curr_user)
+      }
+      json data
+
+    rescue ActiveRecord::ActiveRecordError => e
+      data = {
+        error: true,
+        detail: e.to_s
+      }
+      json data
+    end
   end
 end
