@@ -59,9 +59,6 @@ Variables available on `make install`:
 
 Also `DESTDIR`, useful when making packages, available.
 
-Register `privcert` as a service to use from web interface, see
-[web/README.md](./web/README.md) for more details.
-
 Preparation
 -----------
 
@@ -89,11 +86,16 @@ For Apache, append below to the `VirtualHost` directive in `ssl.conf`:
 
 ```apache
 SSLCACertificateFile /etc/privcert/ca/cert.pem
-SSLVerifyClient require
+SSLVerifyClient optional
 SSLVerifyDepth 10
 SSLCARevocationCheck leaf
 SSLCARevocationFile /etc/privcert/ca/crl.pem
+
+SSLRequire %{SSL_CLIENT_S_DN_O} eq "Y̲o̲u̲r̲ ̲C̲o̲m̲p̲a̲n̲y̲"
 ```
+
+Change condition value in `SSLRequire` to O value of DN specified to `DN_BASE`,
+from the default of "`Your Company`".
 
 > [!NOTE]
 > In addition, might already have specified `SSLCertificateFile` and
@@ -108,6 +110,14 @@ $ sudo apachectl restart
 Now the site is not accessible until installing the client cert signed by this
 ca.
 
+Setup web interface (optional)
+------------------------------
+
+To use with web interface, register `privcert` as a service and modify some
+configuration after setup the webapp.
+
+See [web/README.md](./web/README.md) for more details.
+
 User certs management
 ---------------------
 
@@ -119,6 +129,8 @@ $ sudo -i privcert make u̲s̲e̲r̲ [c̲n̲] [e̲m̲a̲i̲l̲]
 
 To make the site accessible, import the cert file generated at
 `/etc/privcert/users/u̲s̲e̲r̲.pfx` into the environment of the user.
+
+[Web interface](./web/) should be useful to distribute certs.
 
 ### Show all user certs
 
@@ -142,7 +154,6 @@ And the cert is moved to `/etc/privcert/trash`.
 ToDo
 ----
 
-* Web interface
 * Server certificate (to use with VPN server)
 * Update CA cert (necessary?)
 

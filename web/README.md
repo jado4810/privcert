@@ -131,6 +131,20 @@ ProxyPass /privcert/ http://localhost:31080/
 > [!NOTE]
 > `SSLProxyEngine` and `RequestHeader` might already be set for other apps.
 
+And add the condition to require a client cert by adding below to `SSLRequire`
+in `ssl.conf`:
+
+```apache
+<If "%{REQUEST_URI} !~ m!/privcert/cert/.*$!">
+  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Your Company"
+</If>
+```
+
+Set `/privcert/` part in `If` directive to the local path part of `ProxyPass`,
+which is to be used as the URL to access this app.
+This condition is necessary to allow download for the user without the cert
+installed.
+
 And activate it:
 
 ```console
@@ -249,6 +263,20 @@ Alias /privcert /usr/local/privcert-web/public
 </Directory>
 ```
 
+And add the condition to require a client cert by adding below to `SSLRequire`
+in `ssl.conf`:
+
+```apache
+<If "%{REQUEST_URI} !~ m!/privcert/cert/.*$!">
+  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Your Company"
+</If>
+```
+
+Set `/privcert/` part in `If` directive to the local path part of `Alias`,
+which is to be used as the URL to access this app.
+This condition is necessary to allow download for the user without the cert
+installed.
+
 And activate it:
 
 ```console
@@ -261,3 +289,13 @@ Default account
 `rake db:seed` introduces a default account "`admin`" with password
 "`PrivCertAdmin`".
 Strongly recommended changing it at first.
+
+Managing certs
+--------------
+
+Valid user certs is listed on main panel, and will be able to download from
+"link" icon: send the url to the user to allow access.
+
+Making and revoking certs are available from this panel.
+
+Two other panels are available to manage account and to change password.
