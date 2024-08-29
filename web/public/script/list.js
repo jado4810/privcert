@@ -270,32 +270,37 @@ privcert.List.prototype.show_ = function(error_msg, res) {
       } else if (spec.dataset.klass == 'col-ui') {
         Array.prototype.forEach.call(spec.children, function(data) {
           var link = document.createElement('a');
-          link.title = data.firstChild.nodeValue;
           switch (data.value) {
           case 'link':
             link.href = './' + this.type + '/' + entry[data.dataset.key];
+            link.title = data.firstChild.nodeValue;
             link.dataset.icon = 'link';
             break;
           case 'update':
             if (!this.edit) return;
-            link.href = '.';
-            link.dataset.icon = 'edit';
             if (entry.mine) {
               link.className = 'disabled';
+              link.href = '.';
+              link.tabIndex = '-1';
             } else {
+              link.href = '.';
+              link.title = data.firstChild.nodeValue;
               link.addEventListener(
                   'click',
                   this.update_.bind(this, entry[data.dataset.key]),
                   false
               );
             }
+            link.dataset.icon = 'edit';
             break;
           case 'delete':
-            link.href = '.';
-            link.dataset.icon = 'delete';
             if (entry.mine) {
               link.className = 'disabled';
+              link.href = '.';
+              link.tabIndex = '-1';
             } else {
+              link.href = '.';
+              link.title = data.firstChild.nodeValue;
               link.addEventListener(
                   'click',
                   this.delete_.bind(
@@ -305,6 +310,7 @@ privcert.List.prototype.show_ = function(error_msg, res) {
                   false
               );
             }
+            link.dataset.icon = 'delete';
             break;
           }
           col.appendChild(link);

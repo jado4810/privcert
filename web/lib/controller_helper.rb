@@ -90,13 +90,15 @@ module ControllerHelper
   def link_icon(target)
     props = []
     if @page == target
-      props << 'class="disabled"' << 'href="."'
-    elsif target == :cert
-      props << %Q{href="./"}
+      props << 'class="disabled"' << 'href="."' << 'tab-index="-1"'
     else
-      props << %Q{href="./#{target.to_s}"}
+      if target == :cert
+        props << %Q{href="."}
+      else
+        props << %Q{href="./#{target.to_s}"}
+      end
+      props << %Q{title="#{_(PAGES[target][:title], :title)}"}
     end
-    props << %Q{title="#{_(PAGES[target][:title], :title)}"}
     props << %Q{data-icon="#{PAGES[target][:icon]}"}
     return '<a ' << props.join(' ') << '></a>'
   end
