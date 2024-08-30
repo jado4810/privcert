@@ -192,7 +192,7 @@ make_cert() {
     return 3
   fi
 
-  $OPENSSL pkcs12 -export -password "pass:$EXTRACT_PWD" \
+  $OPENSSL pkcs12 -export -legacy -password "pass:$EXTRACT_PWD" \
            -name "$CN" -in "$CRT" -inkey "$KEY" -out "$PFX"
   if [ ! -f "$PFX" ]; then
     return 4
