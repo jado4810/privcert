@@ -43,6 +43,8 @@ Variables available on `make`:
     * default: `/C=JP/ST=Tokyo/O=Your Company`
     * requires C, ST and O
     * must omit CN and emailAddress (to be set individually)
+* `EXTRACT_PWD` - password to extract user cert on install
+    * default: `privcert`
 * `UPDATE_HOOK` - hook to reconfigure web server
     * default: `apachectl restart` (with auto detected executable path)
 * `KEYLEN` - default key length in bits
@@ -129,6 +131,8 @@ $ sudo -i privcert make u̲s̲e̲r̲ [c̲n̲] [e̲m̲a̲i̲l̲]
 
 To make the site accessible, import the cert file generated at
 `/etc/privcert/users/u̲s̲e̲r̲.pfx` into the environment of the user.
+Ordinary, just double-click or tap that file to import.
+The fixed password set on `EXTRACT_PWD`, default to be `privcert`, is necessary.
 
 [Web interface](./web/) should be useful to distribute certs.
 

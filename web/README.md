@@ -296,6 +296,10 @@ Managing certs
 Valid user certs is listed on main panel, and will be able to download from
 "link" icon: send the url to the user to allow access.
 
+The user can download the cert file from that url, and import it with
+double-clicking or tapping it.
+The fixed password is also necessary, so remember to announce it with the url.
+
 Making and revoking certs are available from this panel.
 
 Two other panels are available to manage account and to change password.
