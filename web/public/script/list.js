@@ -217,7 +217,7 @@ privcert.List.prototype.delete_ = function(name, confirm_msg, warn_msg, e) {
 
   this.create.form.reset();
   this.create.sw.checked = false;
-  if (this.edit.form) {
+  if (this.edit && this.edit.form) {
     this.edit.target.style.display = '';
     this.edit.target = null;
     this.list.removeChild(this.edit.form);
