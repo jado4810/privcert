@@ -17,6 +17,7 @@ BASE64=%BASE64%
 
 DN_BASE='%DN_BASE%'
 EXTRACT_PWD='%EXTRACT_PWD%'
+CERT_NAME='%CERT_NAME%'
 UPDATE_HOOK='%UPDATE_HOOK%'
 
 CA_HOME=${CA_ROOT}/ca
@@ -193,7 +194,7 @@ make_cert() {
   fi
 
   $OPENSSL pkcs12 -export -legacy -password "pass:$EXTRACT_PWD" \
-           -name "$CN" -in "$CRT" -inkey "$KEY" -out "$PFX"
+           -name "$CERT_NAME" -in "$CRT" -inkey "$KEY" -out "$PFX"
   if [ ! -f "$PFX" ]; then
     return 4
   fi

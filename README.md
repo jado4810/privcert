@@ -45,6 +45,9 @@ Variables available on `make`:
     * must omit CN and emailAddress (to be set individually)
 * `EXTRACT_PWD` - password to extract user cert on install
     * default: `privcert`
+* `CERT_NAME` - default name of user cert
+    * default: `PrivCert`
+    * recommended to set the site name
 * `UPDATE_HOOK` - hook to reconfigure web server
     * default: `apachectl restart` (with auto detected executable path)
 * `KEYLEN` - default key length in bits
