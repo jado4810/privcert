@@ -135,7 +135,7 @@ And add the condition to require a client cert by adding below to `SSLRequire`
 in `ssl.conf`:
 
 ```apache
-<If "%{REQUEST_URI} !~ m!/privcert/cert/.*$!">
+<If "%{REQUEST_URI} !~ m!^/privcert/cert/!">
   SSLRequire %{SSL_CLIENT_S_DN_O} eq "Your Company"
 </If>
 ```
