@@ -1,7 +1,6 @@
 require 'sinatra/base'
 require 'sinatra/config_file'
 require 'active_record/base'
-require 'active_support/core_ext/date/calculations'
 require 'socket'
 require_relative 'exception'
 require_relative 'database'
@@ -16,12 +15,14 @@ class App < Sinatra::Base
     register Sinatra::ConfigFile
     config_file './config/settings.yml'
 
+    # Application log
     if settings.respond_to?(:log_prefix)
       file = File.new("./log/#{settings.log_prefix}-app.log", 'a+')
       file.sync = true
       use Rack::CommonLogger, file
     end
 
+    # Detect locales
     locale_files = Dir.glob('./locales/*.yml').sort
     I18n.load_path << locale_files
     priority = [:en, :'zh-CN']
@@ -31,10 +32,12 @@ class App < Sinatra::Base
     end
     I18n.config.available_locales = priority
 
+    # Store session into cookie
     use Rack::Session::Cookie,
         secret: settings.session_secret,
         expire_after: settings.session_expire
 
+    # Rack security options
     use Rack::Protection::AuthenticityToken
     use Rack::Protection::JsonCsrf
     use Rack::Protection::XSSHeader

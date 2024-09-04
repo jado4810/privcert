@@ -3,6 +3,7 @@ module ControllerHelper
     obj.before do
       request.script_name = App::URL_PATH unless App::URL_PATH.nil?
 
+      # Detect locale from accept-language header
       default_locale = I18n.config.available_locales.first
 
       if request.env['HTTP_ACCEPT_LANGUAGE'].to_s_or_nil.nil?
