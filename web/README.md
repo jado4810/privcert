@@ -20,7 +20,7 @@ Register PrivCert as a service
 ### For systemd compatible system
 
 A socket service file (`privcert.socket`) and a service template file
-(`privcert@.service`) are available under `sample/systemd`.
+(`privcert@.service`) are available under [`sample/systemd`](./sample/systemd/).
 
 To change listening port from default of 26310/TCP, edit `ListenStream`
 definition in `privcert.socket` file:
@@ -59,7 +59,8 @@ $ sudo systemctl start privcert.socket
 Configure inetd to run `/usr/local/sbin/privcert server`.
 
 For the systems with xinetd and `/etc/xinetd.d`, a service config file
-(`privcert`) under `sample/xinetd` is available; copy it and restart xinetd.
+(`privcert`) under [`sample/xinetd`](./sample/xinetd/) is available; copy it and
+restart xinetd.
 
 Recommend to restrict source address to 127.0.0.1 with tcpwrapper or firewalld;
 for tcpwrapper, just add below to `/etc/hosts.allow`:
@@ -87,7 +88,7 @@ Or just load the provided container image:
 $ xzcat privcert-latest.tar.xz | docker load
 ```
 
-Edit `docker-compose.yml` under `sample/docker`.
+Edit `docker-compose.yml` under [`sample/docker`](./sample/docker/).
 
 Mostly editing points are below:
 
