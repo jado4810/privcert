@@ -32,6 +32,10 @@ ListenStream = 127.0.0.1:26310
 
 For security reasons, strongly recommended not to change listening address from
 default of 127.0.0.1.
+However, if web interface would be set on the different host from the target web
+server, specify an appropriate interface address with strict access control
+with, for example, firewalld, and careful account management of web interface
+itself.
 
 If `PREFIX` or `BINDIR` changed while installing privcert, edit `ExecStart`
 definition in `privcert@.service` file:
@@ -298,7 +302,11 @@ Valid user certs is listed on main panel, and will be able to download from
 
 The user can download the cert file from that url, and import it with
 double-clicking or tapping it.
-The fixed password is also necessary, so remember to announce it with the url.
+On some environments, the user might need to import it from the cert management
+menu of the browser.
+
+The fixed password is also necessary, so remember to announce it with the
+download url.
 
 Making and revoking certs are available from this panel.
 

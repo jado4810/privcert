@@ -134,7 +134,10 @@ $ sudo -i privcert make u̲s̲e̲r̲ [c̲n̲] [e̲m̲a̲i̲l̲]
 
 To make the site accessible, import the cert file generated at
 `/etc/privcert/users/u̲s̲e̲r̲.pfx` into the environment of the user.
-Ordinary, just double-click or tap that file to import.
+Ordinary, just double-click or tap that file to import into the system cert
+store, or, on some environments, might need to import from the cert management
+menu of the browser.
+
 The fixed password set on `EXTRACT_PWD`, default to be `privcert`, is necessary.
 
 [Web interface](./web/) should be useful to distribute certs.
