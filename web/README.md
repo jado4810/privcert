@@ -48,7 +48,8 @@ ExecStart = /usr/local/sbin/privcert server
 Copy these files under `/etc/systemd/system`, and activate the socket service:
 
 ```console
-$ sudo cp sample/systemd/privcert.socket sample/systemd/privcert@.service /etc/systemd/system
+$ sudo cp sample/systemd/privcert.socket /etc/systemd/system/
+$ sudo cp sample/systemd/privcert@.service /etc/systemd/system/
 $ sudo systemctl daemon-reload
 $ sudo systemctl enable privcert.socket
 $ sudo systemctl start privcert.socket

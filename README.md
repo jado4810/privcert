@@ -67,7 +67,7 @@ Also `DESTDIR`, useful when making packages, available.
 Preparation
 -----------
 
-First, init the environment and generate self-signed cert for local CA.
+First, init the environment and generate self-signed cert for local CA:
 
 > [!NOTE]
 > On most systems, privcert executable installed in `/usr/local/sbin` is not
@@ -88,6 +88,12 @@ Then, input password for server mode twice.
 
 Set generated cert on the ssl configuration of your web server.
 For Apache, append below to the `VirtualHost` directive in `ssl.conf`:
+
+> [!NOTE]
+> `ssl.conf` would be found under `/etc/httpd/conf.d` on RHEL or compatible
+> system. It might have other location or filename, for example,
+> `default-ssl.conf` under `/etc/apache2/sites-available` on Ubuntu or Debian
+> variants.
 
 ```apache
 SSLCACertificateFile /etc/privcert/ca/cert.pem
