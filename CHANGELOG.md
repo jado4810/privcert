@@ -1,6 +1,6 @@
 # PrivCert - Changelog
 
-## Version 1.0.0 (2024-9-xx)
+## Version 1.0.0 (2024-9-5)
 
 * Release version
 * Update shell option parser to getoptions-3.3.2
