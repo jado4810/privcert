@@ -13,7 +13,7 @@ zh-TW:
     login_failed: '登入失敗。'
   cert:
     name: '名稱'
-    canonical_name: '全稱'
+    common_name: '全稱'
     email_address: '電郵地址'
     expires: '生效日期'
     download_url: '下載網址'

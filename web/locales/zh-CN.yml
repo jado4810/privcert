@@ -13,7 +13,7 @@ zh-CN:
     login_failed: '登录失败。'
   cert:
     name: '名称'
-    canonical_name: '全称'
+    common_name: '全称'
     email_address: '电邮地址'
     expires: '生效日期'
     download_url: '下载网址'

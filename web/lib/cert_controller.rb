@@ -49,7 +49,7 @@ class CertController < Sinatra::Base
         cols = elem.split(/\t/)
         {
           name: cols[0].to_s_or_empty,
-          cname: cols[2].to_s_or_empty,
+          cn: cols[2].to_s_or_empty,
           mail: cols[3].to_s_or_empty,
           expire: cols[1].to_s_or_empty,
           key: cols[4].to_s_or_empty
@@ -143,9 +143,9 @@ class CertController < Sinatra::Base
 
         case mode
         when :create
-          cname = params[:cname].to_s_or_nil
-          unless cname.nil?
-            stat = sendrecv(s, "SETCN #{cname}")
+          cn = params[:cn].to_s_or_nil
+          unless cn.nil?
+            stat = sendrecv(s, "SETCN #{cn}")
             ServerError.check(stat, false)
           end
 

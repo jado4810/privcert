@@ -13,7 +13,7 @@ ja:
     login_failed: 'ログインに失敗しました。'
   cert:
     name: '名前'
-    canonical_name: 'フルネーム'
+    common_name: 'フルネーム'
     email_address: 'メールアドレス'
     expires: '有効期限'
     download_url: 'ダウンロードURL'

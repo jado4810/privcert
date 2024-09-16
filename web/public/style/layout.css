@@ -336,7 +336,7 @@ button:active {
   width: 144px;
 }
 
-.col-cname,
+.col-cn,
 .col-spacer {
   flex-grow: 1;
 }

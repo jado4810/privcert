@@ -13,7 +13,7 @@ de:
     login_failed: 'Anmeldung fehlgeschlagen.'
   cert:
     name: 'Name'
-    canonical_name: 'Kanonischer Name'
+    common_name: 'Üblicher Name'
     email_address: 'E-Mail-Adresse'
     expires: 'Läuft ab'
     download_url: 'URL zum Herunterladen'

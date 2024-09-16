@@ -13,7 +13,7 @@ en:
     login_failed: 'Login failed.'
   cert:
     name: 'Name'
-    canonical_name: 'Canonical Name'
+    common_name: 'Common Name'
     email_address: 'Email Address'
     expires: 'Expires'
     download_url: 'Download URL'

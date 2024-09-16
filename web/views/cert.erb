@@ -4,7 +4,7 @@
     <main class="app-main">
       <header class="list-header">
         <span class="col-name"><%= _('Name', :cert) %></span>
-        <span class="col-cname"><%= _('Canonical Name', :cert) %></span>
+        <span class="col-cn"><%= _('Common Name', :cert) %></span>
         <span class="col-mail"><%= _('Email Address', :cert) %></span>
         <span class="col-expire"><%= _('Expires', :cert) %></span>
         <span class="col-ui"></span>
@@ -12,7 +12,7 @@
       <div id="list" class="list-container" data-type="cert"></div>
       <div id="view" class="list-template">
         <span data-klass="col-name" data-key="name"></span>
-        <span data-klass="col-cname" data-key="cname"></span>
+        <span data-klass="col-cn" data-key="cn"></span>
         <span data-klass="col-mail" data-key="mail"></span>
         <span data-klass="col-expire" data-key="expire"></span>
         <span data-klass="col-ui">
@@ -36,8 +36,8 @@
               _('(AlNum,_,-)', :rule)
             %>" pattern="[\-_0-9a-zA-Z]+" required>
           </span>
-          <span class="col-cname">
-            <input type="text" name="cname" placeholder="<%=
+          <span class="col-cn">
+            <input type="text" name="cn" placeholder="<%=
               _('(ASCII except &quot;,/,\\)', :rule)
             %>" pattern="[ !#-\.0-\[\]-~]*">
           </span>
