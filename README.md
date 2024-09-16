@@ -67,7 +67,7 @@ Also `DESTDIR`, useful when making packages, available.
 Preparation
 -----------
 
-First, init the environment and generate self-signed cert for local CA:
+First, initialize the environment and generate self-signed cert for local CA:
 
 > [!NOTE]
 > On most systems, privcert executable installed in `/usr/local/sbin` is not
@@ -78,6 +78,9 @@ First, init the environment and generate self-signed cert for local CA:
 $ sudo -i privcert init
 ```
 
+A piece to be set to the ssl configuration will be displayed after
+initialization.
+
 Then, input password for server mode twice.
 
 > [!NOTE]
@@ -86,7 +89,7 @@ Then, input password for server mode twice.
 >
 > Once initialized password, try `sudo -i privcert passwd` to update.
 
-Set generated cert on the ssl configuration of your web server.
+Set displayed piece on the ssl configuration of your web server.
 For Apache, append below to the `VirtualHost` directive in `ssl.conf`:
 
 > [!NOTE]
@@ -105,8 +108,9 @@ SSLCARevocationFile /etc/privcert/ca/crl.pem
 SSLRequire %{SSL_CLIENT_S_DN_O} eq "Y̲o̲u̲r̲ ̲C̲o̲m̲p̲a̲n̲y̲"
 ```
 
-Change condition value in `SSLRequire` to O value of DN specified to `DN_BASE`,
-from the default of "`Your Company`".
+The value in `SSLRequire` should be changed to O value of DN specified in
+in `DN_BASE`, from the default of "`Your Company`".
+Anyway, just copy the displayed piece of the configuration.
 
 > [!NOTE]
 > In addition, might already have specified `SSLCertificateFile` and

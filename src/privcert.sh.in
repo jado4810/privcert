@@ -444,10 +444,12 @@ case "$COMMAND" in
       echo "Add below into ssl configuration file:"
       echo "-------- BEGIN --------"
       echo "SSLCACertificateFile $CA_CRT"
-      echo "SSLVerifyClient require"
+      echo "SSLVerifyClient optional"
       echo "SSLVerifyDepth 10"
       echo "SSLCARevocationCheck leaf"
       echo "SSLCARevocationFile $CA_CRL"
+      echo
+      echo "SSLRequire %{SSL_CLIENT_S_DN_O} eq \"${DN_BASE#*/O=}\""
       echo "-------- END --------"
     fi
 
