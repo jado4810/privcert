@@ -18,7 +18,7 @@ EXPIRE      = 3650
 TOOLS       = ./third-party/getoptions
 
 src/license.sh: LICENSE.txt
-	sed -e 's/^/# /' -e 's/[ \r]*$$//' $< > $@
+	sed -e 's/\r$$//' -e 's/^/# /' -e 's/ *$$//' $< > $@
 
 src/parser_definition.sh: src/parser_definition.sh.in
 	sed -e 's/%KEYLEN%/$(KEYLEN)/' -e 's/%EXPIRE%/$(EXPIRE)/' $< > $@
