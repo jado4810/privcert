@@ -142,7 +142,7 @@ in `ssl.conf`:
 
 ```apache
 <If "%{REQUEST_URI} !~ m!^/privcert/cert/!">
-  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Your Company"
+  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Y̲o̲u̲r̲ ̲C̲o̲m̲p̲a̲n̲y̲"
 </If>
 ```
 
@@ -274,7 +274,7 @@ in `ssl.conf`:
 
 ```apache
 <If "%{REQUEST_URI} !~ m!/privcert/cert/.*$!">
-  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Your Company"
+  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Y̲o̲u̲r̲ ̲C̲o̲m̲p̲a̲n̲y̲"
 </If>
 ```
 
