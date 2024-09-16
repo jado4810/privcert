@@ -1,5 +1,12 @@
 # PrivCert - Changelog
 
+## Version 1.0.1 (2024-9-16)
+
+* Fix column label name for cn on en and de locales of web interface
+* Add slash to cn restricted characters on web interface
+* Update configuration shown on initialization
+* Fix minor issue on build for macOS
+
 ## Version 1.0.0 (2024-9-5)
 
 * Release version
