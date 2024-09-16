@@ -50,7 +50,7 @@ ko:
     changing_password_failed: '비밀번호를 변경하지 못했습니다.'
   rule:
     alnum_: '(영숫자,_,-)'
-    ascii_except_quot: '(&quot;,\이외의ASCII)'
+    ascii_except_quot: '(&quot;,/,\ 이외의 ASCII)'
     at_least_8_chars: '(8글자 이상)'
   warn:
     note_this_cannot_be_undone: '참고: 이 작업은 되돌릴 수 없습니다.'

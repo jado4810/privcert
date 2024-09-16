@@ -50,7 +50,7 @@ ja:
     changing_password_failed: 'パスワードの変更に失敗しました。'
   rule:
     alnum_: '(英数・_・-)'
-    ascii_except_quot: '(&quot;・\以外のASCII)'
+    ascii_except_quot: '(&quot;・/・\以外のASCII)'
     at_least_8_chars: '(8文字以上)'
   warn:
     note_this_cannot_be_undone: '注: この操作は元に戻せません。'

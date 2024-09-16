@@ -52,7 +52,7 @@ de:
     note_this_cannot_be_undone: 'HINWEIS: DIES KANN NICHT RÜCKGÄNGIG GEMACHT WERDEN.'
   rule:
     alnum_: '(AlNum,_,-)'
-    ascii_except_quot: '(ASCII außer &quot;,\)'
+    ascii_except_quot: '(ASCII außer &quot;,/,\)'
     at_least_8_chars: '(Mind. 8 Zeichen)'
   error:
     access_error: 'Zugriffsfehler'

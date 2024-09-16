@@ -50,7 +50,7 @@ en:
     changing_password_failed: 'Changing password failed.'
   rule:
     alnum_: '(AlNum,_,-)'
-    ascii_except_quot: '(ASCII except &quot;,\)'
+    ascii_except_quot: '(ASCII except &quot;,/,\)'
     at_least_8_chars: '(At least 8 chars)'
   warn:
     note_this_cannot_be_undone: 'NOTE: THIS CANNOT BE UNDONE.'

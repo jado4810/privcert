@@ -50,7 +50,7 @@ zh-TW:
     changing_password_failed: '更改密碼失敗。'
   rule:
     alnum_: '(字母數字,_,-)'
-    ascii_except_quot: '(除&quot;,\以外的ASCII)'
+    ascii_except_quot: '(除&quot;,/,\以外的ASCII)'
     at_least_8_chars: '(8個字元以上)'
   warn:
     note_this_cannot_be_undone: '注意: 此操作無法撤銷。'
