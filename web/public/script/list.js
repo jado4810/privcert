@@ -254,7 +254,9 @@ privcert.List.prototype.show_ = function(error_msg, res) {
     this.create.form.reset();
     this.create.sw.checked = false;
   }
-  this.list.innerHTML = '';
+  while (this.list.firstChild) {
+    this.list.removeChild(this.list.firstChild);
+  }
   res.detail.forEach(function(entry) {
     var elem = document.createElement('div');
     elem.className = 'list-entry';
