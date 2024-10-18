@@ -52,6 +52,9 @@ ja:
     alnum_: '(英数・_・-)'
     ascii_except_quot: '(&quot;・/・\以外のASCII)'
     at_least_8_chars: '(8文字以上)'
+  ui:
+    sure: '確認'
+    cancel: '戻る'
   warn:
     note_this_cannot_be_undone: '注: この操作は元に戻せません。'
   error:

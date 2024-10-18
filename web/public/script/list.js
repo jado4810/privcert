@@ -210,38 +210,38 @@ privcert.List.prototype.update_ = function(name, e) {
   this.list.insertBefore(form, target.nextSibling);
 }
 
-privcert.List.prototype.delete_ = function(name, confirm_msg, warn_msg, e) {
+privcert.List.prototype.delete_ = function(name, messages, okay, cancel, e) {
   e.preventDefault();
 
-  if (!confirm(confirm_msg + '\n' + warn_msg)) return;
+  privcert.Util.confirm(messages, okay, cancel, true).then(function() {
+    this.create.form.reset();
+    this.create.sw.checked = false;
+    if (this.edit && this.edit.form) {
+      this.edit.target.style.display = '';
+      this.edit.target = null;
+      this.list.removeChild(this.edit.form);
+      this.edit.form = null;
+    }
 
-  this.create.form.reset();
-  this.create.sw.checked = false;
-  if (this.edit && this.edit.form) {
-    this.edit.target.style.display = '';
-    this.edit.target = null;
-    this.list.removeChild(this.edit.form);
-    this.edit.form = null;
-  }
+    var param = {
+      mode: 'delete',
+      name: name
+    };
 
-  var param = {
-    mode: 'delete',
-    name: name
-  };
+    var data = this.error.querySelector('data[value="delete"]');
+    if (data) {
+      var error_msg = data.firstChild.nodeValue;
+    } else {
+      var error_msg = 'Delete failed.';
+    }
 
-  var data = this.error.querySelector('data[value="delete"]');
-  if (data) {
-    var error_msg = data.firstChild.nodeValue;
-  } else {
-    var error_msg = 'Delete failed.';
-  }
+    this.clear_error_();
 
-  this.clear_error_();
-
-  var url = './' + this.type;
-  privcert.Util.post_json(url, param, this.csrf_token)
-      .then(this.show_.bind(this, error_msg))
-      .catch(this.error_.bind(this, error_msg, null));
+    var url = './' + this.type;
+    privcert.Util.post_json(url, param, this.csrf_token)
+        .then(this.show_.bind(this, error_msg))
+        .catch(this.error_.bind(this, error_msg, null));
+  }).catch(privcert.Util.ignore_error);
 }
 
 privcert.List.prototype.show_ = function(error_msg, res) {
@@ -307,7 +307,8 @@ privcert.List.prototype.show_ = function(error_msg, res) {
                   'click',
                   this.delete_.bind(
                       this, entry[data.dataset.key],
-                      data.dataset.confirm, data.dataset.warn
+                      [data.dataset.confirm, data.dataset.warn],
+                      data.dataset.okay, data.dataset.cancel
                   ),
                   false
               );

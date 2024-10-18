@@ -50,6 +50,9 @@ de:
     changing_password_failed: 'Passwortänderung fehlgeschlagen.'
   warn:
     note_this_cannot_be_undone: 'HINWEIS: DIES KANN NICHT RÜCKGÄNGIG GEMACHT WERDEN.'
+  ui:
+    sure: 'Sicher'
+    cancel: 'Absagen'
   rule:
     alnum_: '(AlNum,_,-)'
     ascii_except_quot: '(ASCII außer &quot;,/,\)'

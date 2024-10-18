@@ -52,6 +52,9 @@ en:
     alnum_: '(AlNum,_,-)'
     ascii_except_quot: '(ASCII except &quot;,/,\)'
     at_least_8_chars: '(At least 8 chars)'
+  ui:
+    sure: 'Sure'
+    cancel: 'Cancel'
   warn:
     note_this_cannot_be_undone: 'NOTE: THIS CANNOT BE UNDONE.'
   error:

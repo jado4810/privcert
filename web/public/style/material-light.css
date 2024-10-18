@@ -3,6 +3,10 @@
   color: #666;
 }
 
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, .4);
+}
+
 ::-webkit-scrollbar-thumb {
   background-color: #888;
 }
@@ -58,7 +62,8 @@ input::placeholder {
   color: #aaa;
 }
 
-button {
+button:not([type="button"]),
+button[type="button"]:empty {
   background-color: #48e;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2),
               0 2px 2px      rgba(0, 0, 0, .14),
@@ -66,44 +71,53 @@ button {
   color: #fff;
 }
 
+button[type="button"]:not(:empty),
 a.button {
   border-color: #ccc;
   color: #444;
 }
 
-button:hover {
+button:not([type="button"]):hover,
+button[type="button"]:empty:hover {
   background-color: #59f;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2),
               0 4px 5px      rgba(0, 0, 0, .14),
               0 1px 10px     rgba(0, 0, 0, .12);
 }
 
+button[type="button"]:not(:empty):hover,
 a.button:hover {
   background-color: rgba(0, 0, 0, .1);
   color: #000;
 }
 
-button:active {
+button:not([type="button"]):active,
+button[type="button"]:empty:active {
   background-color: #37c;
   border-color: #48e;
 }
 
+button[type="button"]:not(:empty):active,
 a.button:active {
   background-color: rgba(0, 0, 0, .15);
 }
 
-button:focus-visible {
+button:not([type="button"]):focus-visible,
+button[type="button"]:empty:focus-visible {
   outline: #34c solid 2px;
 }
 
+button[type="button"]:not(:empty):focus-visible,
 a.button:focus-visible {
   border-color: #48e;
 }
 
-button[data-icon]::before {
+button:not([type="button"])[data-icon]::before,
+button[type="button"]:empty[data-icon]::before {
   color: #eee;
 }
 
+button[type="button"]:not(:empty)[data-icon]::before,
 a.button[data-icon]::before {
   color: #666;
 }

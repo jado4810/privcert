@@ -2,6 +2,10 @@
   font: 14px sans-serif;
 }
 
+dialog::backdrop {
+  backdrop-filter: blur(1px);
+}
+
 ::-webkit-scrollbar {
   height: 3px;
   width: 3px;
@@ -22,6 +26,10 @@
 
 body {
   margin: 0;
+}
+
+dialog {
+  padding: 0;
 }
 
 .app-header {
@@ -203,29 +211,46 @@ a.button[data-icon]::before {
   grid-column: 2 / -1;
 }
 
-.form-ui {
+.dialog-content {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 16px;
+  row-gap: 16px;
+}
+
+.dialog-content > p {
+  margin: 0;
+}
+
+.form-ui,
+.dialog-ui {
   column-gap: 16px;
   display: flex;
   justify-content: flex-end;
 }
 
 .form-ui > button,
-.form-ui > a.button {
+.form-ui > a.button,
+.dialog-ui > button {
   flex-shrink: 0;
 }
 
-button {
+button:not([type="button"]),
+button[type="button"]:empty {
   border: 2px solid transparent;
   transition: background-color .3s ease,
               box-shadow       .3s ease;
 }
 
-button:empty[data-icon] {
+button[type="button"]:empty {
   border-radius: 19px;
   padding: 0;
   width: 36px;
 }
 
+button[type="button"]:not(:empty),
 a.button {
   background-color: transparent;
   border-style: solid;
@@ -235,7 +260,8 @@ a.button {
               color            .3s ease;
 }
 
-button:active {
+button:not([type="button"]):active,
+button[type="button"]:empty:active {
   border-style: inset;
   transition: background-color .3s ease,
               box-shadow       .3s ease,

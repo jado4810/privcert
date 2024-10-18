@@ -52,6 +52,9 @@ zh-TW:
     alnum_: '(字母數字,_,-)'
     ascii_except_quot: '(除&quot;,/,\以外的ASCII)'
     at_least_8_chars: '(8個字元以上)'
+  ui:
+    sure: '確認'
+    cancel: '取消'
   warn:
     note_this_cannot_be_undone: '注意: 此操作無法撤銷。'
   error:
