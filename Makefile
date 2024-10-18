@@ -17,6 +17,9 @@ EXPIRE      = 3650
 
 TOOLS       = ./third-party/getoptions
 
+PKCS12_OPTS = $(shell $(OPENSSL) pkcs12 -help 2> /dev/null | \
+                grep -- '-legacy' > /dev/null && echo "'-legacy'")
+
 src/license.sh: LICENSE.txt
 	sed -e 's/\r$$//' -e 's/^/# /' -e 's/ *$$//' $< > $@
 
@@ -37,7 +40,8 @@ src/privcert: src/privcert.sh.in src/license.sh src/parse.sh src/openssl.conf.in
 	    -e 's/%DN_BASE%/$(subst /,\/,$(subst &,\&,$(DN_BASE)))/' \
 	    -e 's/%EXTRACT_PWD%/$(subst /,\/,$(EXTRACT_PWD))/' \
 	    -e 's/%CERT_NAME%/$(subst /,\/,$(CERT_NAME))/' \
-	    -e 's/%UPDATE_HOOK%/$(subst /,\/,$(UPDATE_HOOK))/' $< > $@
+	    -e 's/%UPDATE_HOOK%/$(subst /,\/,$(UPDATE_HOOK))/' \
+	    -e "s/%PKCS12_OPTS%/$(PKCS12_OPTS)/" $< > $@
 
 install: src/privcert
 	test -d $(DESTDIR)$(BINDIR) || mkdir -p $(DESTDIR)$(BINDIR)

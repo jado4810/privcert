@@ -20,6 +20,8 @@ EXTRACT_PWD='%EXTRACT_PWD%'
 CERT_NAME='%CERT_NAME%'
 UPDATE_HOOK='%UPDATE_HOOK%'
 
+PKCS12_OPTS=%PKCS12_OPTS%
+
 CA_HOME=${CA_ROOT}/ca
 CL_HOME=${CA_ROOT}/users
 
@@ -193,7 +195,7 @@ make_cert() {
     return 3
   fi
 
-  $OPENSSL pkcs12 -export -legacy -password "pass:$EXTRACT_PWD" \
+  $OPENSSL pkcs12 -export $PKCS12_OPTS -password "pass:$EXTRACT_PWD" \
            -name "$CERT_NAME" -in "$CRT" -inkey "$KEY" -out "$PFX"
   if [ ! -f "$PFX" ]; then
     return 4
