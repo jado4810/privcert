@@ -1,3 +1,4 @@
 ---
 BUNDLE_PATH: "vendor/bundle"
+BUNDLE_BUILD__SQLITE3: "--with-cflags=-Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion"
 BUNDLE_WITHOUT: "production:test"
