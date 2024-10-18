@@ -89,8 +89,8 @@ privcert.List.prototype.create_ = function(e) {
 
   var url = './' + this.type;
   privcert.Util.post_json(url, param, this.csrf_token)
-      .done(this.show_.bind(this, error_msg))
-      .fail(this.error_.bind(this, error_msg, null));
+      .then(this.show_.bind(this, error_msg))
+      .catch(this.error_.bind(this, error_msg, null));
 }
 
 privcert.List.prototype.read_ = function() {
@@ -103,8 +103,8 @@ privcert.List.prototype.read_ = function() {
 
   var url = './' + this.type + '/list.json';
   privcert.Util.get_json(url)
-      .done(this.show_.bind(this, error_msg))
-      .fail(this.error_.bind(this, error_msg, null));
+      .then(this.show_.bind(this, error_msg))
+      .catch(this.error_.bind(this, error_msg, null));
 }
 
 privcert.List.prototype.update_ = function(name, e) {
@@ -195,8 +195,8 @@ privcert.List.prototype.update_ = function(name, e) {
 
         var url = this.type;
         privcert.Util.post_json(url, param, this.csrf_token)
-            .done(this.show_.bind(this, error_msg))
-            .fail(this.error_.bind(this, error_msg, null));
+            .then(this.show_.bind(this, error_msg))
+            .catch(this.error_.bind(this, error_msg, null));
 
         target.style.display = '';
         this.edit.target = null;
@@ -240,8 +240,8 @@ privcert.List.prototype.delete_ = function(name, confirm_msg, warn_msg, e) {
 
   var url = './' + this.type;
   privcert.Util.post_json(url, param, this.csrf_token)
-      .done(this.show_.bind(this, error_msg))
-      .fail(this.error_.bind(this, error_msg, null));
+      .then(this.show_.bind(this, error_msg))
+      .catch(this.error_.bind(this, error_msg, null));
 }
 
 privcert.List.prototype.show_ = function(error_msg, res) {
