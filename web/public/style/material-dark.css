@@ -3,7 +3,11 @@
   color: #ddd;
 }
 
-dialog {
+::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+}
+
+.confirm {
   background-color: #112;
   color: #fff;
 }
@@ -12,7 +16,7 @@ dialog::backdrop {
   background-color: rgba(255, 255, 255, .4);
 }
 
-::-webkit-scrollbar-thumb {
+.busy > * {
   background-color: #ddd;
 }
 

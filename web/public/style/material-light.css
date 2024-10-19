@@ -3,12 +3,16 @@
   color: #666;
 }
 
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+}
+
 dialog::backdrop {
   background-color: rgba(0, 0, 0, .4);
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: #888;
+.busy > * {
+  background-color: #444;
 }
 
 .app-header {

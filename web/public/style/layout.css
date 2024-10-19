@@ -2,10 +2,6 @@
   font: 14px sans-serif;
 }
 
-dialog::backdrop {
-  backdrop-filter: blur(1px);
-}
-
 ::-webkit-scrollbar {
   height: 3px;
   width: 3px;
@@ -28,8 +24,68 @@ body {
   margin: 0;
 }
 
-dialog {
+.confirm {
   padding: 0;
+}
+
+.confirm::backdrop {
+  backdrop-filter: blur(1px);
+}
+
+.busy {
+  background: transparent;
+  border: none;
+  height: calc(100vh - 130px);
+  outline: none;
+  overflow: hidden;
+  padding: 0;
+  width: 640px;
+}
+
+.busy > * {
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-name: busy-linear-flow;
+  animation-timing-function: cubic-bezier(.01, .7, .99, .3);
+  border-radius: 4px;
+  display: block;
+  height: 6px;
+  left: -6px;
+  position: absolute;
+  top: 30px;
+  width: 6px;
+}
+
+.busy > :nth-child(1) {
+  animation-delay: .1s;
+}
+
+.busy > :nth-child(2) {
+  animation-delay: .2s;
+}
+
+.busy > :nth-child(3) {
+  animation-delay: .3s;
+}
+
+.busy > :nth-child(4) {
+  animation-delay: .4s;
+}
+
+.busy > :nth-child(5) {
+  animation-delay: .5s;
+}
+
+@keyframes busy-linear-flow {
+  0% {
+    left: 0%;
+  }
+  60% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 .app-header {

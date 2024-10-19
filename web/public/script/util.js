@@ -35,8 +35,9 @@ privcert.Util.ready = function(callback) {
 }
 
 // Dialog
-privcert.Util.Dialog = function() {
+privcert.Util.Dialog = function(klass) {
   this.dialog = document.createElement('dialog');
+  if (klass != null) this.dialog.className = klass;
   this.dialog.addEventListener('cancel', this.cancel.bind(this), false);
 
   this.promise = null;
@@ -93,7 +94,7 @@ privcert.Util.Dialog.prototype.cancel = function() {
 // Confirm on modal dialog
 privcert.Util.confirm = function(messages, okay_label, cancel_label,
                                  reject_if_cancel) {
-  var dialog = new privcert.Util.Dialog();
+  var dialog = new privcert.Util.Dialog('confirm');
 
   var content = document.createElement('div');
   content.className = 'dialog-content'
@@ -132,6 +133,26 @@ privcert.Util.confirm = function(messages, okay_label, cancel_label,
   return promise.catch(function() {
     return false;
   });
+}
+
+// Busy bar
+privcert.Util.Busy = function() {
+  this.dialog = document.createElement('dialog');
+  this.dialog.className = 'busy';
+
+  for (var i = 0; i < 5; i++) {
+    this.dialog.appendChild(document.createElement('span'));
+  }
+}
+
+privcert.Util.Busy.prototype.show = function() {
+  document.body.appendChild(this.dialog);
+  this.dialog.showModal();
+}
+
+privcert.Util.Busy.prototype.clear = function() {
+    this.dialog.close();
+    document.body.removeChild(this.dialog);
 }
 
 // Get json from server response

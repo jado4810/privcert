@@ -59,6 +59,8 @@ privcert.List = function() {
     form.addEventListener('submit', this.create_.bind(this), false);
   }
 
+  this.busy = new privcert.Util.Busy();
+
   this.read_();
 }
 
@@ -86,9 +88,11 @@ privcert.List.prototype.create_ = function(e) {
   }
 
   this.clear_error_();
+  this.busy.show();
 
   var url = './' + this.type;
   privcert.Util.post_json(url, param, this.csrf_token)
+      .finally(this.busy.clear.bind(this.busy))
       .then(this.show_.bind(this, error_msg))
       .catch(this.error_.bind(this, error_msg, null));
 }
@@ -101,8 +105,11 @@ privcert.List.prototype.read_ = function() {
     var error_msg = 'Read failed.';
   }
 
+  this.busy.show();
+
   var url = './' + this.type + '/list.json';
   privcert.Util.get_json(url)
+      .finally(this.busy.clear.bind(this.busy))
       .then(this.show_.bind(this, error_msg))
       .catch(this.error_.bind(this, error_msg, null));
 }
@@ -192,9 +199,11 @@ privcert.List.prototype.update_ = function(name, e) {
         }
 
         this.clear_error_();
+        this.busy.show();
 
         var url = this.type;
         privcert.Util.post_json(url, param, this.csrf_token)
+            .finally(this.busy.clear.bind(this.busy))
             .then(this.show_.bind(this, error_msg))
             .catch(this.error_.bind(this, error_msg, null));
 
@@ -236,9 +245,11 @@ privcert.List.prototype.delete_ = function(name, messages, okay, cancel, e) {
     }
 
     this.clear_error_();
+    this.busy.show();
 
     var url = './' + this.type;
     privcert.Util.post_json(url, param, this.csrf_token)
+        .finally(this.busy.clear.bind(this.busy))
         .then(this.show_.bind(this, error_msg))
         .catch(this.error_.bind(this, error_msg, null));
   }).catch(privcert.Util.ignore_error);
