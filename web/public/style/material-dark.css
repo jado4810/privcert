@@ -22,8 +22,7 @@ dialog::backdrop {
 }
 
 .app-logo:focus-visible,
-.header-ui > a[data-icon]:focus-visible,
-.col-ui > a[data-icon]:focus-visible {
+:is(.header-ui, .col-ui) > a[data-icon]:focus-visible {
   outline: #888 solid 2px;
 }
 
@@ -31,29 +30,38 @@ dialog::backdrop {
   color: #cde;
 }
 
-.header-ui > a[data-icon]::before,
-.col-ui > a[data-icon]::before {
+:is(.header-ui, .col-ui) > a[data-icon]::before {
   color: #ccc;
 }
 
-.header-ui > a.disabled[data-icon]::before,
-.col-ui > a.disabled[data-icon]::before {
+:is(.header-ui, .col-ui) > a.disabled[data-icon]::before {
   color: #888;
 }
 
-.header-ui > a:not(.disabled)[data-icon]:hover::before,
-.col-ui > a:not(.disabled)[data-icon]:hover::before {
+:is(.header-ui, .col-ui) > a:not(.disabled)[data-icon]:hover::before {
   color: #eee;
 }
 
-.header-ui > a:not(.disabled)[data-icon]:active::before,
-.col-ui > a:not(.disabled)[data-icon]:active::before {
+:is(.header-ui, .col-ui) > a:not(.disabled)[data-icon]:active::before {
   color: #def;
 }
 
 .app-main {
   background-color: #223;
   box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+}
+
+.list-header {
+  background-color: #223;
+  border-bottom-color: #888;
+}
+
+.list-entry {
+  border-bottom-color: #888;
+}
+
+.error-status {
+  color: #c67;
 }
 
 input {
@@ -70,71 +78,48 @@ input::placeholder {
   color: #aaa;
 }
 
-button:not([type="button"]),
-button[type="button"]:empty {
+button:is(:not([type="button"]), [type="button"]:empty) {
   background-color: #98f;
   box-shadow: 0 2px 2px rgba(0, 0, 0, .5);
   color: #001;
 }
 
-button[type="button"]:not(:empty),
-a.button {
+button[type="button"]:not(:empty), a.button {
   border-color: #888;
   color: #eee;
 }
 
-button:not([type="button"]):hover,
-button[type="button"]:empty:hover {
+button:is(:not([type="button"]), [type="button"]:empty):hover {
   background-color: #a9f;
   box-shadow: 0 4px 5px rgba(0, 0, 0, .5);
 }
 
-button[type="button"]:not(:empty):hover,
-a.button:hover {
+:is(button[type="button"]:not(:empty), a.button):hover {
   background-color: rgba(255, 255, 255, .1);
   color: #fff;
 }
 
-button:not([type="button"]):active,
-button[type="button"]:empty:active {
+button:is(:not([type="button"]), [type="button"]:empty):active {
   background-color: #87c;
   border-color: #98f;
 }
 
-button[type="button"]:not(:empty):active,
-a.button:active {
+:is(button[type="button"]:not(:empty), a.button):active {
   background-color: rgba(255, 255, 255, .15);
 }
 
-button:not([type="button"]):focus-visible,
-button[type="button"]:empty:focus-visible {
+button:is(:not([type="button"]), [type="button"]:empty):focus-visible {
   outline: #def solid 2px;
 }
 
-button[type="button"]:not(:empty):focus-visible,
-a.button:focus-visible {
+:is(button[type="button"]:not(:empty), a.button):focus-visible {
   border-color: #98f;
 }
 
-button:not([type="button"])[data-icon]::before,
-button[type="button"]:empty[data-icon]::before {
+button:is(:not([type="button"]), [type="button"]:empty)[data-icon]::before {
   color: #444;
 }
 
-button[type="button"]:not(:empty)[data-icon]::before,
-a.button[data-icon]::before {
+:is(button[type="button"]:not(:empty), a.button)[data-icon]::before {
   color: #ddd;
-}
-
-.error-status {
-  color: #c67;
-}
-
-.list-header {
-  background-color: #223;
-  border-bottom-color: #888;
-}
-
-.list-entry {
-  border-bottom-color: #888;
 }

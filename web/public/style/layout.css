@@ -98,8 +98,7 @@ dialog {
   user-select: none;
 }
 
-.header-ui > .disabled,
-.col-ui > .disabled {
+:is(.header-ui, .col-ui) > .disabled {
   pointer-events: none;
 }
 
@@ -127,69 +126,6 @@ dialog {
   top: 40px;
 }
 
-input[type="text"],
-input[type="password"],
-input[type="email"] {
-  border-radius: 4px;
-  border-style: solid;
-  border-width: 2px;
-  box-sizing: border-box;
-  font: 14px sans-serif;
-  height: 36px;
-  outline: none;
-  padding: 4px 8px;
-  width: 100%;
-}
-
-button {
-  align-items: center;
-  border-radius: 4px;
-  box-sizing: border-box;
-  column-gap: 8px;
-  cursor: pointer;
-  display: inline-flex;
-  font: 14px sans-serif;
-  height: 36px;
-  justify-content: space-evenly;
-  margin: 0;
-  padding: 0 14px;
-  user-select: none;
-}
-
-a.button {
-  align-items: center;
-  border-radius: 4px;
-  box-sizing: border-box;
-  column-gap: 8px;
-  display: inline-flex;
-  font: 14px sans-serif;
-  height: 36px;
-  justify-content: space-evenly;
-  margin: 0;
-  padding: 0 14px;
-  text-decoration: none;
-  -webkit-user-drag: none;
-  user-select: none;
-}
-
-button[data-icon],
-a.button[data-icon] {
-  padding-left: 10px;
-}
-
-button[data-icon]::before,
-a.button[data-icon]::before {
-  content: attr(data-icon);
-  flex-shrink: 0;
-  display: block;
-  font-family: 'Material Icons';
-  font-feature-settings: 'liga';
-  font-size: 18px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizelegibility;
-}
-
 .auth-form {
   column-gap: 16px;
   display: grid;
@@ -202,13 +138,6 @@ a.button[data-icon]::before {
   align-self: center;
   display: block;
   line-height: 36px;
-}
-
-.form-footer {
-  row-gap: 24px;
-  flex-direction: column;
-  display: flex;
-  grid-column: 2 / -1;
 }
 
 .dialog-content {
@@ -224,71 +153,21 @@ a.button[data-icon]::before {
   margin: 0;
 }
 
-.form-ui,
-.dialog-ui {
+.form-footer {
+  row-gap: 24px;
+  flex-direction: column;
+  display: flex;
+  grid-column: 2 / -1;
+}
+
+.form-ui, .dialog-ui {
   column-gap: 16px;
   display: flex;
   justify-content: flex-end;
 }
 
-.form-ui > button,
-.form-ui > a.button,
-.dialog-ui > button {
+:is(.form-ui, .dialog-ui) > :is(button, a.button) {
   flex-shrink: 0;
-}
-
-button:not([type="button"]),
-button[type="button"]:empty {
-  border: 2px solid transparent;
-  transition: background-color .3s ease,
-              box-shadow       .3s ease;
-}
-
-button[type="button"]:empty {
-  border-radius: 19px;
-  padding: 0;
-  width: 36px;
-}
-
-button[type="button"]:not(:empty),
-a.button {
-  background-color: transparent;
-  border-style: solid;
-  border-width: 2px;
-  outline: none;
-  transition: background-color .3s ease,
-              color            .3s ease;
-}
-
-button:not([type="button"]):active,
-button[type="button"]:empty:active {
-  border-style: inset;
-  transition: background-color .3s ease,
-              box-shadow       .3s ease,
-              border-color     0s  ease .25s;
-}
-
-.error-status {
-  align-items: center;
-  column-gap: 4px;
-  display: flex;
-}
-
-.error-status:has(> p)::before {
-  content: 'error';
-  display: block;
-  flex-shrink: 0;
-  font-family: 'Material Icons';
-  font-feature-settings: 'liga';
-  font-size: 20px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizelegibility;
-}
-
-.error-status > p {
-  line-height: 24px;
-  margin: 0;
 }
 
 .list-header {
@@ -354,16 +233,12 @@ button[type="button"]:empty:active {
   white-space: nowrap;
 }
 
-.col-name,
-.col-passwd,
-.col-expire,
-.col-submit {
+.col-name, .col-passwd, .col-expire, .col-submit {
   flex-shrink: 0;
   width: 144px;
 }
 
-.col-cn,
-.col-spacer {
+.col-cn, .col-spacer {
   flex-grow: 1;
 }
 
@@ -425,4 +300,103 @@ button[type="button"]:empty:active {
 
 .list-error > data {
   display: none;
+}
+
+.error-status {
+  align-items: center;
+  column-gap: 4px;
+  display: flex;
+}
+
+.error-status:has(> p)::before {
+  content: 'error';
+  display: block;
+  flex-shrink: 0;
+  font-family: 'Material Icons';
+  font-feature-settings: 'liga';
+  font-size: 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+}
+
+.error-status > p {
+  line-height: 24px;
+  margin: 0;
+}
+
+input:is([type="text"], [type="password"], [type="email"]) {
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 2px;
+  box-sizing: border-box;
+  font: 14px sans-serif;
+  height: 36px;
+  outline: none;
+  padding: 4px 8px;
+  width: 100%;
+}
+
+button, a.button {
+  align-items: center;
+  border-radius: 4px;
+  box-sizing: border-box;
+  column-gap: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  font: 14px sans-serif;
+  height: 36px;
+  justify-content: space-evenly;
+  margin: 0;
+  padding: 0 14px;
+  user-select: none;
+}
+
+a.button {
+  text-decoration: none;
+  -webkit-user-drag: none;
+}
+
+:is(button, a.button)[data-icon] {
+  padding-left: 10px;
+}
+
+:is(button, a.button)[data-icon]::before {
+  content: attr(data-icon);
+  flex-shrink: 0;
+  display: block;
+  font-family: 'Material Icons';
+  font-feature-settings: 'liga';
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+}
+
+button:is(:not([type="button"]), [type="button"]:empty) {
+  border: 2px solid transparent;
+  transition: background-color .3s ease,
+              box-shadow       .3s ease;
+}
+
+button[type="button"]:empty {
+  border-radius: 19px;
+  padding: 0;
+  width: 36px;
+}
+
+button[type="button"]:not(:empty), a.button {
+  background-color: transparent;
+  border-style: solid;
+  border-width: 2px;
+  outline: none;
+  transition: background-color .3s ease,
+              color            .3s ease;
+}
+
+button:is(:not([type="button"]), [type="button"]:empty):active {
+  border-style: inset;
+  transition: background-color .3s ease,
+              box-shadow       .3s ease,
+              border-color     0s  ease .25s;
 }
