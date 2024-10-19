@@ -1,0 +1,9 @@
+# Modify log output path
+/var/log/privcert/*.log {
+    compress
+    missingok
+    copytruncate
+    monthly
+    minsize 1M
+    rotate 1
+}

@@ -157,6 +157,13 @@ And activate it:
 $ sudo apachectl restart
 ```
 
+Finally, append logrotate configuration to make logfiles rotated.
+
+Just copy `privcert` under [`sample/docker`](./sample/docker/) into
+`/etc/logrotate.d`.
+If changed log output directory in `docker-compose.yml`, edit it to match the
+path.
+
 ### Run standalone
 
 First, install Ruby environment using rbenv or from the official package
