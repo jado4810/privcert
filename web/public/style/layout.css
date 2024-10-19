@@ -227,7 +227,7 @@ dialog {
   text-align: center;
 }
 
-.list-entry > :not(.col-ui) {
+.list-entry > :is(.col-name, .col-cn, .col-mail) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
