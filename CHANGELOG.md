@@ -1,5 +1,13 @@
 # PrivCert - Changelog
 
+## Version 1.0.2 (2024-10-20)
+
+* Fix failure on making certs with openssl-1.1.1
+* Change native confirm dialog into modal dialog of HTML standard
+* Add logrotate configuration sample for web interface
+* Add busy indication to lock UIs while waiting server response
+* Some tweaks on web interface
+
 ## Version 1.0.1 (2024-9-16)
 
 * Fix column label name for cn on en and de locales of web interface
