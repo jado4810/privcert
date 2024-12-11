@@ -453,6 +453,5 @@ button[type="button"]:not(:empty), a.button {
 button:is(:not([type="button"]), [type="button"]:empty):active {
   border-style: inset;
   transition: background-color .3s ease,
-              box-shadow       .3s ease,
               border-color     0s  ease .25s;
 }
