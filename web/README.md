@@ -1,6 +1,8 @@
 PrivCert web interface
 ======================
 
+EN|[JA](./README-ja.md)
+
 Requirement
 -----------
 
