@@ -19,26 +19,19 @@ Register PrivCert as a service
 
 ### For systemd compatible system
 
-A socket service file (`privcert.socket`) and a service template file
-(`privcert@.service`) are available under [`sample/systemd`](./sample/systemd/).
+A socket service file (`privcert.socket`) and a service template file (`privcert@.service`) are available under [`sample/systemd`](./sample/systemd/).
 
-To change listening port from default of 26310/TCP, edit `ListenStream`
-definition in `privcert.socket` file:
+To change listening port from default of 26310/TCP, edit `ListenStream` definition in `privcert.socket` file:
 
 ```ini
 [Socket]
 ListenStream = 127.0.0.1:26310
 ```
 
-For security reasons, strongly recommended not to change listening address from
-default of 127.0.0.1.
-However, if web interface would be set on the different host from the target web
-server, specify an appropriate interface address with strict access control
-with, for example, firewalld, and careful account management of web interface
-itself.
+For security reasons, strongly recommended not to change listening address from default of 127.0.0.1.
+However, if web interface would be set on the different host from the target web server, specify an appropriate interface address with strict access control with, for example, firewalld, and careful account management of web interface itself.
 
-If `PREFIX` or `BINDIR` changed while installing privcert, edit `ExecStart`
-definition in `privcert@.service` file:
+If `PREFIX` or `BINDIR` changed while installing privcert, edit `ExecStart` definition in `privcert@.service` file:
 
 ```ini
 [Service]
@@ -59,12 +52,9 @@ $ sudo systemctl start privcert.socket
 
 Configure inetd to run `/usr/local/sbin/privcert server`.
 
-For the systems with xinetd and `/etc/xinetd.d`, a service config file
-(`privcert`) under [`sample/xinetd`](./sample/xinetd/) is available; copy it and
-restart xinetd.
+For the systems with xinetd and `/etc/xinetd.d`, a service config file (`privcert`) under [`sample/xinetd`](./sample/xinetd/) is available; copy it and restart xinetd.
 
-Recommend to restrict source address to 127.0.0.1 with tcpwrapper or firewalld;
-for tcpwrapper, just add below to `/etc/hosts.allow`:
+Recommend to restrict source address to 127.0.0.1 with tcpwrapper or firewalld; for tcpwrapper, just add below to `/etc/hosts.allow`:
 
 ```hosts
 privcert:127.0.0.1 :allow
@@ -98,8 +88,7 @@ Mostly editing points are below:
 * If changed the port of the privcert server, modify `SERVER_PORT`
 * Set the password for the privcert server to `SERVER_PASSWD`
 
-Strongly recommended to make new account for web application process, and set
-its uid and gid on `APP_UID` and `APP_GID`.
+Strongly recommended to make new account for web application process, and set its uid and gid on `APP_UID` and `APP_GID`.
 
 ```console
 $ sudo useradd -UMd /etc/privcert privcert
@@ -137,19 +126,16 @@ ProxyPass /privcert/ http://localhost:31080/
 > [!NOTE]
 > `SSLProxyEngine` and `RequestHeader` might already be set for other apps.
 
-And add the condition to require a client cert by adding below to `SSLRequire`
-in `ssl.conf`:
+And add the condition to require a client cert by adding below to `SSLRequire` in `ssl.conf`:
 
 ```apache
 <If "%{REQUEST_URI} !~ m!^/privcert/cert/!">
-  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Y̲o̲u̲r̲ ̲C̲o̲m̲p̲a̲n̲y̲"
+  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Your Company"
 </If>
 ```
 
-Set `/privcert/` part in `If` directive to the local path part of `ProxyPass`,
-which is to be used as the URL to access this app.
-This condition is necessary to allow download for the user without the cert
-installed.
+Set `/privcert/` part in `If` directive to the local path part of `ProxyPass`, which is to be used as the URL to access this app.
+This condition is necessary to allow download for the user without the cert installed.
 
 And activate it:
 
@@ -159,15 +145,12 @@ $ sudo apachectl restart
 
 Finally, append logrotate configuration to make logfiles rotated.
 
-Just copy `privcert` under [`sample/docker`](./sample/docker/) into
-`/etc/logrotate.d`.
-If changed log output directory in `docker-compose.yml`, edit it to match the
-path.
+Just copy `privcert` under [`sample/docker`](./sample/docker/) into `/etc/logrotate.d`.
+If changed log output directory in `docker-compose.yml`, edit it to match the path.
 
 ### Run standalone
 
-First, install Ruby environment using rbenv or from the official package
-repository of the target OS.
+First, install Ruby environment using rbenv or from the official package repository of the target OS.
 
 For example, using rbenv with recent RHEL or compatible distros:
 
@@ -208,8 +191,7 @@ Next, install the passenger module to apache:
 
 Just hit <kbd>Enter</kbd>s to any questions.
 
-Will displayed a piece to be added to apache configuration, copy them to
-`/etc/httpd/conf.d/passenger.conf` and edit below:
+Will displayed a piece to be added to apache configuration, copy them to `/etc/httpd/conf.d/passenger.conf` and edit below:
 
 * Line 1, 3 and 4 - just copy the content
 * Line 5-8 - add `PassengerEnabled` line and below:
@@ -233,8 +215,7 @@ Then place whole contents under this directory into an appropriate path:
 # cd /usr/local/privcert-web
 ```
 
-Edit `.bundle/config` and change `production` to `development` in
-`BUNDLE_WITHOUT`:
+Edit `.bundle/config` and change `production` to `development` in `BUNDLE_WITHOUT`:
 
 ```yaml
 BUNDLE_WITHOUT: "development:test"
@@ -248,7 +229,7 @@ Install bundled packages with `bundle install`:
 
 Change configuration in `config/settings.yml` and `config/database.yml`.
 
-Initialize an auth database on the first run:
+Initialize an auth database:
 
 ```console
 # bundle exec rake db:create APP_ENV=production
@@ -276,8 +257,7 @@ Alias /privcert /usr/local/privcert-web/public
 </Directory>
 ```
 
-And add the condition to require a client cert by adding below to `SSLRequire`
-in `ssl.conf`:
+And add the condition to require a client cert by adding below to `SSLRequire` in `ssl.conf`:
 
 ```apache
 <If "%{REQUEST_URI} !~ m!/privcert/cert/.*$!">
@@ -285,10 +265,8 @@ in `ssl.conf`:
 </If>
 ```
 
-Set `/privcert/` part in `If` directive to the local path part of `Alias`,
-which is to be used as the URL to access this app.
-This condition is necessary to allow download for the user without the cert
-installed.
+Set `/privcert/` part in `If` directive to the local path part of `Alias`, which is to be used as the URL to access this app.
+This condition is necessary to allow download for the user without the cert installed.
 
 And activate it:
 
@@ -299,23 +277,18 @@ And activate it:
 Default account
 ---------------
 
-`rake db:seed` introduces a default account "`admin`" with password
-"`PrivCertAdmin`".
+`rake db:seed` introduces a default account "`admin`" with password "`PrivCertAdmin`".
 Strongly recommended changing it at first.
 
 Managing certs
 --------------
 
-Valid user certs is listed on main panel, and will be able to download from
-"link" icon: send the url to the user to allow access.
+Valid user certs is listed on main panel, and will be able to download from "link" icon: send the url to the user to allow access.
 
-The user can download the cert file from that url, and import it with
-double-clicking or tapping it.
-On some environments, the user might need to import it from the cert management
-menu of the browser.
+The user can download the cert file from that url, and import it with double-clicking or tapping it.
+On some environments, the user might need to import it from the cert management menu of the browser.
 
-The fixed password is also necessary, so remember to announce it with the
-download url.
+The fixed password is also necessary, so remember to announce it with the download url.
 
 Making and revoking certs are available from this panel.
 

@@ -10,8 +10,7 @@ PrivCert - Private CA for management of user certs
 What is this?
 -------------
 
-Simple script to manage user certs to be used for client certification on the
-restricted websites.
+Simple script to manage user certs to be used for client certification on the restricted websites.
 
 It sets up self-signed CA and generates client certs per user.
 
@@ -59,8 +58,10 @@ Variables available on `make`:
 
 Variables available on `make install`:
 
-* `PREFIX` - install prefix, default is `/usr/local`.
-* `BINDIR` - where executables are installed at, default is `$(PREFIX)/sbin`.
+* `PREFIX` - install prefix
+    * default: `/usr/local`
+* `BINDIR` - where executables are installed at
+    * default: `$(PREFIX)/sbin`
 
 Also `DESTDIR`, useful when making packages, available.
 
@@ -70,22 +71,19 @@ Preparation
 First, initialize the environment and generate self-signed cert for local CA:
 
 > [!NOTE]
-> On most systems, privcert executable installed in `/usr/local/sbin` is not
-> found under `sudo` due to overridden `$PATH` for security reasons.
+> On most systems, privcert executable installed in `/usr/local/sbin` is not found under `sudo` due to overridden `$PATH` for security reasons.
 > So consider adding `-i` option to bring `$PATH` from root environment.
 
 ```console
 $ sudo -i privcert init
 ```
 
-A piece to be set to the ssl configuration will be displayed after
-initialization.
+A piece to be set to the ssl configuration will be displayed after initialization.
 
 Then, input password for server mode twice.
 
 > [!NOTE]
-> If omit password or failed to set password, retry `init` to initialize
-> password.
+> If omit password or failed to set password, retry `init` to initialize password.
 >
 > Once initialized password, try `sudo -i privcert passwd` to update.
 
@@ -93,10 +91,8 @@ Set displayed piece on the ssl configuration of your web server.
 For Apache, append below to the `VirtualHost` directive in `ssl.conf`:
 
 > [!NOTE]
-> `ssl.conf` would be found under `/etc/httpd/conf.d` on RHEL or compatible
-> system. It might have other location or filename, for example,
-> `default-ssl.conf` under `/etc/apache2/sites-available` on Ubuntu or Debian
-> variants.
+> `ssl.conf` would be found under `/etc/httpd/conf.d` on RHEL or compatible system.
+> It might have other location or filename, for example, `default-ssl.conf` under `/etc/apache2/sites-available` on Ubuntu or Debian variants.
 
 ```apache
 SSLCACertificateFile /etc/privcert/ca/cert.pem
@@ -105,16 +101,14 @@ SSLVerifyDepth 10
 SSLCARevocationCheck leaf
 SSLCARevocationFile /etc/privcert/ca/crl.pem
 
-SSLRequire %{SSL_CLIENT_S_DN_O} eq "Y̲o̲u̲r̲ ̲C̲o̲m̲p̲a̲n̲y̲"
+SSLRequire %{SSL_CLIENT_S_DN_O} eq "Your Company"
 ```
 
-The value in `SSLRequire` should be changed to O value of DN specified in
-in `DN_BASE`, from the default of "`Your Company`".
+The value in `SSLRequire` should be changed to O value of DN specified in `DN_BASE`, from the default of "`Your Company`".
 Anyway, just copy the displayed piece of the configuration.
 
 > [!NOTE]
-> In addition, might already have specified `SSLCertificateFile` and
-> `SSLCertificateKeyFile` to enable SSL with an appropriate server cert.
+> In addition, might already have specified `SSLCertificateFile` and `SSLCertificateKeyFile` to enable SSL with an appropriate server cert.
 
 Update apache configuration to make those valid:
 
@@ -122,14 +116,12 @@ Update apache configuration to make those valid:
 $ sudo apachectl restart
 ```
 
-Now the site is not accessible until installing the client cert signed by this
-ca.
+Now the site is not accessible until installing the client cert signed by this ca.
 
 Setup web interface (optional)
 ------------------------------
 
-To use with web interface, register `privcert` as a service and modify some
-configuration after setup the webapp.
+To use with web interface, register `privcert` as a service and modify some configuration after setup the webapp.
 
 See [web/README.md](./web/README.md) for more details.
 
@@ -142,11 +134,8 @@ User certs management
 $ sudo -i privcert make u̲s̲e̲r̲ [c̲n̲] [e̲m̲a̲i̲l̲]
 ```
 
-To make the site accessible, import the cert file generated at
-`/etc/privcert/users/u̲s̲e̲r̲.pfx` into the environment of the user.
-Ordinary, just double-click or tap that file to import into the system cert
-store, or, on some environments, might need to import from the cert management
-menu of the browser.
+To make the site accessible, import the cert file generated at `/etc/privcert/users/u̲s̲e̲r̲.pfx` into the environment of the user.
+Ordinary, just double-click or tap that file to import into the system cert store, or, on some environments, might need to import from the cert management menu of the browser.
 
 The fixed password set on `EXTRACT_PWD`, default to be `privcert`, is necessary.
 
@@ -158,8 +147,7 @@ The fixed password set on `EXTRACT_PWD`, default to be `privcert`, is necessary.
 $ sudo -i privcert list
 ```
 
-It shows only certs just under `/etc/privcert/users`, which should hold only
-valid ones.
+It shows only certs just under `/etc/privcert/users`, which should hold only valid ones.
 
 ### Revoke user cert
 
@@ -167,8 +155,7 @@ valid ones.
 $ sudo -i privcert revoke u̲s̲e̲r̲
 ```
 
-Revoked cert is added to certificate revocation list (`crl.pem`), so the client
-with the cert could no longer access.
+Revoked cert is added to certificate revocation list (`crl.pem`), so the client with the cert could no longer access.
 And the cert is moved to `/etc/privcert/trash`.
 
 ToDo
@@ -182,7 +169,4 @@ Copyright and License
 
 Copyright (c)2024 Shun-ichi TAHARA &lt;jado@flowernet.jp&gt;
 
-Provided under [MIT license](./LICENSE.txt), with the exception of
-[third-party/getoptions](./third-party/getoptions/) directory, which is
-appropriated from [ko1nksm/getoptions](https://github.com/ko1nksm/getoptions) of
-[CC0 license](./third-party/getoptions/LICENSE).
+Provided under [MIT license](./LICENSE.txt), with the exception of [third-party/getoptions](./third-party/getoptions/) directory, which is appropriated from [ko1nksm/getoptions](https://github.com/ko1nksm/getoptions) of [CC0](./third-party/getoptions/LICENSE).
