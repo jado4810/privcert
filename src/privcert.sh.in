@@ -106,33 +106,83 @@ init_pw() {
   chmod 0600 $CA_PWD
 }
 
+make_index() {
+  cd $CL_HOME
+  local CRT=''
+  for CRT in *.crt; do
+    if [ "$CRT" = '*.crt' ]; then
+      echo -n > .index
+      return
+    fi
+
+    local ID="${CRT%.crt}"
+    local CACHE="${ID}.cache"
+    if [ ! -f "$CACHE" ]; then
+      make_cache "$ID"
+    fi
+
+    local SERIAL
+    local REST
+    IFS="	" read SERIAL REST < "$CACHE"
+
+    echo -e "${SERIAL}\t${ID}"
+  done | sort -n > .index
+}
+
+make_cache() {
+  local ID="$1"
+  local CRT="${CL_HOME}/${ID}.crt"
+  local CACHE="${CL_HOME}/${ID}.cache"
+
+  $OPENSSL x509 -noout -serial -enddate -subject -fingerprint -in "$CRT" | (
+    read SERIAL
+    SERIAL=$((0x${SERIAL#serial=}))
+
+    read ENDDATE
+    ENDDATE="${ENDDATE#notAfter=}"
+    ENDDATE=`LANG=C date "${DATE_OPTS[@]}" "$ENDDATE" '+%Y/%m/%d %T'`
+
+    read SUBJECT
+    local DN="${SUBJECT#subject=}"
+    local REST="${DN#*CN}"
+    REST="${REST# }"; REST="${REST#=}"; REST="${REST# }"
+    local CN="${REST%%[,/]*}"
+    if [ "$CN" = "$REST" ]; then
+      local MAIL=''
+    else
+      local MAIL="${REST#*emailAddress}"
+      MAIL="${MAIL# }"; MAIL="${MAIL#=}"; MAIL="${MAIL# }"
+    fi
+
+    read FINGERPRINT
+    local DLKEY="${FINGERPRINT#*Fingerprint}"
+    DLKEY="${DLKEY# }"; DLKEY="${DLKEY#=}"; DLKEY="${DLKEY# }"
+    DLKEY="${DLKEY//:/}"
+
+    echo -e "${SERIAL}\t${ENDDATE}\t${CN}\t${MAIL}\t${DLKEY}" > $CACHE
+  )
+}
+
 show_cert() {
   local ID="$1"
   local IDT="$2"
   local CRT="${CL_HOME}/${ID}.crt"
+  local CACHE="${CL_HOME}/${ID}.cache"
 
-  local ENDDATE=`$OPENSSL x509 -noout -enddate -in "$CRT"`
-  ENDDATE="${ENDDATE#notAfter=}"
-  ENDDATE=`LANG=C date "${DATE_OPTS[@]}" "$ENDDATE" '+%Y/%m/%d %T'`
-
-  local SUBJECT=`$OPENSSL x509 -noout -subject -in "$CRT"`
-  local DN="${SUBJECT#subject=}"
-  local REST="${DN#*CN}"
-  REST="${REST# }"; REST="${REST#=}"; REST="${REST# }"
-  local CN="${REST%%[,/]*}"
-  if [ "$CN" = "$REST" ]; then
-    local MAIL=''
-  else
-    local MAIL="${REST#*emailAddress}"
-    MAIL="${MAIL# }"; MAIL="${MAIL#=}"; MAIL="${MAIL# }"
+  if [ ! -f "$CACHE" -o "$CACHE" -ot "$CRT" ]; then
+    make_cache "$ID"
   fi
+
+  local SERIAL
+  local ENDDATE
+  local CN
+  local MAIL
+  local DLKEY
+  IFS="	" read SERIAL ENDDATE CN MAIL DLKEY < "$CACHE"
 
   case "${IDT}:${MAIL}" in
     :*)
-      local FINGERPRINT=`$OPENSSL x509 -noout -fingerprint -in "$CRT"`
-      local DLKEY="${FINGERPRINT#*Fingerprint}"
-      DLKEY="${DLKEY# }"; DLKEY="${DLKEY#=}"; DLKEY="${DLKEY# }"
-      echo -e "${ID}\t${ENDDATE}\t${CN}\t${MAIL}\t${DLKEY//:/}"
+      echo -e "${ID}\t${ENDDATE}\t${CN}\t${MAIL}\t${DLKEY}"
       ;;
     auto:)
       echo "$ID    $ENDDATE    $CN"
@@ -196,6 +246,7 @@ make_cert() {
     return 4
   fi
 
+  make_index
   return 0
 }
 
@@ -204,6 +255,7 @@ revoke_cert() {
   local KEY="${CL_HOME}/${ID}.key"
   local CRT="${CL_HOME}/${ID}.crt"
   local PFX="${CL_HOME}/${ID}.pfx"
+  local CACHE="${CL_HOME}/${ID}.cache"
 
   if [ ! -f "$CRT" ]; then
     return 1
@@ -226,7 +278,9 @@ revoke_cert() {
   mv -f "$KEY" "${CL_HOME}/trash/${SERIAL}.key"
   mv -f "$CRT" "${CL_HOME}/trash/${SERIAL}.crt"
   mv -f "$PFX" "${CL_HOME}/trash/${SERIAL}.pfx"
+  rm -f "$CACHE"
 
+  make_index
   return 0
 }
 
@@ -363,23 +417,21 @@ server_loop() {
           continue
         fi
 
-        local IDS=()
-        local CRT=''
-        for CRT in *.crt; do
-          if [ "$CRT" = '*.crt' ]; then
-            echo '030 LIST OK'
-            continue 2
-          fi
-          local SERIAL=`$OPENSSL x509 -noout -serial -in "$CRT"`
-          IDS+=("$((0x${SERIAL#serial=}))_${CRT%.crt}")
-        done
-        IDS=(`echo "${IDS[@]}" | tr ' ' '\n' | sort -n`)
+        if [ ! -f .index ]; then
+          make_index
+        fi
+
+        if [ ! -s .index ]; then
+          echo '030 LIST OK'
+          continue
+        fi
 
         echo '130 LIST OK'
-        local ID=''
-        for ID in "${IDS[@]}"; do
-          show_cert "${ID#*_}"
-        done
+        local SERIAL
+        local ID
+        while IFS="	" read SERIAL ID; do
+          show_cert "$ID"
+        done < .index
         echo 'EOF'
         ;;
 
@@ -528,16 +580,14 @@ case "$COMMAND" in
     fi
 
     cd $CL_HOME
+    if [ ! -f .index ]; then
+      make_index
+    fi
+
     IDS=()
-    for CRT in *.crt; do
-      if [ "$CRT" = '*.crt' ]; then
-        break
-      fi
-      SERIAL=`$OPENSSL x509 -noout -serial -in "$CRT"`
-      IDS+=("$((0x${SERIAL#serial=}))_${CRT%.crt}")
-    done
-    IDS=(`echo "${IDS[@]}" | tr ' ' '\n' | sort -n`)
-    IDS=(`for ID in "${IDS[@]}"; do echo "${ID#*_}"; done`)
+    while IFS="	" read SERIAL ID; do
+      IDS+=("$ID")
+    done < .index
     IDT=`for ID in "${IDS[@]}"; do echo ${#ID}; done | sort -rn | head -n 1`
 
     echo -n 'ID'
