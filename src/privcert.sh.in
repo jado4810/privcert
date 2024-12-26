@@ -108,7 +108,7 @@ init_pw() {
 
 make_index() {
   cd $CL_HOME
-  local CRT=''
+  local CRT
   for CRT in *.crt; do
     if [ "$CRT" = '*.crt' ]; then
       echo -n > .index
@@ -121,8 +121,7 @@ make_index() {
       make_cache "$ID"
     fi
 
-    local SERIAL
-    local REST
+    local SERIAL REST
     IFS="	" read SERIAL REST < "$CACHE"
 
     echo -e "${SERIAL}\t${ID}"
@@ -135,6 +134,7 @@ make_cache() {
   local CACHE="${CL_HOME}/${ID}.cache"
 
   $OPENSSL x509 -noout -serial -enddate -subject -fingerprint -in "$CRT" | (
+    local SERIAL ENDDATE SUBJECT FINGERPRINT
     read SERIAL
     SERIAL=$((0x${SERIAL#serial=}))
 
@@ -174,11 +174,7 @@ show_cert() {
     make_cache "$ID"
   fi
 
-  local SERIAL
-  local ENDDATE
-  local CN
-  local MAIL
-  local DLKEY
+  local SERIAL ENDDATE CN MAIL DLKEY
   IFS="	" read SERIAL ENDDATE CN MAIL DLKEY < "$CACHE"
 
   case "${IDT}:${MAIL}" in
@@ -289,11 +285,7 @@ revoke_cert() {
 }
 
 server_loop() {
-  local CMD=''
-  local ARG=''
-  local CN=''
-  local MAIL=''
-
+  local CMD ARG
   local WAIT=1
   while read -r CMD ARG; do
     CMD=`echo "${CMD%}" | tr [A-Z] [a-z]`
@@ -340,6 +332,8 @@ server_loop() {
   done
 
   cd $CL_HOME
+  local CN=''
+  local MAIL=''
   local UPDATE=''
   while read -r CMD ARG; do
     CMD=`echo "${CMD%}" | tr [A-Z] [a-z]`
