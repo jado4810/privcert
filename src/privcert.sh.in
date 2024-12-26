@@ -153,6 +153,7 @@ make_cache() {
       local MAIL="${REST#*emailAddress}"
       MAIL="${MAIL# }"; MAIL="${MAIL#=}"; MAIL="${MAIL# }"
     fi
+    MAIL="${MAIL:--}"
 
     read FINGERPRINT
     local DLKEY="${FINGERPRINT#*Fingerprint}"
@@ -181,16 +182,19 @@ show_cert() {
   IFS="	" read SERIAL ENDDATE CN MAIL DLKEY < "$CACHE"
 
   case "${IDT}:${MAIL}" in
+    :-)
+      echo -e "${ID}\t${ENDDATE}\t${CN}\t\t${DLKEY}"
+      ;;
     :*)
       echo -e "${ID}\t${ENDDATE}\t${CN}\t${MAIL}\t${DLKEY}"
       ;;
-    auto:)
+    auto:-)
       echo "$ID    $ENDDATE    $CN"
       ;;
     auto:*)
       echo "$ID    $ENDDATE    $CN <${MAIL}>"
       ;;
-    *:)
+    *:-)
       echo -n "$ID"
       seq $((IDT + 4 - ${#ID})) | xargs -I. echo -n ' '
       echo "$ENDDATE    $CN"
