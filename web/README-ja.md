@@ -267,7 +267,7 @@ Alias /privcert /usr/local/privcert-web/public
 
 ```apache
 <If "%{REQUEST_URI} !~ m!/privcert/cert/.*$!">
-  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Y̲o̲u̲r̲ ̲C̲o̲m̲p̲a̲n̲y̲"
+  SSLRequire %{SSL_CLIENT_S_DN_O} eq "DNのOの値"
 </If>
 ```
 

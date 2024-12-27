@@ -263,7 +263,7 @@ And add the condition to require a client cert by adding below to `SSLRequire` i
 
 ```apache
 <If "%{REQUEST_URI} !~ m!/privcert/cert/.*$!">
-  SSLRequire %{SSL_CLIENT_S_DN_O} eq "Y̲o̲u̲r̲ ̲C̲o̲m̲p̲a̲n̲y̲"
+  SSLRequire %{SSL_CLIENT_S_DN_O} eq "O̲ v̲a̲l̲u̲e̲ o̲f̲ D̲N̲"
 </If>
 ```
 
