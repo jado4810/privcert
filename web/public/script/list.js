@@ -252,7 +252,7 @@ privcert.List.prototype.delete_ = function(name, messages, okay, cancel, e) {
         .finally(this.busy.clear.bind(this.busy))
         .then(this.show_.bind(this, error_msg))
         .catch(this.error_.bind(this, error_msg, null));
-  }).catch(privcert.Util.ignore_error);
+  }.bind(this)).catch(privcert.Util.ignore_error);
 }
 
 privcert.List.prototype.show_ = function(error_msg, res) {
