@@ -151,8 +151,8 @@ privcert.Util.Busy.prototype.show = function() {
 }
 
 privcert.Util.Busy.prototype.clear = function() {
-    this.dialog.close();
-    document.body.removeChild(this.dialog);
+  this.dialog.close();
+  document.body.removeChild(this.dialog);
 }
 
 // Get json from server response
