@@ -1,5 +1,12 @@
 # PrivCert - Changelog
 
+## Version 1.0.3 (2025-1-4)
+
+* Cache certs to improve performance
+* Fix bug that revoking cert does not work with web interface
+* Change base image of web interface container from Alpine3.20 to Debian12 due to issue on cross-building with Alpine3.21 and Docker Desktop on mac
+* Some minor tweaks
+
 ## Version 1.0.2 (2024-10-20)
 
 * Fix failure on making certs with openssl-1.1.1
