@@ -39,7 +39,7 @@ passenger_pid = fork do
     prefix << (ENV[key]&.empty? == false ? ENV[key] : default) << suffix
   }.join(' ')
   sec_opts = '--disable-security-update-check --disable-anonymous-telemetry'
-  exec("passenger start #{env_opts} #{sec_opts}")
+  exec("/usr/local/bundle/bin/passenger start #{env_opts} #{sec_opts}")
   raise 'exec failed.'
 end
 
