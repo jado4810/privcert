@@ -42,6 +42,10 @@ body {
   width: 640px;
 }
 
+.busy::backdrop {
+  background: transparent;
+}
+
 .busy > * {
   animation-duration: 2s;
   animation-iteration-count: infinite;

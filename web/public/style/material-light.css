@@ -7,7 +7,7 @@
   background-color: #888;
 }
 
-dialog::backdrop {
+.confirm::backdrop {
   background-color: rgba(0, 0, 0, .4);
 }
 
