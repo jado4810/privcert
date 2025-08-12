@@ -30,11 +30,12 @@ passenger_pid = fork do
   Process::UID.change_privilege(uid.to_i)
 
   # Start Passenger
+  app_name = 'privcert'
   env_opts = [
-    ['--port=',                   'PORT',       '3000',     ''               ],
-    ['--max-pool-size=',          'MAX_POOL',   '6',        ''               ],
-    ['--max-request-queue-size=', 'MAX_QUEUE',  '100',      ''               ],
-    ['--log-file="/opt/app/log/', 'LOG_PREFIX', 'privcert', '-passenger.log"']
+    ['--port=',                   'PORT',       '3000',   ''               ],
+    ['--max-pool-size=',          'MAX_POOL',   '6',      ''               ],
+    ['--max-request-queue-size=', 'MAX_QUEUE',  '100',    ''               ],
+    ['--log-file="/opt/app/log/', 'LOG_PREFIX', app_name, '-passenger.log"']
   ].map{|prefix, key, default, suffix|
     prefix << (ENV[key]&.empty? == false ? ENV[key] : default) << suffix
   }.join(' ')
