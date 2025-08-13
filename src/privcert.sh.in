@@ -4,7 +4,7 @@
 #
 #%LICENSE_HERE%
 
-if [ ! `id -u` = '0' ]; then
+if [ $EUID -ne 0 ]; then
   echo >&2 'Require root privileges'
   exit 1
 fi
