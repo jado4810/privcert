@@ -22,6 +22,7 @@ UPDATE_HOOK='%UPDATE_HOOK%'
 
 DATE_OPTS=(%DATE_OPTS%)
 PKCS12_OPTS=%PKCS12_OPTS%
+MCF_MODE=%MCF_MODE%
 
 CA_HOME=${CA_ROOT}/ca
 CL_HOME=${CA_ROOT}/users
@@ -100,9 +101,15 @@ init_pw() {
     exit 1
   fi
 
-  local SALT=`$OPENSSL rand -hex 16`
-  echo "$SALT" > $CA_PWD
-  echo -n "${SALT}:${PASS}" | $MD5SUM | cut -d' ' -f1 >> $CA_PWD
+  if [ -z "$MCF_MODE" ]; then
+    # Legacy MD5
+    local SALT=`$OPENSSL rand -hex 16`
+    echo "$SALT" > $CA_PWD
+    echo -n "${SALT}:${PASS}" | $MD5SUM | cut -d' ' -f1 >> $CA_PWD
+  else
+    # MCF
+    $OPENSSL passwd -$MCF_MODE "$PASS" > $CA_PWD
+  fi
   chmod 0600 $CA_PWD
 }
 
@@ -299,8 +306,23 @@ server_loop() {
         fi
 
         local PASS=(`xargs < $CA_PWD`)
-        local HASH=`echo -n "${PASS[0]}:${ARG}" | $MD5SUM | cut -d' ' -f1`
-        if [ ! "$HASH" = "${PASS[1]}" ]; then
+        local STAT=''
+        if [ ${#PASS[@]} -gt 1 ]; then
+          # Legacy MD5
+          local HASH=`echo -n "${PASS[0]}:${ARG}" | $MD5SUM | cut -d' ' -f1`
+          if [ "$HASH" = "${PASS[1]}" ]; then
+            STAT=yes
+          fi
+        else
+          # MCF
+          local MODE=`echo -n "${PASS[0]}" | cut -d'$' -f2`
+          local SALT=`echo -n "${PASS[0]}" | cut -d'$' -f3`
+          local HASH=`$OPENSSL passwd -$MODE -salt $SALT "$ARG"`
+          if [ "$HASH" = "${PASS[0]}" ]; then
+            STAT=yes
+          fi
+        fi
+        if [ -z "$STAT" ]; then
           sleep $WAIT
           if [ $WAIT -ge 4 ]; then
             echo '205 Attempt failed'

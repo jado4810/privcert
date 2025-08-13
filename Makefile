@@ -23,6 +23,10 @@ DATE_OPTS   = $(shell date --version > /dev/null 2>&1 && \
 PKCS12_OPTS = $(shell $(OPENSSL) pkcs12 -help 2>&1 | \
                 grep -- '-legacy' > /dev/null && echo "'-legacy'")
 
+MCF_MODE    = $(shell $(OPENSSL) passwd -help 2>&1 | \
+                grep -- '^ *-[0-9]* ' | sed -e 's/^ *-//' -e 's/ .*//' | \
+                sort -nr | head -1)
+
 src/license.sh: LICENSE.txt
 	sed -e 's/\r$$//' -e 's/^/# /' -e 's/ *$$//' $< > $@
 
@@ -45,7 +49,8 @@ src/privcert: src/privcert.sh.in src/license.sh src/parse.sh src/openssl.conf.in
 	    -e 's/%CERT_NAME%/$(subst /,\/,$(CERT_NAME))/' \
 	    -e 's/%UPDATE_HOOK%/$(subst /,\/,$(UPDATE_HOOK))/' \
 	    -e "s/%DATE_OPTS%/$(DATE_OPTS)/" \
-	    -e "s/%PKCS12_OPTS%/$(PKCS12_OPTS)/" $< > $@
+	    -e "s/%PKCS12_OPTS%/$(PKCS12_OPTS)/" \
+	    -e "s/%MCF_MODE%/$(MCF_MODE)/" $< > $@
 
 install: src/privcert
 	test -d $(DESTDIR)$(BINDIR) || mkdir -p $(DESTDIR)$(BINDIR)
