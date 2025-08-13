@@ -1,5 +1,13 @@
 # PrivCert - Changelog
 
+## Version 1.0.4 (2025-8-14)
+
+* Fix auto detection of `-legacy` option of newer openssl for backward compatibility
+* More secure password handling for server mode
+    * Strongly recommended resetting password with `privcert passwd`
+* Change base image of web interface container from Debian12 to 13 with the release of trixie
+* Some minor tweaks
+
 ## Version 1.0.3 (2025-1-4)
 
 * Cache certs to improve performance
