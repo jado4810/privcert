@@ -1,8 +1,7 @@
-FROM ruby:3.2-slim-bookworm AS builder
+FROM ruby:3.2-slim-trixie AS builder
 
 RUN apt update \
- && apt install -y \
-        curl make g++ libsqlite3-dev \
+ && apt install -y curl make g++ libsqlite3-dev \
  && rm -rf /var/lib/apt/lists/*
 
 RUN bundle config --local without development:test
@@ -17,11 +16,10 @@ RUN /usr/local/bundle/bin/passenger-config install-agent \
  && /usr/local/bundle/bin/passenger-config install-standalone-runtime \
  && /usr/local/bundle/bin/passenger-config build-native-support
 
-FROM ruby:3.2-slim-bookworm
+FROM ruby:3.2-slim-trixie
 
 RUN apt update \
- && apt install -y \
-        curl less sqlite3 \
+ && apt install -y curl less sqlite3 \
  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/local/bundle /usr/local/bundle/
