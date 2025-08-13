@@ -20,7 +20,7 @@ TOOLS       = ./third-party/getoptions
 DATE_OPTS   = $(shell date --version > /dev/null 2>&1 && \
                 echo "'-d'" || echo "'-jf' '%b %d %T %Y %Z'")
 
-PKCS12_OPTS = $(shell $(OPENSSL) pkcs12 -help 2> /dev/null | \
+PKCS12_OPTS = $(shell $(OPENSSL) pkcs12 -help 2>&1 | \
                 grep -- '-legacy' > /dev/null && echo "'-legacy'")
 
 src/license.sh: LICENSE.txt
