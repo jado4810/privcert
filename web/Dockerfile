@@ -19,7 +19,7 @@ RUN /usr/local/bundle/bin/passenger-config install-agent \
 FROM ruby:3.2-slim-trixie
 
 RUN apt update \
- && apt install -y curl less sqlite3 \
+ && apt install -y procps curl less sqlite3 \
  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/local/bundle /usr/local/bundle/
