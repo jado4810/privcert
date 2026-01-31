@@ -105,17 +105,6 @@ $ cd path/to/dockerComposeYml
 $ docker compose up -d
 ```
 
-Initialize an auth database on the first run:
-
-```console
-$ docker compose exec app rake db:create
-$ docker compose exec app rake db:migrate
-$ docker compose exec app rake db:seed
-$ sudo chown privcert:privcert /etc/privcert/web/auth.db
-$ sudo chmod 700 /etc/privcert/web
-$ sudo chmod 600 /etc/privcert/web/auth.db
-```
-
 Put reverse proxy settings into `ssl.conf` (for apache):
 
 ```apache
@@ -234,9 +223,7 @@ Change configuration in `config/settings.yml` and `config/database.yml`.
 Initialize an auth database:
 
 ```console
-# bundle exec rake db:create APP_ENV=production
-# bundle exec rake db:migrate APP_ENV=production
-# bundle exec rake db:seed APP_ENV=production
+# bundle exec rake db:prepare APP_ENV=production
 # chown apache:apache /etc/privcert/web/auth.db
 # chmod 700 /etc/privcert/web
 # chmod 600 /etc/privcert/web/auth.db

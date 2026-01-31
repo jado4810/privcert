@@ -108,17 +108,6 @@ $ cd path/to/dockerComposeYml
 $ docker compose up -d
 ```
 
-初回起動時のみ、認証データベースの初期化を行います。
-
-```console
-$ docker compose exec app rake db:create
-$ docker compose exec app rake db:migrate
-$ docker compose exec app rake db:seed
-$ sudo chown privcert:privcert /etc/privcert/web/auth.db
-$ sudo chmod 700 /etc/privcert/web
-$ sudo chmod 600 /etc/privcert/web/auth.db
-```
-
 リバースプロキシーの設定を`ssl.conf`(Apacheの場合)に追加します。
 
 ```apache
@@ -238,9 +227,7 @@ BUNDLE_WITHOUT: "development:test"
 認証データベースの初期化を行います。
 
 ```console
-# bundle exec rake db:create APP_ENV=production
-# bundle exec rake db:migrate APP_ENV=production
-# bundle exec rake db:seed APP_ENV=production
+# bundle exec rake db:prepare APP_ENV=production
 # chown apache:apache /etc/privcert/web/auth.db
 # chmod 700 /etc/privcert/web
 # chmod 600 /etc/privcert/web/auth.db

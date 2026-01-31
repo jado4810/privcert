@@ -29,6 +29,9 @@ passenger_pid = fork do
   Process::GID.change_privilege(gid.to_i)
   Process::UID.change_privilege(uid.to_i)
 
+  # Prepare the database
+  system("umask 077; rake db:prepare")
+
   # Start Passenger
   app_name = 'privcert'
   env_opts = [
