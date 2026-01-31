@@ -1,5 +1,15 @@
 # PrivCert - Changelog
 
+## Version 1.0.5 (2026-1-31)
+
+* Migrate and refactor web interface
+    * Middlewares to Sinatra4.1 and ActiveRecord8.1
+    * Build container image with Ruby4.0
+    * Upgrade least Ruby version to 2.7.8
+* Auto preparation of auth database on web interface
+* Fix problem when redefining the account with the same name after deleted one on web interface
+* Fix problem of failing authentication after session expiration
+
 ## Version 1.0.4 (2025-8-14)
 
 * Fix auto detection of `-legacy` option of newer openssl for backward compatibility
