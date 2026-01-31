@@ -22,6 +22,9 @@ RUN apt update \
  && apt install -y procps curl less sqlite3 \
  && rm -rf /var/lib/apt/lists/*
 
+RUN echo 'SYS_UID_MAX 60000' >> /etc/login.defs \
+ && echo 'SYS_GID_MAX 60000' >> /etc/login.defs
+
 COPY --from=builder /usr/local/bundle /usr/local/bundle/
 
 WORKDIR /opt/app

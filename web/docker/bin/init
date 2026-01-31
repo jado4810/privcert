@@ -23,11 +23,13 @@ end
 # Adjust permission of the directory where Passenger writes
 dirs = ['auth', 'log', 'tmp', 'db'].map{|dir| '/opt/app/' << dir}.join(' ')
 system("find #{dirs} -xdev ! -type l -exec chown app:app {} \\;")
+system("chmod 700 /opt/app/auth")
 
 passenger_pid = fork do
   # Change execution permission of Passenger
   Process::GID.change_privilege(gid.to_i)
   Process::UID.change_privilege(uid.to_i)
+  ENV['HOME'] = '/opt/app/tmp'
 
   # Prepare the database
   system("umask 077; rake db:prepare")
