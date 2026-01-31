@@ -13,7 +13,7 @@ PrivCert WEBインターフェース
 
 ### 直接実行
 
-* Ruby(2.6以降)
+* Ruby(2.7.8以降)
 * Rackを駆動できるWEBサーバー(Apache等)
 
 PrivCertのサービス登録
@@ -163,8 +163,8 @@ export PATH=$RBENV_ROOT/bin:$PATH
 eval "$(rbenv init --no-rehash -)"
 # source /etc/profile.d/rbenv.sh
 # ebenv install --list
-# rbenv insatll 3.2.3
-# rbenv global 3.2.3
+# rbenv insatll 4.0.1
+# rbenv global 4.0.1
 # gem install bundler --no-document
 # gem install passenger --no-document
 ```
@@ -174,8 +174,8 @@ eval "$(rbenv init --no-rehash -)"
 ```console
 $ sudo su -
 # dnf module reset ruby
-# dnf module enable ruby:3.2
-# dnf module -y install ruby:3.2
+# dnf module enable ruby:3.3
+# dnf module -y install ruby:3.3
 ```
 
 続いて、Apacheのpassengerモジュールをインストールします。
@@ -194,8 +194,8 @@ Apacheの設定ファイルに追加する断片が表示されますので、`/
 ```apache
 LoadModule passenger_module /usr/local/rbenv/…/buildout/apache2/mod_passenger.so
 <IfModule mod_passenger.c>
-  PassengerRoot /usr/local/rbenv/…/gems/3.2.0/gems/passenger-6.0.23
-  PassengerDefaultRuby /usr/local/rbenv/versions/3.2.2/bin/ruby
+  PassengerRoot /usr/local/rbenv/…/gems/4.0.1/gems/passenger-6.1.1
+  PassengerDefaultRuby /usr/local/rbenv/versions/4.0.1/bin/ruby
   PassengerEnabled off
   PassengerUserSwitching off
   PassengerDefaultUser apache

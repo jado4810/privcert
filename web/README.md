@@ -13,7 +13,7 @@ Requirement
 
 ### Run standalone
 
-* Ruby (2.6 or later)
+* Ruby (2.7.8 or later)
 * Web server (such as apache) to drive rack
 
 Register PrivCert as a service
@@ -159,8 +159,8 @@ export PATH=$RBENV_ROOT/bin:$PATH
 eval "$(rbenv init --no-rehash -)"
 # source /etc/profile.d/rbenv.sh
 # ebenv install --list
-# rbenv insatll 3.2.3
-# rbenv global 3.2.3
+# rbenv insatll 4.0.1
+# rbenv global 4.0.1
 # gem install bundler --no-document
 # gem install passenger --no-document
 ```
@@ -170,8 +170,8 @@ Or using RHEL or compatible appstream packages:
 ```console
 $ sudo su -
 # dnf module reset ruby
-# dnf module enable ruby:3.2
-# dnf module -y install ruby:3.2
+# dnf module enable ruby:3.3
+# dnf module -y install ruby:3.3
 ```
 
 Next, install the passenger module to apache:
@@ -190,8 +190,8 @@ Will displayed a piece to be added to apache configuration, copy them to `/etc/h
 ```apache
 LoadModule passenger_module /usr/local/rbenv/…/buildout/apache2/mod_passenger.so
 <IfModule mod_passenger.c>
-  PassengerRoot /usr/local/rbenv/…/gems/3.2.0/gems/passenger-6.0.23
-  PassengerDefaultRuby /usr/local/rbenv/versions/3.2.2/bin/ruby
+  PassengerRoot /usr/local/rbenv/…/gems/4.0.1/gems/passenger-6.1.1
+  PassengerDefaultRuby /usr/local/rbenv/versions/4.0.1/bin/ruby
   PassengerEnabled off
   PassengerUserSwitching off
   PassengerDefaultUser apache
