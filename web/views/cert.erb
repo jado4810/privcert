@@ -7,19 +7,19 @@
         <span class="col-cn"><%= _('Common Name', :cert) %></span>
         <span class="col-mail"><%= _('Email Address', :cert) %></span>
         <span class="col-expire"><%= _('Expires', :cert) %></span>
-        <span class="col-ui"></span>
       </header>
       <div id="list" class="list-container" data-type="cert"></div>
-      <div id="view" class="list-template">
-        <span data-klass="col-name" data-key="name"></span>
-        <span data-klass="col-cn" data-key="cn"></span>
-        <span data-klass="col-mail" data-key="mail"></span>
-        <span data-klass="col-expire" data-key="expire"></span>
-        <span data-klass="col-ui">
-          <data value="link" data-key="key"><%=
+      <div id="entry" class="list-template">
+        <span class="col-name" data-key="id"></span>
+        <span class="col-cn" data-key="cn"></span>
+        <span class="col-mail" data-key="mail"></span>
+        <span class="col-expire" data-key="expire"></span>
+        <span class="col-spacer"></span>
+        <span class="col-ui">
+          <data value="link"><%=
             _('Download URL', :cert)
           %></data>
-          <data value="delete" data-key="name" data-confirm="<%=
+          <data value="delete" data-confirm="<%=
             _('Sure to revoke cert?', :cert)
           %>" data-warn="<%=
             _('NOTE: THIS CANNOT BE UNDONE.', :warn)
@@ -33,10 +33,10 @@
         </span>
       </div>
       <footer class="list-ui">
-        <input id="switch" class="switch-control" type="checkbox">
+        <input id="visible" class="switch-control" type="checkbox">
         <form id="create" class="switch-part" <%= csrf_data %>>
           <span class="col-name">
-            <input type="text" name="name" placeholder="<%=
+            <input type="text" name="id" placeholder="<%=
               _('(AlNum,_,-)', :rule)
             %>" pattern="[\-_0-9a-zA-Z]+" required>
           </span>
@@ -51,6 +51,7 @@
           <span class="col-submit">
             <button data-icon="done"><%= _('Create', :cert) %></button>
           </span>
+          <span class="col-spacer"></span>
           <span class="col-ui">
             <a id="close" href="." title="<%=
               _('Cancel', :cert)

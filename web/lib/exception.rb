@@ -1,4 +1,11 @@
 class ServerError < StandardError
+  attr_reader :code
+
+  def initialize(code, msg)
+    @code = code
+    super(msg)
+  end
+
   def self.check(res, have_data = nil)
     case res
     when /^0/
@@ -8,71 +15,104 @@ class ServerError < StandardError
       raise UnexpectedDataError unless have_data.nil? || have_data == true
       return true
     when /^20[45]/
-      raise BadPasswordError;
+      raise BadPasswordError
     when /^211/
-      raise CertExistsError;
+      raise CertExistsError
     when /^2[24]1/
-      raise CertNotFoundError;
+      raise CertNotFoundError
     when /^21[234]/
-      raise CertCreateError;
+      raise CertCreateError
     when /^242/
-      raise CertRevokeError;
+      raise CertRevokeError
     else
-      raise UnknownServerError;
+      raise UnknownServerError
     end
   end
 end
 
 class BadPasswordError < ServerError
   def initialize
-    super('bad server password');
+    super(500, 'bad server password')
   end
 end
 
 class CertExistsError < ServerError
   def initialize
-    super('specified cert already exists')
+    super(400, 'specified cert already exists')
   end
 end
 
 class CertNotFoundError < ServerError
   def initialize
-    super('specified cert not found')
+    super(404, 'specified cert not found')
   end
 end
 
 class CertCreateError < ServerError
   def initialize
-    super('error on creating cert')
+    super(500, 'error on creating cert')
   end
 end
 
 class CertRevokeError < ServerError
   def initialize
-    super('error on revoking cert')
+    super(500, 'error on revoking cert')
   end
 end
 
 class UnknownServerError < ServerError
   def initialize
-    super('unknown server error')
+    super(500, 'unknown server error')
   end
 end
 
 class NoDataError < ServerError
   def initialize
-    super('no data in server response')
+    super(500, 'no data in server response')
   end
 end
 
 class UnexpectedDataError < ServerError
   def initialize
-    super('unexpected data in server response')
+    super(500, 'unexpected data in server response')
   end
 end
 
 class UnexpectedEofError < ServerError
   def initialize
-    super('unexpected eof in server response')
+    super(500, 'unexpected eof in server response')
+  end
+end
+
+class CommunicationError < ServerError
+  def initialize
+    super(500, 'error on server communication')
+  end
+end
+
+class ControllerError < StandardError
+  attr_reader :code
+
+  def initialize(code, msg)
+    @code = code
+    super(msg)
+  end
+end
+
+class BadParamError < ControllerError
+  def initialize(msg)
+    super(400, msg)
+  end
+end
+
+class NotFoundError < ControllerError
+  def initialize(msg)
+    super(404, msg)
+  end
+end
+
+class InternalError < ControllerError
+  def initialize(msg)
+    super(500, msg)
   end
 end

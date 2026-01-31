@@ -2,104 +2,108 @@ class UserController < Sinatra::Base
   include ControllerHelper
 
   get '/user' do
-    need_auth(:or_login)
+    set_user(:or_login)
     view(:user)
   end
 
-  def get_list(curr_user)
-    return Db::User.order(:created_at, :id).map{|user|
-      {
-        name: user.name.to_s_or_empty,
-        mine: (user.id == curr_user.id)
+  def load
+    return {
+      list: Db::User.order(:created_at, :id).map{|user|
+        {
+          id: user.name.to_s_or_empty,
+          updatable: (user.id != @user.id),
+          deletable: (user.id != @user.id)
+        }
       }
     }
   end
 
   get '/user/list.json' do
-    curr_user = get_user(:or_halt)
+    set_user(:or_halt)
 
     begin
-      data = {
-        error: false,
-        detail: get_list(curr_user)
-      }
-      json data
+      json load()
 
     rescue ActiveRecord::ActiveRecordError => e
-      data = {
-        error: true,
-        detail: e.to_s
-      }
-      json data
+      halt 500, e.to_s
     end
   end
 
   post '/user' do
-    curr_user = get_user(:or_halt)
+    set_user(:or_halt)
 
-    case params[:mode].to_s_or_nil
-    when 'create'
-      mode = :create
-    when 'update'
-      mode = :update
-    when 'delete'
-      mode = :delete
-    else
-      halt 400, 'Unknown mode'
+    id = params[:id].to_s_or_nil
+    if id.nil?
+      halt 400, 'No id'
     end
 
-    name = params[:name].to_s_or_nil
-    if name.nil?
-      halt 400, 'No name'
+    passwd = params[:passwd]
+    if passwd.nil? || passwd.empty?
+      halt 400, 'No passwd'
     end
 
     begin
-      if mode == :create
-        user = Db::User.new
+      user = Db::User.new
 
-        user.name = name
-        user.password = params[:passwd]
-        user.password_confirmation = params[:passwd]
+      user.name = id
+      user.password = passwd
+      user.password_confirmation = passwd
+
+      unless user.save
+        raise InternalError, 'Failed'
+      end
+
+      json load()
+
+    rescue ActiveRecord::ActiveRecordError => e
+      halt 400, e.to_s
+
+    rescue ControllerError => e
+      halt e.code, e.to_s
+    end
+  end
+
+  post %r{/user/(\S+)} do |id|
+    set_user(:or_halt)
+
+    del = is_delete
+
+    unless del
+      passwd = params[:passwd]
+      if passwd.nil? || passwd.empty?
+        halt 400, 'No passwd'
+      end
+    end
+
+    begin
+      user = Db::User.find_by(name: id)
+      if user.nil?
+        raise NotFoundError, 'Unknown user'
+      end
+
+      if del
+        if user.id == @user.id
+          raise BadParamError, 'Not permitted'
+        end
+
+        user.invalid_flag = true
 
       else
-        user = Db::User.find_by(name: name)
-        if user.nil?
-          halt 400, 'Unknown user'
-        end
-
-        case mode
-        when :update
-          user.password = params[:passwd]
-          user.password_confirmation = params[:passwd]
-
-        when :delete
-          if user.id == curr_user.id
-            halt 400, 'Not permitted'
-          end
-
-          user.invalid_flag = true
-
-        else
-          halt 500, 'Illegal mode'
-        end
+        user.password = passwd
+        user.password_confirmation = passwd
       end
 
       unless user.save
-        halt 500, 'Failed'
+        raise InternalError, 'Failed'
       end
 
-      data = {
-        error: false,
-        detail: get_list(curr_user)
-      }
-      json data
+      json load()
 
     rescue ActiveRecord::ActiveRecordError => e
-      data = {
-        error: true,
-        detail: e.to_s
-      }
-      json data
+      halt 500, e.to_s
+
+    rescue ControllerError => e
+      halt e.code, e.to_s
     end
   end
 end

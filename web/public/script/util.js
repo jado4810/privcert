@@ -80,13 +80,17 @@ privcert.Util.Dialog.prototype.show_modal = function(initial_focus) {
 }
 
 // Close dialog with resolving
-privcert.Util.Dialog.prototype.okay = function(value) {
+privcert.Util.Dialog.prototype.okay = function(value, e) {
+  e.preventDefault();
+
   if (this.resolve == null) return;
   this.resolve((value == null) ? true : value);
 }
 
 // Close dialog with rejecting
-privcert.Util.Dialog.prototype.cancel = function() {
+privcert.Util.Dialog.prototype.cancel = function(e) {
+  e.preventDefault();
+
   if (this.reject == null) return;
   this.reject(new Error('Canceled'));
 }
@@ -139,6 +143,7 @@ privcert.Util.confirm = function(messages, okay_label, cancel_label,
 privcert.Util.Busy = function() {
   this.dialog = document.createElement('dialog');
   this.dialog.className = 'busy';
+  this.dialog.closedBy = 'none';
 
   for (var i = 0; i < 5; i++) {
     this.dialog.appendChild(document.createElement('span'));
@@ -158,7 +163,7 @@ privcert.Util.Busy.prototype.clear = function() {
 // Get json from server response
 privcert.Util.receive_json_ = function(res) {
   if (!res.ok) {
-    if (res.status == 401) {
+    if (res.status == 403) {
       document.location.href = './login';
     }
     throw new Error('Ajax error: status=' + res.status);

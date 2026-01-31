@@ -18,8 +18,9 @@ class LoginController < Sinatra::Base
   end
 
   get '/logout' do
-    need_auth(:or_login)
-    session.clear
+    if session[:user_id]
+      session.clear
+    end
     redirect to('/login')
   end
 end

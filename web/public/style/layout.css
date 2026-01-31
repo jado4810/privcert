@@ -30,6 +30,8 @@ body {
 
 .confirm::backdrop {
   backdrop-filter: blur(1px);
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .busy {
@@ -44,6 +46,8 @@ body {
 
 .busy::backdrop {
   background: transparent;
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .busy > * {
@@ -102,6 +106,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   max-width: 960px;
+  padding: 0 8px;
   position: absolute;
   right: 0;
   top: 0;
@@ -112,15 +117,10 @@ body {
   align-items: flex-start;
   background-color: #eef;
   border-radius: 2px;
-  color: #97c;
   column-gap: 4px;
   cursor: pointer;
   display: flex;
-  font-family: 'Georgia', serif;
-  font-size: 10px;
-  font-weight: bold;
   height: 32px;
-  margin-left: 8px;
   padding: 2px;
   text-decoration: none;
   -webkit-user-drag: none;
@@ -134,12 +134,40 @@ body {
   width: 32px;
 }
 
+.app-logo > .caption {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-logo > .caption > .main {
+  color: #97c;
+  font-family: 'Georgia', serif;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 12px;
+}
+
+.app-logo > .caption > .sub {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  font-size: 8px;
+  line-height: 10px;
+}
+
+.app-logo > .caption > .sub > .line {
+  color: #bae;
+  font-family: 'Futura', 'Bahnschrift', sans-serif;
+  font-stretch: condensed;
+}
+
 .app-title {
   flex-grow: 1;
   font-family: sans-serif;
   font-size: 20px;
-  line-height: 40px;
   margin: 0;
+  overflow: hidden;
   padding: 0;
 }
 
@@ -148,7 +176,6 @@ body {
   column-gap: 12px;
   display: flex;
   flex-shrink: 0;
-  margin-right: 12px;
 }
 
 .header-ui > a {
@@ -190,8 +217,9 @@ body {
   column-gap: 16px;
   display: grid;
   grid-template-columns: auto 1fr;
-  margin: 96px 80px;
+  margin: 96px auto;
   row-gap: 24px;
+  width: 480px;
 }
 
 .auth-form > label {
@@ -260,6 +288,7 @@ body {
 }
 
 .list-ui {
+  height: 96px;
   margin-top: 12px;
   position: relative;
 }
@@ -268,7 +297,6 @@ body {
   align-items: center;
   column-gap: 16px;
   display: flex;
-  height: 36px;
   justify-content: flex-end;
   left: 0;
   padding: 0 12px;
@@ -287,41 +315,50 @@ body {
   text-align: center;
 }
 
-.list-entry > :is(.col-name, .col-cn, .col-mail) {
+.col-name,
+.col-cn,
+.col-mail,
+.col-expire,
+.col-passwd {
+  box-sizing: border-box;
+  flex-shrink: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.col-name, .col-passwd, .col-expire, .col-submit {
-  flex-shrink: 0;
+.col-name,
+.col-expire,
+.col-passwd {
   width: 144px;
 }
 
-.col-cn, .col-spacer {
-  flex-grow: 1;
-}
-
+.col-cn,
 .col-mail {
-  flex-shrink: 0;
   width: 256px;
 }
 
-.col-ui {
-  flex-shrink: 0;
-  width: 44px;
-}
-
-:not(.list-header) > .col-ui {
-  align-items: center;
-  column-gap: 8px;
-  display: flex;
-  justify-content: flex-end;
+:is(.col-name, .col-cn, .col-mail,
+    .col-expire, .col-passwd):not(:has(input)) {
+  padding: 0 8px;
 }
 
 .col-submit {
   align-items: center;
   display: flex;
+  flex-shrink: 0;
+  width: 144px;
+}
+
+.col-spacer {
+  flex-grow: 1;
+}
+
+.col-ui {
+  align-items: center;
+  column-gap: 8px;
+  display: flex;
+  flex-shrink: 0;
 }
 
 .col-ui > a {
@@ -355,7 +392,7 @@ body {
 }
 
 .list-error {
-  padding: 48px 12px 0;
+  padding: 44px 8px 0;
 }
 
 .list-error > data {
@@ -366,6 +403,7 @@ body {
   align-items: center;
   column-gap: 4px;
   display: flex;
+  line-height: 24px;
 }
 
 .error-status:has(> p)::before {
@@ -404,6 +442,7 @@ button, a.button {
   column-gap: 8px;
   cursor: pointer;
   display: inline-flex;
+  flex-shrink: 0;
   font: 14px sans-serif;
   height: 36px;
   justify-content: space-evenly;

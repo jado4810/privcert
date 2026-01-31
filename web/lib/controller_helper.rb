@@ -37,27 +37,22 @@ module ControllerHelper
   end
 
   def or_halt
-    halt 401, 'Unauthorized'
+    halt 403, 'Unauthorized'
   end
 
   def or_login
     redirect to('/login')
   end
 
-  def need_auth(fallback)
+  def set_user(fallback)
     unless session[:user_id]
       fallback.to_proc.call(self)
     end
-  end
 
-  def get_user(fallback)
-    need_auth(fallback)
-    user = Db::User.find_by(id: session[:user_id])
-    if user.nil?
+    @user = Db::User.find_by(id: session[:user_id])
+    if @user.nil?
       fallback.to_proc.call(self)
     end
-
-    return user
   end
 
   PAGES = {
@@ -86,6 +81,10 @@ module ControllerHelper
     @page = page
     @title = _(PAGES[page][:title], :title)
     erb page
+  end
+
+  def is_delete
+    return params[:mode].to_s_or_nil == 'delete'
   end
 
   def link_icon(target)

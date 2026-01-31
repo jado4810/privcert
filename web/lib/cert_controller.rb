@@ -2,7 +2,7 @@ class CertController < Sinatra::Base
   include ControllerHelper
 
   get '/' do
-    need_auth(:or_login)
+    set_user(:or_login)
     view(:cert)
   end
 
@@ -42,21 +42,25 @@ class CertController < Sinatra::Base
     end
   end
 
-  def get_list(s)
+  def load(s)
     stat = sendrecv(s, 'LIST')
     if ServerError.check(stat)
-      return get_data(s).map{|elem|
-        cols = elem.split(/\t/)
-        {
-          name: cols[0].to_s_or_empty,
-          cn: cols[2].to_s_or_empty,
-          mail: cols[3].to_s_or_empty,
-          expire: cols[1].to_s_or_empty,
-          key: cols[4].to_s_or_empty
+      return {
+        list: get_data(s).map{|elem|
+          cols = elem.split(/\t/)
+          {
+            id: cols[0].to_s_or_empty,
+            cn: cols[2].to_s_or_empty,
+            mail: cols[3].to_s_or_empty,
+            expire: cols[1].to_s_or_empty,
+            key: cols[4].to_s_or_empty
+          }
         }
       }
     else
-      return []
+      return {
+        list: []
+      }
     end
   end
 
@@ -66,122 +70,139 @@ class CertController < Sinatra::Base
   end
 
   get '/cert/list.json' do
-    need_auth(:or_halt)
+    set_user(:or_halt)
+
+    server = App::settings.server
 
     begin
-      server = App::settings.server
       TCPSocket.open(server['host'], server['port']) do |s|
-        auth(s, server['passwd'])
+        begin
+          auth(s, server['passwd'])
+          json load(s)
 
-        data = {
-          error: false,
-          detail: get_list(s)
-        }
-        json data
+        ensure
+          close(s)
+        end
       end
+
+    rescue SocketError, SystemCallError => e
+      halt 500, e.to_s
+
     rescue ServerError => e
-      data = {
-        error: true,
-        detail: e.to_s
-      }
-      json data
+      halt e.code, e.to_s
     end
   end
 
   get %r{/cert/([0-9A-F]+)} do |key|
     server = App::settings.server
 
-    TCPSocket.open(server['host'], server['port']) do |s|
-      begin
-        auth(s, server['passwd'])
+    begin
+      TCPSocket.open(server['host'], server['port']) do |s|
+        begin
+          auth(s, server['passwd'])
 
-        target = get_list(s).find{|elem| elem[:key] == key}
-        if target.nil?
-          halt 404, 'Not found'
+          target = load(s)[:list].find{|elem| elem[:key] == key}
+          if target.nil?
+            raise NotFoundError, 'Not found'
+          end
+
+          stat = sendrecv(s, "GET #{target[:id]}")
+          ServerError.check(stat, true)
+
+          cert = Base64.decode64(get_data(s).join(''))
+
+          content_type 'application/x-pkcs12'
+          attachment "#{target[:id]}.pfx"
+          cert
+
+        ensure
+          close(s)
         end
-
-        stat = sendrecv(s, "GET #{target[:name]}")
-        ServerError.check(stat, true)
-
-        cert = Base64.decode64(get_data(s).join(''))
-
-        content_type 'application/x-pkcs12'
-        attachment "#{target[:name]}.pfx"
-        cert
-
-      rescue ServerError => e
-        halt 500, "Server error: #{e.to_s}"
-
-      ensure
-        close(s)
       end
+
+    rescue SocketError, SystemCallError => e
+      halt 500, e.to_s
+
+    rescue ServerError, ControllerError => e
+      halt e.code, e.to_s
     end
   end
 
   post '/cert' do
-    need_auth(:or_halt)
+    set_user(:or_halt)
 
-    case params[:mode].to_s_or_nil
-    when 'create'
-      mode = :create
-    when 'delete'
-      mode = :delete
-    else
-      halt 400, 'Unknown mode'
+    id = params[:id].to_s_or_nil
+    if id.nil?
+      halt 400, 'No id'
     end
 
-    name = params[:name].to_s_or_nil
-    if name.nil?
-      halt 400, 'No name'
-    end
+    cn = params[:cn].to_s_or_nil
+    mail = params[:mail].to_s_or_nil
 
     server = App::settings.server
 
-    TCPSocket.open(server['host'], server['port']) do |s|
-      begin
-        auth(s, server['passwd'])
+    begin
+      TCPSocket.open(server['host'], server['port']) do |s|
+        begin
+          auth(s, server['passwd'])
 
-        case mode
-        when :create
-          cn = params[:cn].to_s_or_nil
           unless cn.nil?
             stat = sendrecv(s, "SETCN #{cn}")
             ServerError.check(stat, false)
           end
 
-          mail = params[:mail].to_s_or_nil
           unless mail.nil?
             stat = sendrecv(s, "SETMAIL #{mail}")
             ServerError.check(stat, false)
           end
 
-          stat = sendrecv(s, "MAKE #{name}")
+          stat = sendrecv(s, "MAKE #{id}")
+          ServerError.check(stat, false)
 
-        when :delete
-          stat = sendrecv(s, "REVOKE #{name}")
+          json load(s)
 
-        else
-          halt 500, 'Illegal mode'
+        ensure
+          close(s)
         end
-
-        ServerError.check(stat, false)
-
-        data = {
-          error: false,
-          detail: get_list(s)
-        }
-        json data
-
-      rescue ServerError => e
-        data = {
-          error: true,
-          detail: e.to_s
-        }
-        json data
-
-      ensure
-        close(s)
       end
+
+    rescue SocketError, SystemCallError => e
+      halt 500, e.to_s
+
+    rescue ServerError => e
+      halt e.code, e.to_s
+    end
+  end
+
+  post %r{/cert/(\S+)} do |id|
+    set_user(:or_halt)
+
+    unless is_delete
+      halt 200, 'Unknown mode'
+    end
+
+    server = App::settings.server
+
+    begin
+      TCPSocket.open(server['host'], server['port']) do |s|
+        begin
+          auth(s, server['passwd'])
+
+          stat = sendrecv(s, "REVOKE #{id}")
+          ServerError.check(stat, false)
+
+          json load(s)
+
+        ensure
+          close(s)
+        end
+      end
+
+    rescue SocketError, SystemCallError => e
+      halt 500, e.to_s
+
+    rescue ServerError => e
+      halt e.code, e.to_s
     end
   end
 end

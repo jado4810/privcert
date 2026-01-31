@@ -16,8 +16,8 @@ class App < Sinatra::Base
     config_file './config/settings.yml'
 
     # Application log
-    if settings.respond_to?(:log_prefix)
-      file = File.new("./log/#{settings.log_prefix}-app.log", 'a+')
+    if settings.respond_to?(:log_prefix) && settings.log_prefix.to_s_or_nil
+      file = File.new("./log/#{settings.log_prefix.fullstrip}-app.log", 'a+')
       file.sync = true
       use Rack::CommonLogger, file
     end
@@ -32,10 +32,24 @@ class App < Sinatra::Base
     end
     I18n.config.available_locales = priority
 
+    if settings.respond_to?(:session_expire) &&
+       !settings.session_expire.nil? && settings.session_expire > 0
+      session_expire = settings.session_expire
+    else
+      session_expire = nil
+    end
+
+    if settings.respond_to?(:session_secret) &&
+       !settings.session_secret.nil? && !settings.session_secret.empty?
+      session_secret = settings.session_secret
+    else
+      session_secret = 'PrivCertWebSecret'
+    end
+
     # Store session into cookie
     use Rack::Session::Cookie,
-        secret: settings.session_secret,
-        expire_after: settings.session_expire
+        expire_after: session_expire,
+        secret: session_secret
 
     # Rack security options
     use Rack::Protection::AuthenticityToken
