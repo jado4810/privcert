@@ -172,7 +172,7 @@ ToDo
 著作権およびライセンス
 ----------------------
 
-Copyright (c)2024-2025 Shun-ichi TAHARA &lt;jado@flowernet.jp&gt;
+Copyright (c)2024-2026 Shun-ichi TAHARA &lt;jado@flowernet.jp&gt;
 
 [MITライセンス](./LICENSE.txt)で提供します。
 例外として、[third-party/getoptions](./third-party/getoptions/)ディレクトリー以下は、[ko1nksm/getoptions](https://github.com/ko1nksm/getoptions)の成果物を流用したものであるため、[CC0](./third-party/getoptions/LICENSE)が適用されます。
