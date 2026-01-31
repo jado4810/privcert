@@ -15,6 +15,19 @@ class App < Sinatra::Base
     register Sinatra::ConfigFile
     config_file './config/settings.yml'
 
+    # Extract settings
+    if settings.respond_to?(:url_path)
+      path = settings.url_path.match(/^\//) ? '' : '/'
+      path << settings.url_path.sub(/\/$/, '')
+      if path.empty?
+        URL_PATH = nil
+      else
+        URL_PATH = path
+      end
+    else
+      URL_PATH = nil
+    end
+
     # Application log
     if settings.respond_to?(:log_prefix) && settings.log_prefix.to_s_or_nil
       file = File.new("./log/#{settings.log_prefix.fullstrip}-app.log", 'a+')
@@ -48,27 +61,20 @@ class App < Sinatra::Base
 
     # Store session into cookie
     use Rack::Session::Cookie,
+        path: URL_PATH.nil? ? '/' : URL_PATH,
         expire_after: session_expire,
         secret: session_secret
 
     # Rack security options
-    use Rack::Protection::AuthenticityToken
+    if session_expire.nil?
+      use Rack::Protection::AuthenticityToken
+    else
+      use Rack::Protection::RemoteToken
+    end
     use Rack::Protection::JsonCsrf
     use Rack::Protection::XSSHeader
     use Rack::Protection::FrameOptions
     use Rack::Protection::SessionHijacking
-  end
-
-  if settings.respond_to?(:url_path)
-    path = settings.url_path.match(/^\//) ? '' : '/'
-    path << settings.url_path.sub(/\/$/, '')
-    if path.empty?
-      URL_PATH = nil
-    else
-      URL_PATH = path
-    end
-  else
-    URL_PATH = nil
   end
 
   use LoginController
