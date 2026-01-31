@@ -1,16 +1,19 @@
 source 'https://rubygems.org'
 
-gem 'sinatra', '~> 3.2.0', require: false
+gem 'sinatra', '~> 4.0', '>= 4.1.1', require: false
 gem 'sinatra-contrib'
-gem 'activerecord', '< 7.1.0'
+gem 'activerecord'
 gem 'sinatra-activerecord'
-# xxx to avoid error around ActiveSupport::LoggerThreadSafeLevel::Logger
-gem 'concurrent-ruby', '< 1.3.5'
-gem 'sqlite3', '~> 1.4'
+gem 'sqlite3'
 gem 'bcrypt'
-gem 'rake'
-gem 'pry'
+gem 'rake', require: false
+gem 'pry', require: false
 
 group :production do
-  gem 'passenger'
+  gem 'passenger', require: false
+end
+
+group :development do
+  gem 'rackup', require: false
+  gem 'webrick', require: false
 end

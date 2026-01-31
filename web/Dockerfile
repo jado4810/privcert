@@ -1,4 +1,4 @@
-FROM ruby:3.2-slim-trixie AS builder
+FROM ruby:4.0-slim-trixie AS builder
 
 RUN apt update \
  && apt install -y curl make g++ libsqlite3-dev \
@@ -16,7 +16,7 @@ RUN /usr/local/bundle/bin/passenger-config install-agent \
  && /usr/local/bundle/bin/passenger-config install-standalone-runtime \
  && /usr/local/bundle/bin/passenger-config build-native-support
 
-FROM ruby:3.2-slim-trixie
+FROM ruby:4.0-slim-trixie
 
 RUN apt update \
  && apt install -y procps curl less sqlite3 \

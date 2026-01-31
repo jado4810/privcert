@@ -11,7 +11,7 @@ default: &default
   session_expire: 3600
 
   # Secret to encrypt session information in cookie
-  session_secret: 'PrivCertWebSecret'
+  session_secret: 'c0c885e7c1d358b40ed1e220c6e4d95c84e5dfb6821fb5d27ff453269261d299'
 
 # Configuration for deployment
 production:

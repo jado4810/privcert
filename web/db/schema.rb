@@ -10,16 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_01_30_131546) do
-
+ActiveRecord::Schema[8.1].define(version: 2026_01_30_131546) do
   create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "invalid_flag", null: false
     t.text "name", null: false
     t.text "password_digest", null: false
-    t.boolean "invalid_flag", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "updated_at", null: false
     t.index ["invalid_flag"], name: "index_users_on_invalid_flag"
     t.index ["name"], name: "index_users_on_name", unique: true, where: "invalid_flag = false"
   end
-
 end

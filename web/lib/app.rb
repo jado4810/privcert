@@ -56,7 +56,8 @@ class App < Sinatra::Base
        !settings.session_secret.nil? && !settings.session_secret.empty?
       session_secret = settings.session_secret
     else
-      session_secret = 'PrivCertWebSecret'
+      session_secret =
+        'c0c885e7c1d358b40ed1e220c6e4d95c84e5dfb6821fb5d27ff453269261d299'
     end
 
     # Store session into cookie

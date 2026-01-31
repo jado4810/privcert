@@ -13,10 +13,10 @@ module ControllerHelper
           [lang.to_sym, lang.sub(/-.*/, '').to_sym]
         }.flatten.uniq
 
-        locale = request.env['HTTP_ACCEPT_LANGUAGE'].split(',').map{|lang|
-          lang.to_s_or_nil&.sub(/;.*$/, '')
-        }.compact.map{|lang|
-          [lang.to_sym, lang.sub(/-.*/, '').to_sym]
+        locale = request.env['HTTP_ACCEPT_LANGUAGE'].split(',')
+                   .filter_map{|lang|
+          lang = lang.to_s_or_nil&.sub(/;.*$/, '')
+          lang && [lang.to_sym, lang.sub(/-.*/, '').to_sym]
         }.flatten.uniq.find{|lang| locales.include?(lang)}
       end
 
