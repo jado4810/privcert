@@ -9,7 +9,7 @@ if [ $EUID -ne 0 ]; then
   exit 1
 fi
 
-VERSION=1.0.4
+VERSION=1.0.5
 CA_ROOT=%CA_ROOT%
 OPENSSL=%OPENSSL%
 MD5SUM=%MD5SUM%
