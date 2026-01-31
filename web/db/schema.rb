@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_19_000519) do
+ActiveRecord::Schema.define(version: 2026_01_30_131546) do
 
   create_table "users", force: :cascade do |t|
     t.text "name", null: false
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2024_07_19_000519) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["invalid_flag"], name: "index_users_on_invalid_flag"
-    t.index ["name"], name: "index_users_on_name", unique: true
+    t.index ["name"], name: "index_users_on_name", unique: true, where: "invalid_flag = false"
   end
 
 end
