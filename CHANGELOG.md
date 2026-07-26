@@ -1,5 +1,12 @@
 # PrivCert - Changelog
 
+## Version 1.1.0 (2026-7-27)
+
+* More migration on web interface
+    * Use tiny-init of Docker to remove process management on init script
+    * Starting and stopping containers are now much faster
+* Some tweaks of styles on web interface
+
 ## Version 1.0.5 (2026-1-31)
 
 * Migrate and refactor web interface
