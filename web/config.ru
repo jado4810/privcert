@@ -5,8 +5,14 @@ Bundler.require
 class Sinatra::Base
   configure do
     set :root, __dir__
-    # Cache control for static resources: only works with rackup
+  end
+
+  # Only works with rackup
+  configure :development do
+    # Cache control for static resources
     set :static_cache_control, :no_cache
+    # Disable host authorization
+    set :host_authorization, { permitted_hosts: [] }
   end
 
   before do
