@@ -98,6 +98,12 @@ $ id privcert
 uid=501(privcert) gid=501(privcert) groups=501(privcert)
 ```
 
+> [!NOTE]
+> Changes on Ver.1.1
+>
+> When updating from Ver.1.0 to Ver.1.1, the line `init:true` need to be added near the beginning of `docker-compose.yml`.
+> Edit it according to the template.
+
 Run container on the directory where `docker-compose.yml` exists:
 
 ```console

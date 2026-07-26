@@ -1,0 +1,52 @@
+#!/usr/local/bin/ruby
+
+exit unless $0 == __FILE__
+
+app_name = File.basename(__FILE__, '.rb')
+app_dir = File.expand_path('../..', __FILE__)
+
+uid = ENV['APP_UID']
+gid = ENV['APP_GID']
+unless uid && gid
+  raise 'APP_UID or APP_GID not specified.'
+end
+
+# Set app:app to be UID and GID of when Passenger is executed
+begin
+  system(%Q{
+    if ! id app > /dev/null 2>&1; then
+      groupadd -og #{gid} -r app
+      useradd -ou #{uid} -g app -Md #{app_dir}/tmp -r app
+    fi
+  }, exception: true)
+rescue RuntimeError
+  raise "Failed to register: app:app - uid=#{uid}, gid=#{gid}"
+end
+
+# Adjust permission of the directory where Passenger writes
+dirs = ['auth', 'log', 'tmp', 'db'].map{|dir| "#{app_dir}/#{dir}"}.join(' ')
+system("find #{dirs} -xdev ! -type l -exec chown app:app {} \\;")
+system("chmod 700 #{app_dir}/auth")
+
+# Change execution permission of Passenger
+Process::GID.change_privilege(gid.to_i)
+Process::UID.change_privilege(uid.to_i)
+ENV['HOME'] = "#{app_dir}/tmp"
+
+# Prepare the database
+system("umask 077; rake db:prepare")
+
+# Start Passenger
+opts = [
+  [  '--port=',                     'PORT',       '3000',   ''               ],
+  [  '--max-pool-size=',            'MAX_POOL',   '6',      ''               ],
+  [  '--max-request-queue-size=',   'MAX_QUEUE',  '100',    ''               ],
+  [%Q{--log-file="#{app_dir}/log/}, 'LOG_PREFIX', app_name, '-passenger.log"']
+].map{|prefix, key, default, suffix|
+  prefix << (ENV[key]&.empty? == false ? ENV[key] : default) << suffix
+}.push(
+  '--disable-security-update-check',
+  '--disable-anonymous-telemetry'
+).join(' ')
+exec("/usr/local/bundle/bin/passenger start #{opts}")
+raise 'exec failed.'

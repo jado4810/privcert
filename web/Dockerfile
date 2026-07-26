@@ -43,4 +43,4 @@ COPY lib lib/
 COPY locales locales/
 
 ENV APP_ENV=production
-CMD ["/opt/app/bin/init"]
+CMD ["/opt/app/bin/privcert"]

@@ -101,6 +101,12 @@ $ id privcert
 uid=501(privcert) gid=501(privcert) groups=501(privcert)
 ```
 
+> [!NOTE]
+> Ver.1.1系での変更点
+>
+> Ver.1.0系から1.1系にアップデートする場合、`docker-compose.yml`先頭付近に`init:true`行の追加が必要です。
+> 雛形を確認の上、該当部分を修正してください。
+
 `docker-compose.yml`を置いたディレクトリーに移動してコンテナを起動します。
 
 ```console
