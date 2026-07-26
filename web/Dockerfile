@@ -1,7 +1,7 @@
 FROM ruby:4.0-slim-trixie AS builder
 
-RUN apt update \
- && apt install -y curl make g++ libsqlite3-dev \
+RUN apt-get update \
+ && apt-get install -y curl make g++ libsqlite3-dev \
  && rm -rf /var/lib/apt/lists/*
 
 RUN bundle config --local without development:test
@@ -18,8 +18,8 @@ RUN /usr/local/bundle/bin/passenger-config install-agent \
 
 FROM ruby:4.0-slim-trixie
 
-RUN apt update \
- && apt install -y procps curl less sqlite3 \
+RUN apt-get update \
+ && apt-get install -y procps curl less sqlite3 \
  && rm -rf /var/lib/apt/lists/*
 
 RUN echo 'SYS_UID_MAX 60000' >> /etc/login.defs \
